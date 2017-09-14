@@ -9,8 +9,9 @@
 
 <p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{event.edit}">*</a></p>
 <p><a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
-<p><a th:href="@{/events/{id}/(id=${user.id})}" th:text="#{event.list}">*</a></p>
-<p><a th:text="${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}">*</a></p>
+<p><a th:text="${requestedEvent != null} ? 
+${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}
+: ${addEventInfo}">*</a></p>
 
 <h2 th:text="#{event.list}">*</h2>
 
@@ -37,8 +38,8 @@
 		<td th:text="${event.room.place.name}">* </td>
        <td th:text="${event.room.number}"></td>
 		<td th:text="${event.series.client}"></td>
-       <td><a th:href="@{/events/{ide}/delete/ (ide=${event.id})}" th:text="#{event.delete}">*</a> 
-       <a th:href="@{/events/{ide}/edit/ (ide=${event.id})}" th:text="#{event.edit}">*</a></td>
+       <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.delete}">*</a> 
+       <a th:href="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.edit}">*</a></td>
     </tr>
 </table>
 

@@ -33,7 +33,7 @@
         </div>
             
             <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hourStart" th:text="#{event.dateOfFirstEvent}"><span
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hourStart" th:text="#{event.hour}"><span
                         class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12" >
@@ -61,7 +61,7 @@
                         class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input name="eventCycleLength" type="number" min="1" max="365" id="numberOfEvents" required="required"
+                    <input name="eventCycleLength" type="number" min="1" max="365" id="eventCycleLength" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
@@ -162,8 +162,7 @@
 	  });
 	});
  
-</script>
-<script>
+
 $( function() {
     $( "#dateStart" ).datepicker();
   } );

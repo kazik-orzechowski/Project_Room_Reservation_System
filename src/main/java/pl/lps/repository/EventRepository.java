@@ -13,7 +13,7 @@ import pl.lps.entity.Series;
 
 
 
-public interface EventRepository extends JpaRepository<Event, Long>{
+public interface EventRepository extends JpaRepository<Event, Long> {
 
 	Event findOneById (Long id);
 	List<Event> findAllBySeriesUserId (Long Id) ;
@@ -21,7 +21,7 @@ public interface EventRepository extends JpaRepository<Event, Long>{
 	Event findOneByDateAndHour (Date date, Date hour) ;
 	Event findOneByDateAndHourAndRoom (Date date, Date hour, Room room) ;
 	
-	@Query ("SELECT e FROM Event e WHERE e.date = :date "
+	@Query ("SELECT e FROM Event e WHERE e.date IN :date "
 			+ "AND e.room.id = :roomId "
 			+ "AND :endHour >e.hour AND :endHour < e.endHour OR "
 			+ "e.date = :date AND e.room.id = :roomId AND "
@@ -34,13 +34,13 @@ public interface EventRepository extends JpaRepository<Event, Long>{
 									@Param("endHour")Date hour2
 									);
 	
-	@Query ("SELECT e FROM Event e WHERE e.date = :date "
+	@Query ("SELECT e FROM Event e WHERE e.date IN (:dates) "
 			+ "AND e.room.id = :roomId "
 			+ "AND :endHour >e.hour AND :endHour < e.endHour OR "
-			+ "e.date = :date AND e.room.id = :roomId AND "
+			+ "e.date IN (:dates) AND e.room.id = :roomId AND "
 			+ ":startHour >e.hour AND :startHour < e.endHour"
 			)
-	List<Event> findManyNotCollidingEvents(@Param("date")List<Date> dates
+	List<Event> findNotCollidingManyEvents(@Param("dates")List<Date> dates
 									,@Param("roomId")Long roomId
 									, 
 									@Param("startHour")Date hour,
