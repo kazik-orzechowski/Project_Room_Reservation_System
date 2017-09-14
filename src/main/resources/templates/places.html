@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2 th:text="#{place.list}">*</h2>
+
+<p><a th:href="@{/users/adminPanel}" th:text="#{main.page}">*</a></p>
+<p><a th:href="@{/places/add}" th:text="#{place.add}">*</a></p>
+<table>
+    <tr>
+    	<th th:text="#{place.id}">* </th>
+    	<th th:text="#{place.name}">* </th>
+    	<th th:text="#{place.city}">* </th>
+    	<th th:text="#{place.street}">* </th>
+    	<th th:text="#{place.description}">* </th>
+    	<th th:text="#{action}">* </th>
+    </tr>
+    <tr th:each="place : ${places}">
+       <td th:text="${place.id}"></td>
+       <td th:text="${place.name}"></td>
+       <td th:text="${place.city}"></td>
+       <td th:text="${place.street}"></td>
+       <td th:text="${place.description}"></td>
+       <td><a th:href="@{/places/{id}/delete/(id=${place.id})}" th:text="#{place.delete}">*</a> 
+       <a th:href="@{/places/{id}/edit/(id=${place.id})}" th:text="#{place.edit}">*</a></td>
+    </tr>
+</table>
+</body>
+</html>
+

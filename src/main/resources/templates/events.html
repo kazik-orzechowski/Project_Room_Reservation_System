@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2 th:text="#{event.list}">*</h2>
+
+<p><a th:href="@{/events/add}" th:text="#{event.add}">*</a></p>
+<p><a th:href="@{/users/adminPanel}" th:text="#{main.page}">*</a></p>
+<table>
+    <tr>
+    	<th th:text="#{event.id}">* </th>
+    	<th th:text="#{event.date}">* </th>
+    	<th th:text="#{event.hour}">* </th>
+       	<th th:text="#{event.series.user.fullName}"></th>
+       	<th th:text="#{event.duration}">* </th>
+    	<th th:text="#{event.eventSeats}">* </th>
+    	<th th:text="#{event.series.eventType.name}">* </th>
+		<th th:text="#{event.room.place.name}">* </th>
+		<th th:text="#{event.room.number}">* </th>
+		<th th:text="#{event.series.client}"></th>
+    	<th th:text="#{action}">* </th>
+    </tr>
+    <tr th:each="event : ${events}">
+       <td th:text="${event.id}"></td>
+       <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
+       <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
+       <th th:text="${event.series.user.firstName}+' '+${event.series.user.lastName}"></th>
+       <td th:text="${event.eventDuration}"></td>
+       <td th:text="${event.eventSeats}"></td>
+       <td th:text="${event.series.eventType.name}"></td>
+		<td th:text="${event.room.place.name}">* </td>
+       <td th:text="${event.room.number}"></td>
+		<td th:text="${event.series.client}"></td>
+       <td><a th:href="@{/events/{ide}/delete/ (ide=${event.id})}" th:text="#{event.delete}">*</a> 
+       <a th:href="@{/events/{ide}/edit/ (ide=${event.id})}" th:text="#{event.edit}">*</a></td>
+    </tr>
+</table>
+
+</body>
+</html>
+

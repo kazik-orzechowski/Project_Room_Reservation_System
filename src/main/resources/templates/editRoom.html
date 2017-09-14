@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8" /> 
+<body>
+
+  <h2 th:text="#{room.editroom}">*</h2>
+  <h3 th:text="${room.number}"></h3>
+
+        <form method="post" id="room-form" th:action="@{/rooms/{id}/edit/(id=${room.id})}" th:object="${room}">
+			<ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+            </ul> 		         
+
+            <div class="form-room">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number" th:text="#{room.number}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{number}" type="text" id="number" th:value="${room.number}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+           
+            <div class="form-room">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="floor" th:text="#{room.floor}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{floor}" type="text" id="floor"  th:value="${room.floor}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+         
+          <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="place" th:text="#{room.place.name}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control" id="place" th:field="*{place}">
+                        <option th:each="place : ${ourPlaces}" th:value="${{place}}" th:text="${place.name}">Wireframe
+                        </option>
+                    </select>
+                </div>
+               </div>
+                  
+             <div class="form-room">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="seats" th:text="#{room.seats}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{seats}" type="text" id="seats"  th:value="${room.seats}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+                      
+             <div class="form-room">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="description" th:text="#{room.description}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{description}" id="description" th:value="${room.description}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+                     <div class="ln_solid"></div>
+            <div class="room-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <button class="btn btn-primary" type="button">Cancel</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+
+</form>
+
+    
+</body>
+</html>

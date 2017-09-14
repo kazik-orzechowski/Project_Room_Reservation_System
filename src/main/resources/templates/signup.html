@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8" /> 
+<body>
+
+  <h2 th:text="#{user.signup}">*</h2>
+
+        <form method="post" id="user-form" th:action="@{/users/signup}" th:object="${user}">
+			<ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+            </ul> 		         
+
+            <div class="form-user">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" th:text="#{user.firstname}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{firstName}" type="text" id="first-name" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+           
+            <div class="form-user">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-Name" th:text="#{user.lastname}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{lastName}" type="text" id="last-name" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+            
+             <div class="form-user">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-Name" th:text="#{user.username}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{userName}" type="text" id="user-name" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+            
+             <div class="form-user">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password" th:text="#{user.password}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{password}" type="password" id="password" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+                      
+             <div class="form-user">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email" th:text="#{user.email}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{email}" type="email" id="email" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+        
+            <div class="ln_solid"></div>
+            <div class="user-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <button class="btn btn-primary" type="button">Cancel</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+
+</form>
+
+    
+</body>
+</html>

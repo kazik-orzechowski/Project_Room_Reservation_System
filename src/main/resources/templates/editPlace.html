@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8" /> 
+<body>
+
+  <h2 th:text="#{place.editplace}">*</h2>
+  <h3 th:text="${place.name}"></h3>
+
+        <form method="post" id="place-form" th:action="@{/places/{id}/edit/(id=${place.id})}" th:object="${place}">
+			<ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+            </ul> 		         
+
+            <div class="form-place">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name" th:text="#{place.name}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{name}" type="text" id="name" th:value="${place.name}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+           
+            <div class="form-place">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="city" th:text="#{place.city}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{city}" type="text" id="city"  th:value="${place.city}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+            
+                  
+             <div class="form-place">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="street" th:text="#{place.street}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{street}"  id="street" required="required" th:value="${place.street}"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+                      
+             <div class="form-place">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="description" th:text="#{place.description}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input th:field="*{description}" id="description" th:value="${place.description}" required="required"
+                           class="form-control col-md-7 col-xs-12"/>
+                </div>
+            </div>
+                     <div class="ln_solid"></div>
+            <div class="place-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <button class="btn btn-primary" type="button">Cancel</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+
+</form>
+
+    
+</body>
+</html>
