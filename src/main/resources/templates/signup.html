@@ -7,7 +7,7 @@
 
 
 <body>
-
+<h1 th:text="#{page.main.title}">*</h1>
   <h2 th:text="#{user.signup}">*</h2>
 
         <form method="post" id="user-form" th:action="@{/users/signup}" th:object="${user}">

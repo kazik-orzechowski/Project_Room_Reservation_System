@@ -3,13 +3,13 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
+    <script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
 </head>
 <body>
 <h2 th:text="#{room.list}">*</h2>
 
-<p><a th:href="@{/rooms/add}" th:text="#{room.add}">*</a></p>
-<p><a th:href="@{/users/adminPanel}" th:text="#{page.main}">*</a></p>
+<p><a href="#" onClick=goback() th:text="#{back}">*</a></p>
+
 <table>
     <tr>
     	<th th:text="#{room.id}">* </th>
@@ -18,7 +18,7 @@
        	<th th:text="#{room.place.name}">* </th>
     	<th th:text="#{room.seats}">* </th>
     	<th th:text="#{room.description}">* </th>
-    	<th th:text="#{action}">* </th>
+    	
     </tr>
     <tr th:each="room : ${rooms}">
        <td th:text="${room.id}"></td>
@@ -27,9 +27,7 @@
        <td th:text="${room.place.name}"></td>
        <td th:text="${room.seats}"></td>
        <td th:text="${room.description}"></td>
-       <td><a th:href="@{/rooms/{id}/delete/(id=${room.id})}" th:text="#{room.delete}">*</a> 
-       <a th:href="@{/rooms/{id}/edit/(id=${room.id})}" th:text="#{room.edit}">*</a></td>
-    </tr>
+     </tr>
 </table>
 </body>
 </html>

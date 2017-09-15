@@ -18,6 +18,7 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
 	List<Room> findAllByPlaceName (String name);
 	List<Room> findAllByPlaceId (Long id);
 	
+	
 	@Query ("SELECT r FROM Room r WHERE r.seats >= :minSeats")
 	List<Room> findAllByRoomSize (@Param ("minSeats") Long seats);
 	@Query ("SELECT r FROM Room r WHERE r.seats >= :minSeats AND r.place.id = :placeId")

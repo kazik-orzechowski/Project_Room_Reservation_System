@@ -3,11 +3,17 @@
 <head>
     <title>User Panel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
+
 </head>
 <body>
+<h4 th:text="#{page.main.title}">*</h4>
 <h2 th:text="#{user.main.page} + ' ' + ${user.userName}">*</h2>
 <p><small><a th:href="@{/users/logout}" th:text="#{user.logout}">*</a></small></p>
 <p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}">*</a></p>
+<p><a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a></p>
 <p><a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
 
 <p><a th:text="${requestedEvent != null} ? 

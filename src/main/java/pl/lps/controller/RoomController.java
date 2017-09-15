@@ -37,6 +37,13 @@ public class RoomController {
 		return "rooms";
 	}
 
+	@RequestMapping("/forUser")
+	public String allRoomsForUser(Model model) {
+		model.addAttribute("rooms", repoRoom.findAll());
+		System.out.println(repoRoom.findAll().toString());
+		return "roomsForUser";
+	}
+	
 	@GetMapping("/add")
 	public String addRoom(Model model) {
 		Room room = new Room();
