@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8" /> 
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
+<body>
+
+<h1 th:text="#{page.main.title}">*</h1>
+<h2 th:text="#{page.login}">*</h2>
+
+<h4 th:text="#{page.login.heading}">*</h4>
+<form action="" method="post">
+	
+	<label th:text="#{user.username}">*</label><br/>
+	<input type="text" name="login" /><br/>
+	
+	<label th:text="#{user.password}">* </label><br/>
+	<input type="password" name="password" /><br/>
+
+	<div class="ln_solid"></div>
+        <div class="event-group">
+            <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
+            <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
+        </div>
+
+</form>
+    
+</body>
+</html>

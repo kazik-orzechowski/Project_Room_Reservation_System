@@ -7,8 +7,8 @@
 <body>
 <h2 th:text="#{event.list}">*</h2>
 
-<p><a th:href="@{/events/add}" th:text="#{event.add}">*</a></p>
-<p><a th:href="@{/users/adminPanel}" th:text="#{main.page}">*</a></p>
+<p><a th:href="@{/events/{id}/add/ (id=${user.id})}" th:text="#{event.add}">*</a></p>
+<p><a th:href="@{/users/adminPanel}" th:text="#{page.main}">*</a></p>
 <table>
     <tr>
     	<th th:text="#{event.id}">* </th>
@@ -27,15 +27,15 @@
        <td th:text="${event.id}"></td>
        <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
        <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
-       <th th:text="${event.series.user.firstName}+' '+${event.series.user.lastName}"></th>
+       <td th:text="${event.series.user.firstName}+' '+${event.series.user.lastName}"></td>
        <td th:text="${event.eventDuration}"></td>
        <td th:text="${event.eventSeats}"></td>
        <td th:text="${event.series.eventType.name}"></td>
 		<td th:text="${event.room.place.name}">* </td>
        <td th:text="${event.room.number}"></td>
 		<td th:text="${event.series.client}"></td>
-       <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id})(ide=${event.id})}" th:text="#{event.delete}">*</a> 
-       <a th:href="@{/events/{id}/edit/{ide}/ (id=${user.id})(ide=${event.id})}" th:text="#{event.edit}">*</a></td>
+       <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.delete}">*</a> 
+       <a th:href="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.edit}">*</a></td>
     </tr>
 </table>
 

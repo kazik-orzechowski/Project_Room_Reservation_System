@@ -5,12 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h2 th:text="#{main.page}">*</h2>
-
+<h2 th:text="#{page.main.admin}">*</h2>
+<p><small><a th:href="@{/users/logout}" th:text="#{user.logout}">*</a></small></p>
 <p><a th:href="@{/places}" th:text="#{place.main}">*</a></p>
 <p><a th:href="@{/rooms}" th:text="#{room.main}">*</a></p>
 <p><a th:href="@{/eventTypes}" th:text="#{eventType.main}">*</a></p>
-<p><a th:href="@{/users}" th:text="#{users.main}">*</a></p>
+<p><a th:href="@{/users}" th:text="#{user.main}">*</a></p>
+<p><a th:href="@{/events/4}" th:text="#{event.main}">*</a></p>
 
 </body>
 </html>

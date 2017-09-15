@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8" /> 
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
 <body>
 
   <h2 th:text="#{room.editroom}">*</h2>
@@ -63,16 +66,15 @@
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
-                     <div class="ln_solid"></div>
-            <div class="room-group">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                    <button class="btn btn-primary" type="button">Cancel</button>
-                    <button type="submit" class="btn btn-success">Submit</button>
+                    
+            <div class="ln_solid"></div>
+                      <div class="event-group">
+                    <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
+                    <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
                 </div>
-            </div>
 
 </form>
-
     
 </body>
+
 </html>

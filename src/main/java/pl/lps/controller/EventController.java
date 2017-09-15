@@ -42,7 +42,9 @@ public class EventController {
 
 	public static final long HOUR = 3600 * 1000;
 	public static final long DAY = 3600 * 1000 * 24;
-
+	Room roomPossible = new Room();
+	ArrayList<Room> rooms = new ArrayList<Room>();
+	
 	@Autowired
 	EventRepository repoEvent;
 
@@ -61,12 +63,12 @@ public class EventController {
 	@Autowired
 	SeriesRepository repoSeries;
 
-//	@RequestMapping("")
-//	public String allEvents(Model model) {
-//		model.addAttribute("events", repoEvent.findAll());
-//		System.out.println(repoEvent.findAll().toString());
-//		return "events";
-//	}
+	@RequestMapping("")
+	public String allEvents(Model model) {
+		model.addAttribute("events", repoEvent.findAll());
+		model.addAttribute("user", repoUser.findOneByUserName("admin"));
+		return "events";
+	}
 
 	@RequestMapping("/{id}")
 	public String allEvents(@PathVariable Long id, Model model) {
@@ -95,11 +97,11 @@ public class EventController {
 		Date endHour = new Date(hour.getTime() + eventDuration * HOUR);
 
 		User userCurrent = repoUser.findOneById(id);
-		ArrayList<Room> rooms = new ArrayList<Room>();
+		
 		ArrayList<Event> events = new ArrayList<Event>();
 		ArrayList<Date> requestedDates = new ArrayList<Date>();
-		// ArrayList<Room> possibleRooms = new ArrayList<Room>();
-		Room possibleRoom = new Room();
+		// ArrayList<Room> roomPossibles = new ArrayList<Room>();
+		
 		Series series = new Series(userCurrent, client, repoEventType.findOneById(eventTypeId));
 
 		// Warunek wybierający zaznaczyć wszystkie lokalizacje
@@ -123,29 +125,30 @@ public class EventController {
 		for (Room room : rooms) {
 
 			if (repoEvent.findNotCollidingManyEvents(requestedDates, room.getId(), hour, endHour).isEmpty()) {
-				System.err.println("*** IF " + room.toString());
-
+				
+				System.err.println("***** IF " + repoEvent.findNotCollidingManyEvents(
+						requestedDates, room.getId(), hour, endHour));
 				// if (repoEvent.findNotCollidingEvents(dateOfFirstEvent, room.getId(), hour,
 				// endHour).isEmpty()) {
 				// System.err.println("*** IF " + room.toString());
 				// rooms.add(room);
 
-				possibleRoom = room;
-
-				System.err.println("*** IF OK " + room.toString());
+				roomPossible = room;
 				model.addAttribute("addEventInfo", "Dodano zdarzenie");
 
 				break;
 			} else {
 				System.err.println("*** ELSE " + room.toString());
 				model.addAttribute("addEventInfo", "Brak wolnych sal");
+				roomPossible = null;
 			}
 
 		}
 
 		System.err.println("***** Checkpoint 3 *******");
-
-		if (possibleRoom != null) {
+		
+		
+		if (roomPossible != null) {
 
 			Integer i = 0;
 			for (Date date2 : requestedDates) {
@@ -162,7 +165,7 @@ public class EventController {
 				event.setEventSeats(eventSeats);
 				event.setEndHour(endHour);
 				event.setEventDuration(eventDuration);
-				event.setRoom(repoRoom.findOneById(possibleRoom.getId()));
+				event.setRoom(repoRoom.findOneById(roomPossible.getId()));
 				event.setSeries(series);
 				repoEvent.save(event);
 
@@ -174,16 +177,18 @@ public class EventController {
 
 		System.err.println("***** Checkpoint LAST *******");
 		model.addAttribute("user", userCurrent);
-		
+		model.addAttribute("eventType", repoEventType.findAll());
 		// User 0 to administrator - ma dostęp do wszystkich zdarzeń
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute("events", repoEvent.findAll());
+			return "events";
 		} else {
 			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
+			return "userPanel";
 		}
-		model.addAttribute("eventType", repoEventType.findAll());
 		
-		return "userPanel";
+		
+		
 	}
 
 	@GetMapping("/{id}/delete/{ide}")
@@ -199,6 +204,7 @@ public class EventController {
 			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
 		}
 		model.addAttribute("eventType", repoEventType.findAll());
+		model.addAttribute("addEventInfo", "Usunięto zdarzenie");
 		return "userPanel";
 
 	}
@@ -217,11 +223,59 @@ public class EventController {
 			System.err.println(result);
 			return "editEvent";
 		}
-		repoEvent.save(event);
-		model.addAttribute("events", repoEvent.findAll());
-		model.addAttribute("user", repoUser.findOneById(id));
-		return "events"; // event.toString();
+		
+		Date endHour = new Date(event.getHour().getTime() + event.getEventDuration() * HOUR);
+		event.setEndHour(endHour);
+		event.setId(ide);
+		repoEvent.deleteById(ide);
+		Room roomCurrent = event.getRoom();
+		Long placeCurrentId = roomCurrent.getPlace().getId();
+		Long seatsRequired = event.getEventSeats();
+		if (repoEvent.findNotCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(),
+				 endHour).isEmpty()) {
+			roomPossible = roomCurrent;
+			System.err.println("Bieżący pokój");
+		} else {
+			if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
+			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
+			} else {
+				rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId, seatsRequired);
+			}
+			
+			for (Room room : rooms) {
 
+			 if (repoEvent.findNotCollidingEvents(event.getDate(), room.getId(), event.getHour(),
+				 endHour).isEmpty()) {
+				 roomPossible = room;
+				 event.setRoom(roomPossible);
+				 System.err.println("Nowy pokój");
+				 break;
+				 } else {
+				model.addAttribute("addEventInfo", "Brak wolnych sal");
+				model.addAttribute("event", event);
+				model.addAttribute("user", repoUser.findOneById(id));
+				 System.err.println("Brak pokoju");
+				return "editEvent";
+				}
+			}
+		
+		}
+		System.err.println(event.toString());
+		repoEvent.save(event);
+		model.addAttribute("requestedEvent", event);
+		model.addAttribute("user", repoUser.findOneById(id));
+		
+		model.addAttribute("eventType", repoEventType.findAll());
+		// User 0 to administrator - ma dostęp do wszystkich zdarzeń
+		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+			model.addAttribute("events", repoEvent.findAll());
+			return "events";
+		} else {
+			model.addAttribute("addEventInfo", "Zmieniono zdarzenie");
+			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
+			return "userPanel";
+		}
+	
 	}
 
 	@ModelAttribute("ourEventTypes")

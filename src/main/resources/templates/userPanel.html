@@ -1,14 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>User Panel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h2 th:text="#{user.main.page} + ${user.userName}">*</h2>
-
-<p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{event.edit}">*</a></p>
+<h2 th:text="#{user.main.page} + ' ' + ${user.userName}">*</h2>
+<p><small><a th:href="@{/users/logout}" th:text="#{user.logout}">*</a></small></p>
+<p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}">*</a></p>
 <p><a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
+
 <p><a th:text="${requestedEvent != null} ? 
 ${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}
 : ${addEventInfo}">*</a></p>

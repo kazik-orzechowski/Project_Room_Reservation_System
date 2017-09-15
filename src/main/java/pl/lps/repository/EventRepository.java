@@ -23,9 +23,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 	
 	@Query ("SELECT e FROM Event e WHERE e.date IN :date "
 			+ "AND e.room.id = :roomId "
-			+ "AND :endHour >e.hour AND :endHour < e.endHour OR "
+			+ "AND :endHour >e.hour AND :endHour <= e.endHour OR "
 			+ "e.date = :date AND e.room.id = :roomId AND "
-			+ ":startHour >e.hour AND :startHour < e.endHour"
+			+ ":startHour >=e.hour AND :startHour < e.endHour"
 			)
 	List<Event> findNotCollidingEvents(@Param("date")Date date
 									,@Param("roomId")Long roomId
@@ -36,9 +36,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 	
 	@Query ("SELECT e FROM Event e WHERE e.date IN (:dates) "
 			+ "AND e.room.id = :roomId "
-			+ "AND :endHour >e.hour AND :endHour < e.endHour OR "
+			+ "AND :endHour >e.hour AND :endHour <= e.endHour OR "
 			+ "e.date IN (:dates) AND e.room.id = :roomId AND "
-			+ ":startHour >e.hour AND :startHour < e.endHour"
+			+ ":startHour >=e.hour AND :startHour < e.endHour"
 			)
 	List<Event> findNotCollidingManyEvents(@Param("dates")List<Date> dates
 									,@Param("roomId")Long roomId

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1 th:text="#{page.main.title}">*</h1>
+<h2 th:text="#{page.main}">*</h2>
+
+<p><a th:href="@{/users/signup}" th:text="#{user.signup}">*</a></p>
+<p><a th:href="@{/users/login}" th:text="#{user.login}">*</a></p>
+
+</body>
+</html>
+
