@@ -8,8 +8,11 @@
 <h1 th:text="#{page.main.title}">*</h1>
 <h2 th:text="#{page.main}">*</h2>
 
-<p><a th:href="@{/users/signup}" th:text="#{user.signup}">*</a></p>
-<p><a th:href="@{/users/login}" th:text="#{user.login}">*</a></p>
+<p><a th:href="@{/register}" th:text="#{user.signup}">*</a></p>
+<p><a th:href="@{/login}" th:text="#{user.login}">*</a></p>
+
+<p><a th:text="${message} + ${username}">*</a></p>
+
 
 </body>
 </html>

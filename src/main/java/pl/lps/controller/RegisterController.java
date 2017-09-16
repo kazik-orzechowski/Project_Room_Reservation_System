@@ -1,7 +1,5 @@
 package pl.lps.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,30 +9,38 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.lps.entity.User;
-import pl.lps.model.LoginData;
 import pl.lps.repository.UserRepository;
 
 
 @Controller
-@RequestMapping("main")
+@RequestMapping("/register")
+public class RegisterController {
 
-public class MainControler extends SessionedController{
+	@Autowired
+	UserRepository repoUser;
 	
 	@GetMapping("")
-		public String home(Model model) {
-		LoginData loginData = (LoginData) session().getAttribute("user");
+	public String register(Model model) {
+		User user=new User();
+		model.addAttribute("user",user );
 		
-		if(session().getAttribute("user")!=null) {
-			model.addAttribute("message","#{user.logged.in}");
-			model.addAttribute("username"," "+loginData.getLogin());
+		return "register";
+	}
+
+	@PostMapping("")
+	public String registerPost(@Valid User user, BindingResult result, Model model) {
+		
+		if(result.hasErrors()) {
+			System.err.println(result);
+			return "register";
 		}
-		
-		model.addAttribute("message","");
-		model.addAttribute("username","");
+		this.repoUser.save(user);
+		model.addAttribute("message", "Zarejestrowano użytkownika ");
+		model.addAttribute("username", user.getUserName());
 		
 		return "main";
-		} 
+	}
+
 }

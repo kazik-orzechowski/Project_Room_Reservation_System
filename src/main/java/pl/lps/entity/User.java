@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @Table(name = "users")
@@ -102,8 +103,13 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = BCrypt.hashpw(password, BCrypt.gensalt()) ;
 	}
+
+	public Boolean isPasswordCorrect(String password) {
+		return BCrypt.checkpw(password, this.password);
+	}
+	
 
 	public List<Series> getSeries() {
 		return series;

@@ -11,13 +11,14 @@
 <h2 th:text="#{page.login}">*</h2>
 
 <h4 th:text="#{page.login.heading}">*</h4>
-<form action="" method="post">
+<form action="" method="post"  th:object="${user}">
 	
 	<label th:text="#{user.username}">*</label><br/>
-	<input type="text" name="login" /><br/>
+	<input th:field="*{login}" type="text" id="dateStart" th:value="${user.login}" required="required"  /><br/>
 	
 	<label th:text="#{user.password}">* </label><br/>
-	<input type="password" name="password" /><br/>
+	<input th:field="*{password}" type="password" id="password" th:value="${user.password}" required="required"  /><br/>
+	<br/>
 
 	<div class="ln_solid"></div>
         <div class="event-group">

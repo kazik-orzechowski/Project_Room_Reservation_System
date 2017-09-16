@@ -10,7 +10,7 @@
 <h1 th:text="#{page.main.title}">*</h1>
   <h2 th:text="#{user.signup}">*</h2>
 
-        <form method="post" id="user-form" th:action="@{/users/signup}" th:object="${user}">
+        <form method="post" id="user-form" th:action="@{/register}" th:object="${user}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         
@@ -39,13 +39,6 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-Name" th:text="#{user.username}"><span
                         class="required">*</span>
                 </label>
-           <div class="ln_solid"></div>
-            <div class="event-group">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                    <button class="btn btn-primary" type="button">Cancel</button>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-            </div>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <input th:field="*{userName}" type="text" id="user-name" required="required"
                            class="form-control col-md-7 col-xs-12"/>
