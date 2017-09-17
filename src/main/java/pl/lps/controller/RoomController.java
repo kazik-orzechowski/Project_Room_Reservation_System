@@ -22,7 +22,7 @@ import pl.lps.repository.RoomRepository;
 
 @Controller
 @RequestMapping("/rooms")
-public class RoomController {
+public class RoomController extends SessionedController {
 
 	@Autowired
 	RoomRepository repoRoom;
@@ -32,6 +32,11 @@ public class RoomController {
 	
 	@RequestMapping("")
 	public String allRooms(Model model) {
+		
+		if(!SessionValidation.isSessionValid()) {
+			return "main";
+		}
+		
 		model.addAttribute("rooms", repoRoom.findAll());
 		System.out.println(repoRoom.findAll().toString());
 		return "rooms";
@@ -39,6 +44,11 @@ public class RoomController {
 
 	@RequestMapping("/forUser")
 	public String allRoomsForUser(Model model) {
+		
+		if(!SessionValidation.isSessionValid()) {
+			return "main";
+		}
+		
 		model.addAttribute("rooms", repoRoom.findAll());
 		System.out.println(repoRoom.findAll().toString());
 		return "roomsForUser";
@@ -46,6 +56,11 @@ public class RoomController {
 	
 	@GetMapping("/add")
 	public String addRoom(Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		Room room = new Room();
 		model.addAttribute("room", room);
 		return "addRoom";
@@ -66,12 +81,20 @@ public class RoomController {
 
 	@GetMapping("/{id}/delete")
 	public String delRoom(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
 		repoRoom.deleteById(id);
 		return "rooms";
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editRoom(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
 		model.addAttribute("room", repoRoom.findOneById(id));
 		return "editRoom";
 	}

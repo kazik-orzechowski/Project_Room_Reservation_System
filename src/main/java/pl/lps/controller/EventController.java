@@ -38,7 +38,7 @@ import pl.lps.repository.EventRepository;
 
 @Controller
 @RequestMapping("/events")
-public class EventController {
+public class EventController extends SessionedController {
 
 	public static final long HOUR = 3600 * 1000;
 	public static final long DAY = 3600 * 1000 * 24;
@@ -63,8 +63,16 @@ public class EventController {
 	@Autowired
 	SeriesRepository repoSeries;
 
+	@Autowired
+	SessionValidation sv;
+	
 	@RequestMapping("")
 	public String allEvents(Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		model.addAttribute("events", repoEvent.findAll());
 		model.addAttribute("user", repoUser.findOneByUserName("admin"));
 		return "events";
@@ -72,6 +80,10 @@ public class EventController {
 
 	@RequestMapping("/{id}")
 	public String allEvents(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionUser(id)) {
+			return "main";
+		}
 		model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
 		model.addAttribute("user", repoUser.findOneById(id));
 		System.out.println(repoEvent.findAll().toString());
@@ -80,7 +92,12 @@ public class EventController {
 
 	@GetMapping("/{id}/add")
 	public String addEvent(@PathVariable Long id, Model model) {
-
+		
+		
+		if(!SessionValidation.isSessionUser(id)) {
+			return "main";
+		}
+		
 		model.addAttribute("user", repoUser.findOneById(id));
 		model.addAttribute("allPlaces", repoPlace.findAll());
 
@@ -193,6 +210,11 @@ public class EventController {
 
 	@GetMapping("/{id}/delete/{ide}")
 	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
+		
+		if(!SessionValidation.isSessionUser(id)) {
+			return "main";
+		}
+		
 		repoEvent.deleteById(ide);
 		model.addAttribute("events", repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);
@@ -211,6 +233,10 @@ public class EventController {
 
 	@GetMapping("/{id}/edit/{ide}")
 	public String editEvent(@PathVariable Long ide, @PathVariable Long id,  Model model) {
+		
+		if(!SessionValidation.isSessionUser(id)) {
+			return "main";
+		}
 		model.addAttribute("user", repoUser.findOneById(id));
 		model.addAttribute("event", repoEvent.findOneById(ide));
 		return "editEvent";
@@ -290,4 +316,29 @@ public class EventController {
 		return places;
 	}
 
+	@GetMapping("/{id}/series")
+	public String getSeries(@PathVariable Long id,  Model model) {
+		
+		if(!SessionValidation.isSessionUser(id)) {
+			return "main";
+		}
+		
+		model.addAttribute("series", repoSeries.findAllByUserId(id) );
+		User userCurrent = repoUser.findOneById(id);
+		model.addAttribute("user", userCurrent);
+		
+		
+		
+		if (userCurrent.getUserName().equals("admin")) {
+			model.addAttribute("events", repoEvent.findAll());
+			return "events";
+		} else {
+			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
+		}
+		model.addAttribute("eventType", repoEventType.findAll());
+		model.addAttribute("addEventInfo", "Usunięto zdarzenie");
+		return "userPanel";
+
+	}
+	
 }

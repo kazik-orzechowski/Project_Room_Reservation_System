@@ -16,13 +16,18 @@ import pl.lps.repository.EventTypeRepository;
 
 @Controller
 @RequestMapping("/eventTypes")
-public class EventTypeController {
+public class EventTypeController extends SessionedController {
 
 	@Autowired
 	EventTypeRepository repoEventType;
 
 	@RequestMapping("")
 	public String allEventTypes(Model model) {
+		
+		if(!SessionValidation.isSessionValid()) {
+			return "main";
+		}
+		
 		model.addAttribute("eventTypes", repoEventType.findAll());
 		System.out.println(repoEventType.findAll().toString());
 		return "eventTypes";
@@ -30,6 +35,11 @@ public class EventTypeController {
 
 	@GetMapping("/add")
 	public String addEventType(Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		EventType eventType = new EventType();
 		model.addAttribute("eventType", eventType);
 		return "addEventType";
@@ -49,12 +59,20 @@ public class EventTypeController {
 
 	@GetMapping("/{id}/delete")
 	public String delEventType(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
 		repoEventType.deleteById(id);
 		return "redirect: /eventTypes";
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editEventType(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
 		model.addAttribute("eventType", repoEventType.findOneById(id));
 		return "editEventType";
 	}

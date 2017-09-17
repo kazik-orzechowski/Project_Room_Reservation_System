@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Panel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
+
+</head>
+<body>
+<h4 th:text="#{page.main.title}">*</h4>
+<h2 th:text="#{user.main.page} + ' ' + ${user.userName}">*</h2>
+<p><small><a th:href="@{/logout}" th:text="#{user.logout}">*</a></small></p>
+<p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}">*</a></p>
+<p><a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a></p>
+<p><a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
+
+<p><a th:text="${requestedEvent != null} ? 
+${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}
+: ${addEventInfo}">*</a></p>
+
+<h2 th:text="#{event.list}">*</h2>
+
+<table>
+    <tr>
+    	<th th:text="#{event.id}">* </th>
+    	<th th:text="#{event.date}">* </th>
+    	<th th:text="#{event.hour}">* </th>
+       	<th th:text="#{event.duration}">* </th>
+    	<th th:text="#{event.eventSeats}">* </th>
+    	<th th:text="#{event.series.eventType.name}">* </th>
+		<th th:text="#{event.room.place.name}">* </th>
+		<th th:text="#{event.room.number}">* </th>
+		<th th:text="#{event.series.client}"></th>
+    	<th th:text="#{action}">* </th>
+    </tr>
+    <tr th:each="event : ${events}">
+       <td th:text="${event.id}"></td>
+       <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
+       <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
+       <td th:text="${event.eventDuration}"></td>
+       <td th:text="${event.eventSeats}"></td>
+       <td th:text="${event.series.eventType.name}"></td>
+		<td th:text="${event.room.place.name}">* </td>
+       <td th:text="${event.room.number}"></td>
+		<td th:text="${event.series.client}"></td>
+       <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.delete}">*</a> 
+       <a th:href="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.edit}">*</a></td>
+    </tr>
+</table>
+
+
+</body>
+</html>
+

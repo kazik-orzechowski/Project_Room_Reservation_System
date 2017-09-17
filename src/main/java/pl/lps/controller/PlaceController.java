@@ -16,13 +16,18 @@ import pl.lps.repository.PlaceRepository;
 
 @Controller
 @RequestMapping("/places")
-public class PlaceController {
+public class PlaceController extends SessionedController {
 
 	@Autowired
 	PlaceRepository repoPlace;
 
 	@RequestMapping("")
 	public String allPlaces(Model model) {
+		
+		if(!SessionValidation.isSessionValid()) {
+			return "main";
+		}
+		
 		model.addAttribute("places", repoPlace.findAll());
 		System.out.println(repoPlace.findAll().toString());
 		return "places";
@@ -30,6 +35,11 @@ public class PlaceController {
 
 	@GetMapping("/add")
 	public String addPlace(Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		Place place = new Place();
 		model.addAttribute("place", place);
 		return "addPlace";
@@ -49,16 +59,27 @@ public class PlaceController {
 
 	@GetMapping("/{id}/delete")
 	public String delPlace(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		repoPlace.deleteById(id);
 		return "redirect: /places";
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editPlace(@PathVariable Long id, Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		model.addAttribute("place", repoPlace.findOneById(id));
 		return "editPlace";
 	}
 
+	
 	@PostMapping("/{id}/edit")
 	public String editPlacePost(@Valid Place place, BindingResult result, Model model) {
 		if (result.hasErrors()) {

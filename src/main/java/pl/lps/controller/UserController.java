@@ -18,25 +18,34 @@ import pl.lps.repository.UserRepository;
 
 @Controller
 @RequestMapping("/users")
-public class UserController {
+public class UserController extends SessionedController {
 
 	@Autowired
 	UserRepository repoUser;
-	
+
 	@Autowired
 	EventRepository repoEvent;
-	
+
 	@Autowired
 	EventTypeRepository repoEventType;
-	
-	
+
 	@RequestMapping("/adminPanel")
 	public String adminPanel(Model model) {
+
+		if (!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+
 		return "adminPanel";
 	}
-	
+
 	@RequestMapping("")
 	public String allUsers(Model model) {
+
+		if (!SessionValidation.isSessionValid()) {
+			return "main";
+		}
+
 		model.addAttribute("users", repoUser.findAll());
 		System.out.println(repoUser.findAll().toString());
 		return "users";
@@ -44,23 +53,32 @@ public class UserController {
 
 	@GetMapping("/{id}/delete")
 	public String delUser(@PathVariable Long id, Model model) {
+
+		if (!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
 		repoUser.deleteById(id);
-		return "redirect: /users"; 
+		return "redirect: /users";
 	}
-	
+
 	@GetMapping("/{id}/edit")
 	public String editUser(@PathVariable Long id, Model model) {
-		model.addAttribute("user", repoUser.findOneById(id));
-		
-		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute("returnUrl", "/users");			 
-		} else {
-			model.addAttribute("returnUrl", "/events/"+id);
+
+		if (!SessionValidation.isSessionAdmin()) {
+			return "main";
 		}
-		
-		return "editUser"; 
+
+		model.addAttribute("user", repoUser.findOneById(id));
+
+		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+			model.addAttribute("returnUrl", "/users");
+		} else {
+			model.addAttribute("returnUrl", "/events/" + id);
+		}
+
+		return "editUser";
 	}
-	
+
 	@PostMapping("/{id}/edit")
 	public String editUserPost(@Valid User user, @PathVariable Long id, BindingResult result, Model model) {
 		if (result.hasErrors()) {
@@ -68,21 +86,26 @@ public class UserController {
 			return "editUser";
 		}
 		repoUser.save(user);
-		
+
 		model.addAttribute("eventType", repoEventType.findAll());
-		
+
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute("events", repoEvent.findAll());
-			return "users"; 
+			return "users";
 		} else {
 			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
 			return "userPanel";
 		}
-		
+
 	}
-	
+
 	@GetMapping("/add")
 	public String addUser(Model model) {
+		
+		if(!SessionValidation.isSessionAdmin()) {
+			return "main";
+		}
+		
 		User user = new User();
 		model.addAttribute("user", user);
 		return "signup";
@@ -96,9 +119,12 @@ public class UserController {
 		repoUser.save(user);
 		model.addAttribute("user", user);
 		model.addAttribute("users", repoUser.findAll());
-		return "users"; 
+		return "users";
 
 	}
 
+	
+	
+	
 	
 }
