@@ -9,17 +9,17 @@ Grand Reserve contains fully functional admin panel that enables adding, deletio
 ## Setup
 
 Clone this repo to your IDE.
-Create mySql database `grand_reserve` and set database url and login data in `src/main/resources/application.properties`
+Create mySql database `grand_reserve` and set database url and login data in `src/main/resources/application.properties`.
 
 ## Starting the application
 
-Right click on the project repository in your IDE, choose Run as --> Spring Boot App.
-To enter main page type [your server address]/main  ` 
+Right-click the project repository in your IDE, choose `Run as --> Spring Boot App` (for Eclipse).
+To enter home page of Grand Reserve type `[your server address]/main` in your browser.  ` 
 
 ## Built With
 
 * [Spring boot](https://projects.spring.io/spring-boot/) - dependency management
-* [Thymaleaf] (http://www.thymeleaf.org/) - web templates
+* [Thymaleaf](http://www.thymeleaf.org/) - web templates
 
 ## License
 
@@ -27,5 +27,4 @@ To be completed.
 
 ## Acknowledgments
 
-* Coderslab team for support in first steps of development, remarks and guidelines. 
-
+* Coderslab team for support in first steps of development, remarks and guidelines.
