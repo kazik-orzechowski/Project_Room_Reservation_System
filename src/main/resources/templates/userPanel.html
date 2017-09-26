@@ -13,7 +13,8 @@
 <h2 th:text="#{user.main.page} + ' ' + ${user.userName}">*</h2>
 <p><small><a th:href="@{/logout}" th:text="#{user.logout}">*</a></small></p>
 <p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}">*</a></p>
-<p><a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a></p>
+<p><a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a><br />
+<a th:href="@{/events/series}" th:text="#{event.series.list}">*</a></p>
 <p><a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
 
 <p><a th:text="${requestedEvent != null} ? 
