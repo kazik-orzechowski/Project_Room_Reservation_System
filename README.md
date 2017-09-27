@@ -18,8 +18,8 @@ To enter home page of Grand Reserve type `[your server address]/main` in your br
 
 ## Built With
 
-* [Spring boot](https://projects.spring.io/spring-boot/) - dependency management
-* [Thymaleaf](http://www.thymeleaf.org/) - web templates
+* [Spring boot](https://projects.spring.io/spring-boot/)
+* [Thymaleaf](http://www.thymeleaf.org/)
 
 ## License
 
