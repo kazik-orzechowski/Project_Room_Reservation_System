@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -46,28 +47,33 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/events")
 public class EventController extends SessionedController {
 
+	private static final String EVENT = "event";
+	private static final String MAIN = "main";
+	private static final String EDIT_EVENT = "editEvent";
+	private static final String USER = "user";
+	private static final String USER_PANEL = "userPanel";
+	private static final String EVENTS = "events";
+	private static final String ADD_EVENT = "addEvent";
+	private static final String ALL_EVENTS = "allEvents";
+	private static final String EVENT_TYPE = "eventType";
+	private static final String ALL_PLACES = "allPlaces";
+	private static final String REQUESTED_EVENT = "requestedEvent";
+	private static final String ADD_EVENT_INFO = "addEventInfo";
 	/**
 	 * The long value that represents an hour in milliseconds
 	 */
-	public static final long HOUR = 3600 * 1000;
+	public static final long HOUR =  3600L * 1000;
 	/**
 	 * The long value that represents a day in milliseconds
 	 */
-	public static final long DAY = 3600 * 1000 * 24;
+	public static final long DAY = 3600L * 1000 * 24;
 
 	/**
 	 * Instantiation of Room instance, that will be initialized with first free room
 	 * attributes if such is found for defined event series criteria
 	 */
 	Room roomPossible = new Room();
-
-	/**
-	 * Instantiation of array list of rooms, that will be used to narrow free room
-	 * search to rooms meeting place and number of seats criteria
-	 */
-
-	ArrayList<Room> rooms = new ArrayList<Room>();
-
+	
 	/**
 	 * Event repository instance injection
 	 */
@@ -125,12 +131,12 @@ public class EventController extends SessionedController {
 	public String allEvents(Model model) {
 
 		if (!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN;
 		}
 
-		model.addAttribute("events", repoEvent.findAll());
-		model.addAttribute("user", repoUser.findOneByUserName("admin"));
-		return "events";
+		model.addAttribute(ALL_EVENTS, repoEvent.findAll());
+		model.addAttribute(USER, repoUser.findOneByUserName("admin"));
+		return EVENTS;
 	}
 
 	/**
@@ -148,12 +154,12 @@ public class EventController extends SessionedController {
 	public String allEvents(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return "main";
+			return MAIN;
 		}
-		model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-		model.addAttribute("user", repoUser.findOneById(id));
+		model.addAttribute(ALL_EVENTS, repoEvent.findAllBySeriesUserId(id));
+		model.addAttribute(USER, repoUser.findOneById(id));
 		System.out.println(repoEvent.findAll().toString());
-		return "userPanel";
+		return USER_PANEL;
 	}
 
 	/**
@@ -171,13 +177,13 @@ public class EventController extends SessionedController {
 	public String addEvent(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return "main";
+			return MAIN;
 		}
 
-		model.addAttribute("user", repoUser.findOneById(id));
-		model.addAttribute("allPlaces", repoPlace.findAll());
+		model.addAttribute(USER, repoUser.findOneById(id));
+		model.addAttribute(ALL_PLACES, repoPlace.findAll());
 
-		return "addEvent";
+		return ADD_EVENT;
 	}
 
 	/**
@@ -222,58 +228,40 @@ public class EventController extends SessionedController {
 			@RequestParam @DateTimeFormat(pattern = "HH:mm") Date hour, @RequestParam Long numberOfEvents,
 			@RequestParam Long eventDuration, @RequestParam Long eventSeats, @RequestParam Long placeId,
 			@RequestParam Long eventTypeId, @RequestParam Long eventCycleLength, @RequestParam String client,
-			@PathVariable Long id, Model model) throws ParseException {
+			@PathVariable Long id, Model model)  {
 
 		Date endHour = new Date(hour.getTime() + eventDuration * HOUR);
 
 		User userCurrent = repoUser.findOneById(id);
-
-		ArrayList<Event> events = new ArrayList<Event>();
-		ArrayList<Date> requestedDates = new ArrayList<Date>();
-		// ArrayList<Room> roomPossibles = new ArrayList<Room>();
-
+	
+		ArrayList<Date> requestedDates = new ArrayList<>();
+	
 		Series series = new Series(userCurrent, client, repoEventType.findOneById(eventTypeId));
 
-		// Warunek wybierający zaznaczyć wszystkie lokalizacje
-		if (placeId == repoPlace.findOneByName("Dowolne").getId()) {
-			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(eventSeats);
-		} else {
-			rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeId, eventSeats);
-		}
+		ArrayList<Room> rooms = roomLongListing(eventSeats, placeId);
 
-		System.err.println("***** Checkpoint 1 *******");
-
-		// tworzenie ciągu dat na potrzeby weryfikacji czy terminy sa zajęte
+		// Creation of date list to pass it to event search method 
 		for (Long i = 0L; i < numberOfEvents; i++) {
 			Date nextEventDate = new Date(dateOfFirstEvent.getTime() + i * eventCycleLength * DAY);
 			requestedDates.add(nextEventDate);
 		}
 
-		System.err.println("Requested dates to String" + requestedDates.toString());
-		System.err.println(dateOfFirstEvent.toString());
 
 		for (Room room : rooms) {
 
 			if (repoEvent.findManyCollidingEvents(requestedDates, room.getId(), hour).isEmpty()) {
 
-				// if (repoEvent.findNotCollidingEvents(dateOfFirstEvent, room.getId(), hour,
-				// endHour).isEmpty()) {
-				// System.err.println("*** IF " + room.toString());
-				// rooms.add(room);
-
 				roomPossible = room;
-				model.addAttribute("addEventInfo", "Dodano zdarzenie");
+				model.addAttribute(ADD_EVENT_INFO, "Dodano zdarzenie");
 
 				break;
 			} else {
-				System.err.println("*** ELSE " + room.toString());
-				model.addAttribute("addEventInfo", "Brak wolnych sal");
+				model.addAttribute(ADD_EVENT_INFO, "Brak wolnych sal");
 				roomPossible = null;
 			}
 
 		}
 
-		System.err.println("***** Checkpoint 3 *******");
 
 		if (roomPossible != null) {
 
@@ -284,7 +272,6 @@ public class EventController extends SessionedController {
 				}
 
 				i++;
-				System.err.println("***** Checkpoint " + (i + 4) + " *******");
 
 				Event event = new Event();
 				event.setDate(date2);
@@ -297,57 +284,47 @@ public class EventController extends SessionedController {
 				repoEvent.save(event);
 
 				if (i == 1) {
-					model.addAttribute("requestedEvent", event);
+					model.addAttribute(REQUESTED_EVENT, event);
 				}
 			}
 		}
 
-		System.err.println("***** Checkpoint LAST *******");
-		model.addAttribute("user", userCurrent);
-		model.addAttribute("eventType", repoEventType.findAll());
-		// User 0 to administrator - ma dostęp do wszystkich zdarzeń
-		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute("events", repoEvent.findAll());
-			return "events";
-		} else {
-			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-			return "userPanel";
-		}
+		model.addAttribute(USER, userCurrent);
+		model.addAttribute(EVENT_TYPE, repoEventType.findAll());
+		
+		return userVsAdminRedirect(id, model);
 
 	}
 
+	
 	@GetMapping("/{id}/delete/{ide}")
 	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return "main";
+			return MAIN;
 		}
 
 		repoEvent.deleteById(ide);
-		model.addAttribute("events", repoEvent.findAll());
+		model.addAttribute(ALL_EVENTS, repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);
-		model.addAttribute("user", userCurrent);
-		if (userCurrent.getUserName().equals("admin")) {
-			model.addAttribute("events", repoEvent.findAll());
-			return "events";
-		} else {
-			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-		}
-		model.addAttribute("eventType", repoEventType.findAll());
-		model.addAttribute("addEventInfo", "Usunięto zdarzenie");
-		return "userPanel";
-
+		model.addAttribute(USER, userCurrent);
+		
+		model.addAttribute(EVENT_TYPE, repoEventType.findAll());
+		model.addAttribute(ADD_EVENT_INFO, "Usunięto zdarzenie");
+		
+		
+		return userVsAdminRedirect(id, model);
 	}
 
 	@GetMapping("/{id}/edit/{ide}")
 	public String editEvent(@PathVariable Long ide, @PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return "main";
+			return MAIN;
 		}
-		model.addAttribute("user", repoUser.findOneById(id));
-		model.addAttribute("event", repoEvent.findOneById(ide));
-		return "editEvent";
+		model.addAttribute(USER, repoUser.findOneById(id));
+		model.addAttribute(EVENT, repoEvent.findOneById(ide));
+		return EDIT_EVENT;
 	}
 
 	@PostMapping("/{id}/edit/{ide}")
@@ -355,7 +332,7 @@ public class EventController extends SessionedController {
 			Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return "editEvent";
+			return EDIT_EVENT;
 		}
 
 		Date endHour = new Date(event.getHour().getTime() + event.getEventDuration() * HOUR);
@@ -369,11 +346,8 @@ public class EventController extends SessionedController {
 			roomPossible = roomCurrent;
 			System.err.println("Bieżący pokój");
 		} else {
-			if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
-				rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
-			} else {
-				rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId, seatsRequired);
-			}
+			
+			ArrayList<Room> rooms = roomLongListing(placeCurrentId, seatsRequired);
 
 			for (Room room : rooms) {
 
@@ -383,43 +357,60 @@ public class EventController extends SessionedController {
 					System.err.println("Nowy pokój");
 					break;
 				} else {
-					model.addAttribute("addEventInfo", "Brak wolnych sal");
-					model.addAttribute("event", event);
-					model.addAttribute("user", repoUser.findOneById(id));
+					model.addAttribute(ADD_EVENT_INFO, "Brak wolnych sal");
+					model.addAttribute(EVENT, event);
+					model.addAttribute(USER, repoUser.findOneById(id));
 					System.err.println("Brak pokoju");
-					return "editEvent";
+					return EDIT_EVENT;
 				}
 			}
 
 		}
-		System.err.println(event.toString());
 		repoEvent.save(event);
-		model.addAttribute("requestedEvent", event);
-		model.addAttribute("user", repoUser.findOneById(id));
+		model.addAttribute(REQUESTED_EVENT, event);
+		model.addAttribute(USER, repoUser.findOneById(id));
 
-		model.addAttribute("eventType", repoEventType.findAll());
-		// User 0 to administrator - ma dostęp do wszystkich zdarzeń
-		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute("events", repoEvent.findAll());
-			return "events";
-		} else {
-			model.addAttribute("addEventInfo", "Zmieniono zdarzenie");
-			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-			return "userPanel";
-		}
+		model.addAttribute(EVENT_TYPE, repoEventType.findAll());
+		model.addAttribute(ADD_EVENT_INFO, "Zmieniono zdarzenie");
 
+		return userVsAdminRedirect(id, model);
 	}
 
+	/**
+	 * Preparation of array list of rooms, that will be used to narrow free room
+	 * search to rooms meeting place and number of seats criteria
+	 */
+	
+	private ArrayList<Room> roomLongListing(Long placeCurrentId, Long seatsRequired) {
+	
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
+			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
+		} else {
+			rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId, seatsRequired);
+		}
+		return rooms;
+	}
+
+	private String userVsAdminRedirect(Long id, Model model) {
+		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+			model.addAttribute(ALL_EVENTS, repoEvent.findAll());
+			return EVENTS;
+		} else {
+			model.addAttribute(ALL_EVENTS, repoEvent.findAllBySeriesUserId(id));
+			return USER_PANEL;
+		}
+	}
+
+	
 	@ModelAttribute("ourEventTypes")
 	public List<EventType> getEventTypes() {
-		List<EventType> eventTypes = this.repoEventType.findAll();
-		return eventTypes;
+		return repoEventType.findAll();
 	}
 
 	@ModelAttribute("ourPlaces")
 	public List<Place> getPlaces() {
-		List<Place> places = this.repoPlace.findAll();
-		return places;
+		return repoPlace.findAll();
 	}
 
 }

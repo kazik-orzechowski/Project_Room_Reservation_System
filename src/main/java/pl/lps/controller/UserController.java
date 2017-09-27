@@ -101,11 +101,11 @@ public class UserController extends SessionedController {
 
 	@GetMapping("/add")
 	public String addUser(Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return "main";
 		}
-		
+
 		User user = new User();
 		model.addAttribute("user", user);
 		return "signup";
@@ -123,8 +123,4 @@ public class UserController extends SessionedController {
 
 	}
 
-	
-	
-	
-	
 }

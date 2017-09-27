@@ -27,7 +27,7 @@
 		<th th:text="#{event.series.client}"></th>
     	<th th:text="#{action}">* </th>
     </tr>
-    <tr th:each="event : ${events}">
+    <tr th:each="event : ${allEvents}">
        <td th:text="${event.id}"></td>
        <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
        <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
