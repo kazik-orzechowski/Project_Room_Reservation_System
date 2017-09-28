@@ -23,18 +23,22 @@ import pl.lps.repository.UserRepository;
 
 public class MainControler extends SessionedController{
 	
+	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
+	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";
+	private static final String MAIN_VIEW = "main";
+
 	@GetMapping("")
 		public String home(Model model) {
 		LoginData loginData = (LoginData) session().getAttribute("user");
 		
 		if(session().getAttribute("user")!=null) {
-			model.addAttribute("message","#{user.logged.in}");
-			model.addAttribute("username"," "+loginData.getLogin());
+			model.addAttribute(MAIN_MESSAGE_ATTRIBUTE,"#{user.logged.in}");
+			model.addAttribute(MAIN_USERNAME_ATTRIBUTE," "+loginData.getLogin());
 		}
 		
-		model.addAttribute("message","");
-		model.addAttribute("username","");
+		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE,"");
+		model.addAttribute(MAIN_USERNAME_ATTRIBUTE,"");
 		
-		return "main";
+		return MAIN_VIEW;
 		} 
 }

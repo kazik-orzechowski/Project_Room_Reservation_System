@@ -18,7 +18,7 @@
     	<th th:text="#{place.description}">* </th>
     	<th th:text="#{action}">* </th>
     </tr>
-    <tr th:each="place : ${places}">
+    <tr th:each="place : ${allPlaces}">
        <td th:text="${place.id}"></td>
        <td th:text="${place.name}"></td>
        <td th:text="${place.city}"></td>

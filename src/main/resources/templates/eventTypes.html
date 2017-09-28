@@ -16,7 +16,7 @@
        	<th th:text="#{eventType.description}">* </th>
        	<th th:text="#{action}">* </th>
     </tr>
-    <tr th:each="eventType : ${eventTypes}">
+    <tr th:each="eventType : ${allEventTypes}">
        <td th:text="${eventType.id}"></td>
        <td th:text="${eventType.name}"></td>
        <td th:text="${eventType.description}"></td>

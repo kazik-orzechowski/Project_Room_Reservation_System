@@ -40,6 +40,7 @@ import pl.lps.repository.EventRepository;
 @RequestMapping("/series")
 public class SeriesController extends SessionedController {
 
+	private static final String MAIN_VIEW = "main";
 	public static final long HOUR = 3600 * 1000;
 	public static final long DAY = 3600 * 1000 * 24;
 	
@@ -59,7 +60,7 @@ public class SeriesController extends SessionedController {
 	public String allSeries(Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
 		model.addAttribute("series", repoEvent.findAll());

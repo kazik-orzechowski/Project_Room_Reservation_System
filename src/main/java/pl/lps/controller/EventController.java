@@ -48,17 +48,17 @@ import pl.lps.repository.UserRepository;
 public class EventController extends SessionedController {
 
 	private static final String EVENT = "event";
-	private static final String MAIN = "main";
-	private static final String EDIT_EVENT = "editEvent";
-	private static final String USER = "user";
-	private static final String USER_PANEL = "userPanel";
-	private static final String EVENTS = "events";
-	private static final String ADD_EVENT = "addEvent";
-	private static final String ALL_EVENTS = "allEvents";
-	private static final String EVENT_TYPE = "eventType";
-	private static final String ALL_PLACES = "allPlaces";
-	private static final String REQUESTED_EVENT = "requestedEvent";
-	private static final String ADD_EVENT_INFO = "addEventInfo";
+	private static final String MAIN_VIEW = "main";
+	private static final String EDIT_EVENT_VIEW = "editEvent";
+	private static final String USER_PANEL_VIEW = "userPanel";
+	private static final String EVENTS_VIEW = "events";
+	private static final String ADD_EVENT_VIEW = "addEvent";
+	private static final String USER_ATTRIBUTE = "user";
+	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+	private static final String EVENT_TYPE_ATTRIBUTE = "eventType";
+	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+	private static final String REQUESTED_EVENT_ATTRIBUTE = "requestedEvent";
+	private static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
 	/**
 	 * The long value that represents an hour in milliseconds
 	 */
@@ -131,12 +131,12 @@ public class EventController extends SessionedController {
 	public String allEvents(Model model) {
 
 		if (!SessionValidation.isSessionAdmin()) {
-			return MAIN;
+			return MAIN_VIEW;
 		}
 
-		model.addAttribute(ALL_EVENTS, repoEvent.findAll());
-		model.addAttribute(USER, repoUser.findOneByUserName("admin"));
-		return EVENTS;
+		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneByUserName("admin"));
+		return EVENTS_VIEW;
 	}
 
 	/**
@@ -154,12 +154,12 @@ public class EventController extends SessionedController {
 	public String allEvents(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return MAIN;
+			return MAIN_VIEW;
 		}
-		model.addAttribute(ALL_EVENTS, repoEvent.findAllBySeriesUserId(id));
-		model.addAttribute(USER, repoUser.findOneById(id));
+		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		System.out.println(repoEvent.findAll().toString());
-		return USER_PANEL;
+		return USER_PANEL_VIEW;
 	}
 
 	/**
@@ -177,13 +177,13 @@ public class EventController extends SessionedController {
 	public String addEvent(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return MAIN;
+			return MAIN_VIEW;
 		}
 
-		model.addAttribute(USER, repoUser.findOneById(id));
-		model.addAttribute(ALL_PLACES, repoPlace.findAll());
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
+		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 
-		return ADD_EVENT;
+		return ADD_EVENT_VIEW;
 	}
 
 	/**
@@ -252,11 +252,11 @@ public class EventController extends SessionedController {
 			if (repoEvent.findManyCollidingEvents(requestedDates, room.getId(), hour).isEmpty()) {
 
 				roomPossible = room;
-				model.addAttribute(ADD_EVENT_INFO, "Dodano zdarzenie");
+				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Dodano zdarzenie");
 
 				break;
 			} else {
-				model.addAttribute(ADD_EVENT_INFO, "Brak wolnych sal");
+				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
 				roomPossible = null;
 			}
 
@@ -284,13 +284,13 @@ public class EventController extends SessionedController {
 				repoEvent.save(event);
 
 				if (i == 1) {
-					model.addAttribute(REQUESTED_EVENT, event);
+					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
 				}
 			}
 		}
 
-		model.addAttribute(USER, userCurrent);
-		model.addAttribute(EVENT_TYPE, repoEventType.findAll());
+		model.addAttribute(USER_ATTRIBUTE, userCurrent);
+		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
 		
 		return userVsAdminRedirect(id, model);
 
@@ -301,16 +301,16 @@ public class EventController extends SessionedController {
 	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return MAIN;
+			return MAIN_VIEW;
 		}
 
 		repoEvent.deleteById(ide);
-		model.addAttribute(ALL_EVENTS, repoEvent.findAll());
+		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);
-		model.addAttribute(USER, userCurrent);
+		model.addAttribute(USER_ATTRIBUTE, userCurrent);
 		
-		model.addAttribute(EVENT_TYPE, repoEventType.findAll());
-		model.addAttribute(ADD_EVENT_INFO, "Usunięto zdarzenie");
+		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Usunięto zdarzenie");
 		
 		
 		return userVsAdminRedirect(id, model);
@@ -320,11 +320,11 @@ public class EventController extends SessionedController {
 	public String editEvent(@PathVariable Long ide, @PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return MAIN;
+			return MAIN_VIEW;
 		}
-		model.addAttribute(USER, repoUser.findOneById(id));
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		model.addAttribute(EVENT, repoEvent.findOneById(ide));
-		return EDIT_EVENT;
+		return EDIT_EVENT_VIEW;
 	}
 
 	@PostMapping("/{id}/edit/{ide}")
@@ -332,7 +332,7 @@ public class EventController extends SessionedController {
 			Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return EDIT_EVENT;
+			return EDIT_EVENT_VIEW;
 		}
 
 		Date endHour = new Date(event.getHour().getTime() + event.getEventDuration() * HOUR);
@@ -357,21 +357,21 @@ public class EventController extends SessionedController {
 					System.err.println("Nowy pokój");
 					break;
 				} else {
-					model.addAttribute(ADD_EVENT_INFO, "Brak wolnych sal");
+					model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
 					model.addAttribute(EVENT, event);
-					model.addAttribute(USER, repoUser.findOneById(id));
+					model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 					System.err.println("Brak pokoju");
-					return EDIT_EVENT;
+					return EDIT_EVENT_VIEW;
 				}
 			}
 
 		}
 		repoEvent.save(event);
-		model.addAttribute(REQUESTED_EVENT, event);
-		model.addAttribute(USER, repoUser.findOneById(id));
+		model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 
-		model.addAttribute(EVENT_TYPE, repoEventType.findAll());
-		model.addAttribute(ADD_EVENT_INFO, "Zmieniono zdarzenie");
+		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Zmieniono zdarzenie");
 
 		return userVsAdminRedirect(id, model);
 	}
@@ -394,11 +394,11 @@ public class EventController extends SessionedController {
 
 	private String userVsAdminRedirect(Long id, Model model) {
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute(ALL_EVENTS, repoEvent.findAll());
-			return EVENTS;
+			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+			return EVENTS_VIEW;
 		} else {
-			model.addAttribute(ALL_EVENTS, repoEvent.findAllBySeriesUserId(id));
-			return USER_PANEL;
+			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+			return USER_PANEL_VIEW;
 		}
 	}
 
