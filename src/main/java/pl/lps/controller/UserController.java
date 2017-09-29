@@ -20,6 +20,26 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/users")
 public class UserController extends SessionedController {
 
+	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+
+	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
+
+	private static final String USER_ATTRIBUTE = "user";
+
+	private static final String USER_PANEL_VIEW = "userPanel";
+
+	private static final String EDIT_USER_VIEW = "editUser";
+
+	private static final String EVENTS_VIEW = "events";
+
+	private static final String USERS_VIEW = "users";
+
+	private static final String ADMIN_PANEL_VIEW = "adminPanel";
+
+	private static final String MAIN_VIEW = "main";
+
+	private static final String SIGNUP_VIEW = "signup";
+
 	@Autowired
 	UserRepository repoUser;
 
@@ -33,68 +53,68 @@ public class UserController extends SessionedController {
 	public String adminPanel(Model model) {
 
 		if (!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 
-		return "adminPanel";
+		return ADMIN_PANEL_VIEW;
 	}
 
 	@RequestMapping("")
 	public String allUsers(Model model) {
 
 		if (!SessionValidation.isSessionValid()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 
-		model.addAttribute("users", repoUser.findAll());
+		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
 		System.out.println(repoUser.findAll().toString());
-		return "users";
+		return USERS_VIEW;
 	}
 
 	@GetMapping("/{id}/delete")
 	public String delUser(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		repoUser.deleteById(id);
-		return "redirect: /users";
+		return "redirect: /" + USERS_VIEW;
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editUser(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 
-		model.addAttribute("user", repoUser.findOneById(id));
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute("returnUrl", "/users");
+			model.addAttribute("returnUrl", "/" + USERS_VIEW);
 		} else {
-			model.addAttribute("returnUrl", "/events/" + id);
+			model.addAttribute("returnUrl", "/" + EVENTS_VIEW + "/" + id);
 		}
 
-		return "editUser";
+		return EDIT_USER_VIEW;
 	}
 
 	@PostMapping("/{id}/edit")
-	public String editUserPost(@Valid User user, @PathVariable Long id, BindingResult result, Model model) {
+	public String editUserPost(@Valid User editedUser, @PathVariable Long id, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.out.println(result);
-			return "editUser";
+			return EDIT_USER_VIEW;
 		}
-		repoUser.save(user);
+		repoUser.save(editedUser);
 
 		model.addAttribute("eventType", repoEventType.findAll());
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute("events", repoEvent.findAll());
-			return "users";
+			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+			return USERS_VIEW;
 		} else {
-			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-			return "userPanel";
+			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+			return USER_PANEL_VIEW;
 		}
 
 	}
@@ -103,23 +123,23 @@ public class UserController extends SessionedController {
 	public String addUser(Model model) {
 
 		if (!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 
-		User user = new User();
-		model.addAttribute("user", user);
-		return "signup";
+		User addedUser = new User();
+		model.addAttribute(USER_ATTRIBUTE, addedUser);
+		return SIGNUP_VIEW;
 	}
 
 	@PostMapping("/add")
-	public String addUserPost(@Valid User user, BindingResult result, Model model) {
+	public String addUserPost(@Valid User addedUser, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			return "signup";
+			return SIGNUP_VIEW;
 		}
-		repoUser.save(user);
-		model.addAttribute("user", user);
-		model.addAttribute("users", repoUser.findAll());
-		return "users";
+		repoUser.save(addedUser);
+		model.addAttribute(USER_ATTRIBUTE, addedUser);
+		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
+		return USERS_VIEW;
 
 	}
 

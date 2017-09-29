@@ -18,15 +18,19 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/register")
 public class RegisterController {
 
+	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
+	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";
+	private static final String MAIN_VIEW = "main";
+	private static final String REGISTER = "register";
 	@Autowired
 	UserRepository repoUser;
 	
 	@GetMapping("")
 	public String register(Model model) {
-		User user=new User();
-		model.addAttribute("user",user );
+		User registeringUser=new User();
+		model.addAttribute("user",registeringUser);
 		
-		return "register";
+		return REGISTER;
 	}
 
 	@PostMapping("")
@@ -34,13 +38,13 @@ public class RegisterController {
 		
 		if(result.hasErrors()) {
 			System.err.println(result);
-			return "register";
+			return REGISTER;
 		}
 		this.repoUser.save(user);
-		model.addAttribute("message", "Zarejestrowano użytkownika ");
-		model.addAttribute("username", user.getUserName());
+		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "Zarejestrowano użytkownika ");
+		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, user.getUserName());
 		
-		return "main";
+		return MAIN_VIEW;
 	}
 
 }

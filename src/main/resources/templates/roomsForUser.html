@@ -20,7 +20,7 @@
     	<th th:text="#{room.description}">* </th>
     	
     </tr>
-    <tr th:each="room : ${rooms}">
+    <tr th:each="room : ${allRooms}">
        <td th:text="${room.id}"></td>
        <td th:text="${room.number}"></td>
        <td th:text="${room.floor}"></td>

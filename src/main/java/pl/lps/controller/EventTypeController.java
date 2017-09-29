@@ -18,6 +18,12 @@ import pl.lps.repository.EventTypeRepository;
 @RequestMapping("/eventTypes")
 public class EventTypeController extends SessionedController {
 
+	private static final String EDIT_EVENT_TYPE_VIEW = "editEventType";
+	private static final String EVENT_TYPE_ATTRIBUTE = "eventType";
+	private static final String EVENT_TYPES_VIEW = "eventTypes";
+	private static final String ADD_EVENT_TYPE_VIEW = "addEventType";
+	private static final String ALL_EVENT_TYPES_ATTRIBUTE = "allEventTypes";
+	private static final String MAIN_VIEW = "main";
 	@Autowired
 	EventTypeRepository repoEventType;
 
@@ -25,35 +31,35 @@ public class EventTypeController extends SessionedController {
 	public String allEventTypes(Model model) {
 		
 		if(!SessionValidation.isSessionValid()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
-		model.addAttribute("eventTypes", repoEventType.findAll());
+		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
 		System.out.println(repoEventType.findAll().toString());
-		return "eventTypes";
+		return EVENT_TYPES_VIEW;
 	}
 
 	@GetMapping("/add")
 	public String addEventType(Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
 		EventType eventType = new EventType();
-		model.addAttribute("eventType", eventType);
-		return "addEventType";
+		model.addAttribute(EVENT_TYPE_ATTRIBUTE, eventType);
+		return ADD_EVENT_TYPE_VIEW;
 	}
 
 	@PostMapping("/add")
 	public String addEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return "addEventType";
+			return ADD_EVENT_TYPE_VIEW;
 		}
 		repoEventType.save(eventType);
-		model.addAttribute("eventTypes", repoEventType.findAll());
-		return "eventTypes";
+		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
+		return EVENT_TYPES_VIEW;
 
 	}
 
@@ -61,31 +67,31 @@ public class EventTypeController extends SessionedController {
 	public String delEventType(@PathVariable Long id, Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		repoEventType.deleteById(id);
-		return "redirect: /eventTypes";
+		return "redirect: /"+EVENT_TYPES_VIEW;
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editEventType(@PathVariable Long id, Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
-		model.addAttribute("eventType", repoEventType.findOneById(id));
-		return "editEventType";
+		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findOneById(id));
+		return EDIT_EVENT_TYPE_VIEW;
 	}
 
 	@PostMapping("/{id}/edit")
 	public String editEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return "editEventType";
+			return EDIT_EVENT_TYPE_VIEW;
 		}
 		repoEventType.save(eventType);
-		model.addAttribute("eventTypes", repoEventType.findAll());
-		return "eventTypes"; // eventType.toString();
+		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
+		return EVENT_TYPES_VIEW;
 
 	}
 

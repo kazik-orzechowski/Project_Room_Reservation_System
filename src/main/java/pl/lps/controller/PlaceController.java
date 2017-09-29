@@ -18,6 +18,12 @@ import pl.lps.repository.PlaceRepository;
 @RequestMapping("/places")
 public class PlaceController extends SessionedController {
 
+	private static final String EDIT_PLACE_VIEW = "editPlace";
+	private static final String ADD_PLACE_VIEW = "addPlace";
+	private static final String MAIN_VIEW = "main";
+	private static final String PLACES_VIEW = "places";
+	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+	private static final String PLACE_ATTRIBUTE = "place";
 	@Autowired
 	PlaceRepository repoPlace;
 
@@ -25,35 +31,35 @@ public class PlaceController extends SessionedController {
 	public String allPlaces(Model model) {
 		
 		if(!SessionValidation.isSessionValid()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
-		model.addAttribute("places", repoPlace.findAll());
+		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 		System.out.println(repoPlace.findAll().toString());
-		return "places";
+		return PLACES_VIEW;
 	}
 
 	@GetMapping("/add")
 	public String addPlace(Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
 		Place place = new Place();
-		model.addAttribute("place", place);
-		return "addPlace";
+		model.addAttribute(PLACE_ATTRIBUTE, place);
+		return ADD_PLACE_VIEW;
 	}
 
 	@PostMapping("/add")
-	public String addPlacePost(@Valid Place place, BindingResult result, Model model) {
+	public String addPlacePost(@Valid Place addedPlace, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return "addPlace";
+			return ADD_PLACE_VIEW;
 		}
-		repoPlace.save(place);
-		model.addAttribute("places", repoPlace.findAll());
-		return "places";
+		repoPlace.save(addedPlace);
+		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
+		return PLACES_VIEW;
 
 	}
 
@@ -61,34 +67,34 @@ public class PlaceController extends SessionedController {
 	public String delPlace(@PathVariable Long id, Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
 		repoPlace.deleteById(id);
-		return "redirect: /places";
+		return "redirect: /"+PLACES_VIEW;
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editPlace(@PathVariable Long id, Model model) {
 		
 		if(!SessionValidation.isSessionAdmin()) {
-			return "main";
+			return MAIN_VIEW;
 		}
 		
-		model.addAttribute("place", repoPlace.findOneById(id));
-		return "editPlace";
+		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findOneById(id));
+		return EDIT_PLACE_VIEW;
 	}
 
 	
 	@PostMapping("/{id}/edit")
-	public String editPlacePost(@Valid Place place, BindingResult result, Model model) {
+	public String editPlacePost(@Valid Place editedPlace, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return "editPlace";
+			return EDIT_PLACE_VIEW;
 		}
-		repoPlace.save(place);
-		model.addAttribute("places", repoPlace.findAll());
-		return "places"; // place.toString();
+		repoPlace.save(editedPlace);
+		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
+		return PLACES_VIEW;
 
 	}
 

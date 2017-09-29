@@ -16,6 +16,15 @@ import pl.lps.repository.UserRepository;
 @Controller
 @RequestMapping("/login")
 public class LoginController extends SessionedController {
+
+	private static final String USER_PANEL_EVENTS_ATTRIBUTE = "events";
+	private static final String LOGIN_USERNAME_ATTRIBUTE = "username";
+	private static final String LOGIN_MESSAGE_ATTRIBUTE = "message";
+	private static final String LOGIN_USER_ATTRIBUTE = "user";
+	private static final String ADMIN_PANEL_VIEW = "adminPanel";
+	private static final String LOGIN_VIEW = "login";
+	private static final String USER_PANEL_VIEW = "userPanel";
+
 	@Autowired
 	UserRepository repoUser;
 
@@ -27,33 +36,34 @@ public class LoginController extends SessionedController {
 
 	@GetMapping("")
 	public String login(Model m) {
-		LoginData login = new LoginData();
-		m.addAttribute("user", login);
+		LoginData loginData = new LoginData();
+		m.addAttribute(LOGIN_USER_ATTRIBUTE, loginData);
 
-		return "login";
+		return LOGIN_VIEW;
 	}
+	
 
 	@PostMapping("")
 	public String loginPost(LoginData user, Model model) {
 		User u = this.repoUser.findByUserName(user.getLogin());
 		if (u == null) {
-			model.addAttribute("message", "Wprowadź prawidłowe dane");
-			model.addAttribute("username", "");
-			return "login";
+			model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "Wprowadź prawidłowe dane");
+			model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, "");
+			return LOGIN_VIEW;
 		}
 
 		if (u.isPasswordCorrect(user.getPassword())) {
-			session().setAttribute("user", u);
+			session().setAttribute(LOGIN_USER_ATTRIBUTE, u);
 		}
 
 		if (u.getUserName().equals("admin")) {
-			return "adminPanel";
+			return ADMIN_PANEL_VIEW;
 		} else {
-			model.addAttribute("events", repoEvent.findAllBySeriesUserId(u.getId()));
+			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(u.getId()));
 
 			model.addAttribute("eventType", repoEventType.findAll());
-			model.addAttribute("user", u);
-			return "userPanel";
+			model.addAttribute(LOGIN_USER_ATTRIBUTE, u);
+			return USER_PANEL_VIEW;
 		}
 	}
 

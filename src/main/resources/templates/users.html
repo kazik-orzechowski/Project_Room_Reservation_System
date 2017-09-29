@@ -17,7 +17,7 @@
     	<th th:text="#{user.email}">* </th>
     	<th th:text="#{action}">* </th>
     </tr>
-    <tr th:each="user : ${users}">
+    <tr th:each="user : ${allUsers}">
        <td th:text="${user.id}"></td>
        <td th:text="${user.firstName}"></td>
        <td th:text="${user.lastName}"></td>
