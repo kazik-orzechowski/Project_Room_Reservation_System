@@ -78,7 +78,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 			+ "AND :endHour >e.hour AND :endHour <= e.endHour OR " + "e.date = :date AND e.room.id = :roomId AND "
 			+ ":startHour >=e.hour AND :startHour < e.endHour")
 	List<Event> findCollidingEvents(@Param("date") Date date, @Param("roomId") Long roomId,
-			@Param("startHour") Date hour);
+			@Param("startHour") Date hour, @Param("endHour") Date endHour);
 
 	/**
 	 * Event search method - the second of two main methods used for checking
@@ -94,6 +94,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 			+ "AND :endHour >e.hour AND :endHour <= e.endHour OR " + "e.date IN (:dates) AND e.room.id = :roomId AND "
 			+ ":startHour >=e.hour AND :startHour < e.endHour")
 	List<Event> findManyCollidingEvents(@Param("dates") List<Date> dates, @Param("roomId") Long roomId,
-			@Param("startHour") Date hour);
+			@Param("startHour") Date hour, @Param("endHour") Date endHour);
 
 }

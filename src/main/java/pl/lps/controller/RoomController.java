@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.Place;
 import pl.lps.entity.Room;
 import pl.lps.repository.PlaceRepository;
@@ -21,12 +22,7 @@ import pl.lps.repository.RoomRepository;
 
 @Controller
 @RequestMapping("/rooms")
-public class RoomController extends SessionedController {
-
-	private static final String ROOMS_VIEW = "rooms";
-	private static final String EDIT_ROOM_VIEW = "editRoom";
-	private static final String ADD_ROOM_VIEW = "addRoom";
-	private static final String MAIN_VIEW = "main";
+public class RoomController extends SessionedController implements ControllerData {
 
 	private static final String ROOMS_FOR_USER_ATTRIBUTE = "roomsForUser";
 	private static final String PLACE_ATTRIBUTE = "place";

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
 import pl.lps.model.LoginData;
 import pl.lps.repository.UserRepository;
@@ -21,11 +22,10 @@ import pl.lps.repository.UserRepository;
 @Controller
 @RequestMapping("main")
 
-public class MainControler extends SessionedController{
+public class MainControler extends SessionedController implements ControllerData{
 	
 	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
 	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";
-	private static final String MAIN_VIEW = "main";
 
 	@GetMapping("")
 		public String home(Model model) {

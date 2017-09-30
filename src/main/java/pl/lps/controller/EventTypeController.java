@@ -11,19 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.EventType;
 import pl.lps.repository.EventTypeRepository;
 
 @Controller
 @RequestMapping("/eventTypes")
-public class EventTypeController extends SessionedController {
+public class EventTypeController extends SessionedController implements ControllerData {
 
-	private static final String EDIT_EVENT_TYPE_VIEW = "editEventType";
-	private static final String EVENT_TYPE_ATTRIBUTE = "eventType";
-	private static final String EVENT_TYPES_VIEW = "eventTypes";
-	private static final String ADD_EVENT_TYPE_VIEW = "addEventType";
+	
+	private static final String EVENT_TYPE_ATTRIBUTE = "eventTypes";
 	private static final String ALL_EVENT_TYPES_ATTRIBUTE = "allEventTypes";
-	private static final String MAIN_VIEW = "main";
 	@Autowired
 	EventTypeRepository repoEventType;
 

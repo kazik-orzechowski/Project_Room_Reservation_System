@@ -5,14 +5,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
+
 @Controller
 @RequestMapping("/logout")
-public class LogoutController extends SessionedController {
-	
+public class LogoutController extends SessionedController implements ControllerData {
+
 	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";
 	private static final String MAIN_USER_ATTRIBUTE = "user";
 	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
-	private static final String MAIN_VIEW = "main";
 
 	@GetMapping("")
 	public String logout(Model model) {

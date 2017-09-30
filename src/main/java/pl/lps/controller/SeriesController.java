@@ -28,6 +28,7 @@ import pl.lps.entity.Place;
 import pl.lps.entity.Room;
 import pl.lps.entity.Series;
 import pl.lps.entity.User;
+import pl.lps.data.ControllerData;
 import pl.lps.entity.Event;
 import pl.lps.repository.EventTypeRepository;
 import pl.lps.repository.PlaceRepository;
@@ -38,9 +39,8 @@ import pl.lps.repository.EventRepository;
 
 @Controller
 @RequestMapping("/series")
-public class SeriesController extends SessionedController {
+public class SeriesController extends SessionedController implements ControllerData {
 
-	private static final String MAIN_VIEW = "main";
 	public static final long HOUR = 3600 * 1000;
 	public static final long DAY = 3600 * 1000 * 24;
 	

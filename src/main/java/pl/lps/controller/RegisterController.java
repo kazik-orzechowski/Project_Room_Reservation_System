@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
 import pl.lps.repository.UserRepository;
 
@@ -20,8 +21,7 @@ public class RegisterController {
 
 	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
 	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";
-	private static final String MAIN_VIEW = "main";
-	private static final String REGISTER = "register";
+	
 	@Autowired
 	UserRepository repoUser;
 	
@@ -30,7 +30,7 @@ public class RegisterController {
 		User registeringUser=new User();
 		model.addAttribute("user",registeringUser);
 		
-		return REGISTER;
+		return ControllerData.getSignupView();
 	}
 
 	@PostMapping("")
@@ -38,13 +38,13 @@ public class RegisterController {
 		
 		if(result.hasErrors()) {
 			System.err.println(result);
-			return REGISTER;
+			return ControllerData.getSignupView();
 		}
 		this.repoUser.save(user);
 		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "Zarejestrowano użytkownika ");
 		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, user.getUserName());
 		
-		return MAIN_VIEW;
+		return ControllerData.getMainView();
 	}
 
 }

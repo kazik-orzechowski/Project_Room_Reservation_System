@@ -43,7 +43,7 @@ ${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' 
        <td th:text="${event.eventDuration}"></td>
        <td th:text="${event.eventSeats}"></td>
        <td th:text="${event.series.eventType.name}"></td>
-		<td th:text="${event.room.place.name}">* </td>
+		<td th:text="${event.room.place.name}"> </td>
        <td th:text="${event.room.number}"></td>
 		<td th:text="${event.series.client}"></td>
        <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.delete}">*</a> 

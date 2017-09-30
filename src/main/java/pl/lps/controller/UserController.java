@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
 import pl.lps.repository.EventRepository;
 import pl.lps.repository.EventTypeRepository;
@@ -18,28 +19,14 @@ import pl.lps.repository.UserRepository;
 
 @Controller
 @RequestMapping("/users")
-public class UserController extends SessionedController {
-
-	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
-
-	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
+public class UserController extends SessionedController implements ControllerData {
 
 	private static final String USER_ATTRIBUTE = "user";
-
-	private static final String USER_PANEL_VIEW = "userPanel";
-
-	private static final String EDIT_USER_VIEW = "editUser";
-
-	private static final String EVENTS_VIEW = "events";
-
-	private static final String USERS_VIEW = "users";
-
-	private static final String ADMIN_PANEL_VIEW = "adminPanel";
-
-	private static final String MAIN_VIEW = "main";
-
-	private static final String SIGNUP_VIEW = "signup";
-
+	
+	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
+	
+	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+	
 	@Autowired
 	UserRepository repoUser;
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
 import pl.lps.model.LoginData;
 import pl.lps.repository.EventRepository;
@@ -15,15 +16,12 @@ import pl.lps.repository.UserRepository;
 
 @Controller
 @RequestMapping("/login")
-public class LoginController extends SessionedController {
+public class LoginController extends SessionedController implements ControllerData {
 
-	private static final String USER_PANEL_EVENTS_ATTRIBUTE = "events";
+	private static final String USER_PANEL_EVENTS_ATTRIBUTE = "allEvents";
 	private static final String LOGIN_USERNAME_ATTRIBUTE = "username";
 	private static final String LOGIN_MESSAGE_ATTRIBUTE = "message";
 	private static final String LOGIN_USER_ATTRIBUTE = "user";
-	private static final String ADMIN_PANEL_VIEW = "adminPanel";
-	private static final String LOGIN_VIEW = "login";
-	private static final String USER_PANEL_VIEW = "userPanel";
 
 	@Autowired
 	UserRepository repoUser;
@@ -59,10 +57,10 @@ public class LoginController extends SessionedController {
 		if (u.getUserName().equals("admin")) {
 			return ADMIN_PANEL_VIEW;
 		} else {
-			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(u.getId()));
-
 			model.addAttribute("eventType", repoEventType.findAll());
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, u);
+			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(u.getId()));
+		
 			return USER_PANEL_VIEW;
 		}
 	}

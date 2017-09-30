@@ -11,19 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.Place;
 import pl.lps.repository.PlaceRepository;
 
 @Controller
 @RequestMapping("/places")
-public class PlaceController extends SessionedController {
+public class PlaceController extends SessionedController implements ControllerData {
 
-	private static final String EDIT_PLACE_VIEW = "editPlace";
-	private static final String ADD_PLACE_VIEW = "addPlace";
-	private static final String MAIN_VIEW = "main";
-	private static final String PLACES_VIEW = "places";
-	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
 	private static final String PLACE_ATTRIBUTE = "place";
+	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+	
 	@Autowired
 	PlaceRepository repoPlace;
 

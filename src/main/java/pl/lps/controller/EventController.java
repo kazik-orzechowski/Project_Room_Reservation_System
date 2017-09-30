@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lps.data.ControllerData;
 import pl.lps.entity.Event;
 import pl.lps.entity.EventType;
 import pl.lps.entity.Place;
@@ -45,24 +45,20 @@ import pl.lps.repository.UserRepository;
  */
 @Controller
 @RequestMapping("/events")
-public class EventController extends SessionedController {
+public class EventController extends SessionedController implements ControllerData {
 
-	private static final String EVENT = "event";
-	private static final String MAIN_VIEW = "main";
-	private static final String EDIT_EVENT_VIEW = "editEvent";
-	private static final String USER_PANEL_VIEW = "userPanel";
-	private static final String EVENTS_VIEW = "events";
-	private static final String ADD_EVENT_VIEW = "addEvent";
-	private static final String USER_ATTRIBUTE = "user";
-	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
-	private static final String EVENT_TYPE_ATTRIBUTE = "eventType";
-	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
-	private static final String REQUESTED_EVENT_ATTRIBUTE = "requestedEvent";
-	private static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
+	protected static final String USER_ATTRIBUTE = "user";
+	protected static final String EVENT_ATTRIBUTE = "event";
+	protected static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+	protected static final String EVENT_TYPE_ATTRIBUTE = "eventType";
+	protected static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+	protected static final String REQUESTED_EVENT_ATTRIBUTE = "requestedEvent";
+	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
+	
 	/**
 	 * The long value that represents an hour in milliseconds
 	 */
-	public static final long HOUR =  3600L * 1000;
+	public static final long HOUR = 3600L * 1000;
 	/**
 	 * The long value that represents a day in milliseconds
 	 */
@@ -73,7 +69,7 @@ public class EventController extends SessionedController {
 	 * attributes if such is found for defined event series criteria
 	 */
 	Room roomPossible = new Room();
-	
+
 	/**
 	 * Event repository instance injection
 	 */
@@ -182,6 +178,7 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "");
 
 		return ADD_EVENT_VIEW;
 	}
@@ -228,28 +225,27 @@ public class EventController extends SessionedController {
 			@RequestParam @DateTimeFormat(pattern = "HH:mm") Date hour, @RequestParam Long numberOfEvents,
 			@RequestParam Long eventDuration, @RequestParam Long eventSeats, @RequestParam Long placeId,
 			@RequestParam Long eventTypeId, @RequestParam Long eventCycleLength, @RequestParam String client,
-			@PathVariable Long id, Model model)  {
+			@PathVariable Long id, Model model) {
 
 		Date endHour = new Date(hour.getTime() + eventDuration * HOUR);
 
 		User userCurrent = repoUser.findOneById(id);
-	
+
 		ArrayList<Date> requestedDates = new ArrayList<>();
-	
+
 		Series series = new Series(userCurrent, client, repoEventType.findOneById(eventTypeId));
 
 		ArrayList<Room> rooms = roomLongListing(eventSeats, placeId);
 
-		// Creation of date list to pass it to event search method 
+		// Creation of date list to pass it to event search method
 		for (Long i = 0L; i < numberOfEvents; i++) {
 			Date nextEventDate = new Date(dateOfFirstEvent.getTime() + i * eventCycleLength * DAY);
 			requestedDates.add(nextEventDate);
 		}
 
-
 		for (Room room : rooms) {
 
-			if (repoEvent.findManyCollidingEvents(requestedDates, room.getId(), hour).isEmpty()) {
+			if (repoEvent.findManyCollidingEvents(requestedDates, room.getId(), hour, endHour).isEmpty()) {
 
 				roomPossible = room;
 				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Dodano zdarzenie");
@@ -261,7 +257,6 @@ public class EventController extends SessionedController {
 			}
 
 		}
-
 
 		if (roomPossible != null) {
 
@@ -282,7 +277,8 @@ public class EventController extends SessionedController {
 				event.setRoom(repoRoom.findOneById(roomPossible.getId()));
 				event.setSeries(series);
 				repoEvent.save(event);
-
+				// ths is info regarding first event only, to be completed with information
+				// regarding series of event
 				if (i == 1) {
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
 				}
@@ -291,12 +287,11 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
-		
+
 		return userVsAdminRedirect(id, model);
 
 	}
 
-	
 	@GetMapping("/{id}/delete/{ide}")
 	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
 
@@ -308,11 +303,10 @@ public class EventController extends SessionedController {
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
-		
+
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Usunięto zdarzenie");
-		
-		
+
 		return userVsAdminRedirect(id, model);
 	}
 
@@ -323,7 +317,7 @@ public class EventController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-		model.addAttribute(EVENT, repoEvent.findOneById(ide));
+		model.addAttribute(EVENT_ATTRIBUTE, repoEvent.findOneById(ide));
 		return EDIT_EVENT_VIEW;
 	}
 
@@ -342,23 +336,23 @@ public class EventController extends SessionedController {
 		Room roomCurrent = event.getRoom();
 		Long placeCurrentId = roomCurrent.getPlace().getId();
 		Long seatsRequired = event.getEventSeats();
-		if (repoEvent.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour()).isEmpty()) {
+		if (repoEvent.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(), event.getEndHour()).isEmpty()) {
 			roomPossible = roomCurrent;
 			System.err.println("Bieżący pokój");
 		} else {
-			
+
 			ArrayList<Room> rooms = roomLongListing(placeCurrentId, seatsRequired);
 
 			for (Room room : rooms) {
 
-				if (repoEvent.findCollidingEvents(event.getDate(), room.getId(), event.getHour()).isEmpty()) {
+				if (repoEvent.findCollidingEvents(event.getDate(), room.getId(), event.getHour(), event.getEndHour()).isEmpty()) {
 					roomPossible = room;
 					event.setRoom(roomPossible);
 					System.err.println("Nowy pokój");
 					break;
 				} else {
 					model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
-					model.addAttribute(EVENT, event);
+					model.addAttribute(EVENT_ATTRIBUTE, event);
 					model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 					System.err.println("Brak pokoju");
 					return EDIT_EVENT_VIEW;
@@ -380,9 +374,9 @@ public class EventController extends SessionedController {
 	 * Preparation of array list of rooms, that will be used to narrow free room
 	 * search to rooms meeting place and number of seats criteria
 	 */
-	
+
 	private ArrayList<Room> roomLongListing(Long placeCurrentId, Long seatsRequired) {
-	
+
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
 			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
@@ -402,7 +396,6 @@ public class EventController extends SessionedController {
 		}
 	}
 
-	
 	@ModelAttribute("ourEventTypes")
 	public List<EventType> getEventTypes() {
 		return repoEventType.findAll();
