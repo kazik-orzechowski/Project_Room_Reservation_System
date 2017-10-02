@@ -16,13 +16,17 @@ import pl.lps.repository.UserRepository;
 
 @Controller
 @RequestMapping("/login")
-public class LoginController extends SessionedController implements ControllerData {
+public class LoginController extends SessionedController {
 
 	private static final String USER_PANEL_EVENTS_ATTRIBUTE = "allEvents";
 	private static final String LOGIN_USERNAME_ATTRIBUTE = "username";
 	private static final String LOGIN_MESSAGE_ATTRIBUTE = "message";
 	private static final String LOGIN_USER_ATTRIBUTE = "user";
-
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+	private static final String LOGIN_VIEW = ControllerData.getLoginView();
+	private static final String ADMIN_PANEL_VIEW = ControllerData.getAdminPanelView();
+	private static final String USER_PANEL_VIEW = ControllerData.getUserPanelView();
+	
 	@Autowired
 	UserRepository repoUser;
 

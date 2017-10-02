@@ -22,12 +22,49 @@ import pl.lps.repository.RoomRepository;
 
 @Controller
 @RequestMapping("/rooms")
-public class RoomController extends SessionedController implements ControllerData {
+public class RoomController extends SessionedController {
 
-	private static final String ROOMS_FOR_USER_ATTRIBUTE = "roomsForUser";
+	/**
+	 * Defines the name of place attribute used in room list view to show current
+	 * place that list refers to.
+	 */
 	private static final String PLACE_ATTRIBUTE = "place";
+
+	/**
+	 * Defines the name of room attribute used in add place and edit room views.
+	 */
 	private static final String ROOM_ATTRIBUTE = "room";
+	
+	/**
+	 * Defines the name of place attribute used in place list view.
+	 */
 	private static final String ALL_ROOMS_ATTRIBUTE = "allRooms";
+
+	/**
+	 * Passes the name of home page of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+
+	/**
+	 * Passes the name of all rooms available to given user for specified
+	 * reservation criteria.
+	 */
+	private static final String ROOMS_FOR_USER_VIEW = "roomsForUser";
+
+	/**
+	 * Passes the name of room list view.
+	 */
+	private static final String ROOMS_VIEW = ControllerData.getRoomsView();
+
+	/**
+	 * Passes the name of add room view.
+	 */
+	private static final String ADD_ROOM_VIEW = ControllerData.getAddRoomView();
+
+	/**
+	 * Passes the name of edit room view.
+	 */
+	private static final String EDIT_ROOM_VIEW = ControllerData.getEditRoomView();
 
 	@Autowired
 	RoomRepository repoRoom;
@@ -56,7 +93,7 @@ public class RoomController extends SessionedController implements ControllerDat
 
 		model.addAttribute(ROOMS_VIEW, repoRoom.findAll());
 		System.out.println(repoRoom.findAll().toString());
-		return ROOMS_FOR_USER_ATTRIBUTE;
+		return ROOMS_FOR_USER_VIEW;
 	}
 
 	@GetMapping("/add")

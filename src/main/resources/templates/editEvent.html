@@ -17,7 +17,7 @@
   <h3 th:text="#{user.username} + ' ' + ${user.userName}"></h3>
   <p th:text="#{event.series.eventType.name} + ' ' + ${event.series.eventType.name}"> </p>
   <p th:text="#{event.client} + ' ' + ${event.series.client}"> </p>
-  <p th:text="#{event.room.place.name} + ' ' + ${event.room.place.name}"> </p>
+ 
         <form method="post" id="event-form" th:action="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:object="${event}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
@@ -85,6 +85,18 @@
                            	class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
+			<div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="place" th:text="#{event.place.suggested}"><span
+                        class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control" id="place" name="placeId">
+                        <option th:each="place : ${ourPlaces}" th:value="${{place.id}}" th:text="${place.name}">Wireframe
+                        </option>
+					</select>
+                </div>
+               </div>
+            
             
             <div class="form-event">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="room" 

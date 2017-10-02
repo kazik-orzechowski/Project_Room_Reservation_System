@@ -17,10 +17,35 @@ import pl.lps.repository.PlaceRepository;
 
 @Controller
 @RequestMapping("/places")
-public class PlaceController extends SessionedController implements ControllerData {
+public class PlaceController extends SessionedController  {
 
+	/**
+	 * Defines the name of place attribute used in add place and edit place views.
+	 */
 	private static final String PLACE_ATTRIBUTE = "place";
+
+	/**
+	 * Defines the name of all places attribute used in place list view.
+	 */
 	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+	
+	/**
+	 * Passes the name of home page of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+	/**
+	 * Passes the name of all places view.
+	 */
+	private static final String PLACES_VIEW = ControllerData.getPlacesView();
+	/**
+	 * Passes the name of add place view.
+	 */
+	private static final String ADD_PLACE_VIEW = ControllerData.getAddPlaceView();
+	/**
+	 * Passes the name of edit place view.
+	 */
+	private static final String EDIT_PLACE_VIEW = ControllerData.getAddPlaceView();
+	
 	
 	@Autowired
 	PlaceRepository repoPlace;

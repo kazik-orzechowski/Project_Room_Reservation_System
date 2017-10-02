@@ -19,13 +19,37 @@ import pl.lps.repository.UserRepository;
 
 @Controller
 @RequestMapping("/users")
-public class UserController extends SessionedController implements ControllerData {
+public class UserController extends SessionedController {
 
+	/**
+	 * Passes the name of home page of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+
+	
 	private static final String USER_ATTRIBUTE = "user";
 	
 	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
 	
 	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+
+
+	private static final String USERS_VIEW = ControllerData.getUsersView();
+
+
+	private static final String EVENTS_VIEW = ControllerData.getEventsView();
+
+
+	private static final String EDIT_USER_VIEW = ControllerData.getEditUserView();
+
+
+	private static final String USER_PANEL_VIEW = ControllerData.getUserPanelView();
+
+
+	private static final String ADMIN_PANEL_VIEW = ControllerData.getAdminPanelView();
+
+
+	private static final String SIGNUP_VIEW = ControllerData.getSignupView();
 	
 	@Autowired
 	UserRepository repoUser;

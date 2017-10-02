@@ -17,11 +17,35 @@ import pl.lps.repository.EventTypeRepository;
 
 @Controller
 @RequestMapping("/eventTypes")
-public class EventTypeController extends SessionedController implements ControllerData {
+public class EventTypeController extends SessionedController {
 
 	
+	/**
+	 * Name of model attribute passing selected event type to add event type and edit event type views.
+	 */
 	private static final String EVENT_TYPE_ATTRIBUTE = "eventTypes";
+	
+	/**
+	 * Name of model attribute passing list of all event types to particular views.
+	 */
 	private static final String ALL_EVENT_TYPES_ATTRIBUTE = "allEventTypes";
+	/**
+	 * Passes the name of home page view of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();	
+	/**
+	 * Passes the name of all event types view used by admin.
+	 */
+	private static final String EVENT_TYPES_VIEW = ControllerData.getEventTypesView();
+	/**
+	 * Passes the name of add event type view used by admin.
+	 */
+	private static final String ADD_EVENT_TYPE_VIEW = ControllerData.getAddEventTypeView();
+	/**
+	 * Passes the name of edit event type view used by admin.
+	 */
+	private static final String EDIT_EVENT_TYPE_VIEW = ControllerData.getEditEventTypeView();
+	
 	@Autowired
 	EventTypeRepository repoEventType;
 

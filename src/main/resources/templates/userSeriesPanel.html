@@ -12,11 +12,6 @@
 <h4 th:text="#{page.main.title}">*</h4>
 <h2 th:text="#{user.series.page} + ' ' + ${user.userName}">*</h2>
 <p><a th:href="@{/events/{id}/ (id=${user.id})}" th:text="#{user.main.page}">*</a><br/>
-<a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
-
-<p><a th:text="${requestedEvent != null} ? 
-${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}
-: ${addEventInfo}">*</a></p>
 
 <h2 th:text="#{series.list}">*</h2>
 
@@ -32,18 +27,17 @@ ${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' 
 		<th th:text="#{series.client}"></th>
     	<th th:text="#{action}">* </th>
     </tr>
-    <tr th:each="event : ${events}">
-       <td th:text="${event.id}"></td>
-       <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
-       <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
-       <td th:text="${event.eventDuration}"></td>
-       <td th:text="${event.eventSeats}"></td>
-       <td th:text="${event.series.eventType.name}"></td>
-		<td th:text="${event.room.place.name}">* </td>
-       <td th:text="${event.room.number}"></td>
-		<td th:text="${event.series.client}"></td>
-       <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.delete}">*</a> 
-       <a th:href="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.edit}">*</a></td>
+    <tr th:each="seriesDTO : ${allSeries}">
+		<td th:text="${seriesDTO.id}"> </td>
+    	<td th:text="${seriesDTO.eventType.name}"> </td>
+    	<td th:text="${#dates.format(seriesDTO.firstEvent, 'dd-MM-yyyy')}"> </td>
+    	<td th:text="${#dates.format(seriesDTO.lastEvent, 'dd-MM-yyyy')}"> </td>
+      	<td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
+        <td th:text="${seriesDTO.numberOfEvents}"> </td>
+		<td th:text="${seriesDTO.placeAndRoom.name}"> </td>
+		<td th:text="${seriesDTO.client}"></td>
+       <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${series.id})}" th:text="#{series.delete}">*</a> 
+       <a th:href="@{/events/{id}/editSeries/{ids}/ (id=${user.id}, ids=${series.id})}" th:text="#{series.edit}">*</a></td>
     </tr>
 </table>
 

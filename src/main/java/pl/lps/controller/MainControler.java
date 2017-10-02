@@ -22,7 +22,13 @@ import pl.lps.repository.UserRepository;
 @Controller
 @RequestMapping("main")
 
-public class MainControler extends SessionedController implements ControllerData{
+public class MainControler extends SessionedController {
+	
+	/**
+	 * Passes the name of home page of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+
 	
 	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
 	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";

@@ -45,16 +45,41 @@ import pl.lps.repository.UserRepository;
  */
 @Controller
 @RequestMapping("/events")
-public class EventController extends SessionedController implements ControllerData {
+public class EventController extends SessionedController {
 
+	/**
+	 * Name of model attribute passing selected user to event related views.
+	 */
 	protected static final String USER_ATTRIBUTE = "user";
+	/**
+	 * Name of model attribute passing selected event to add event and edit event
+	 * views.
+	 */
 	protected static final String EVENT_ATTRIBUTE = "event";
+	/**
+	 * Name of model attribute passing list of all or selected events to particular
+	 * views.
+	 */
 	protected static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+	/**
+	 * Name of model attribute passing event type attribute of selected event to
+	 * event views.
+	 */
 	protected static final String EVENT_TYPE_ATTRIBUTE = "eventType";
+	/**
+	 * Name of model attribute passing a list all places to event views.
+	 */
 	protected static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+
+	/**
+	 * Name of model attribute passing a list all places to event views.
+	 */
 	protected static final String REQUESTED_EVENT_ATTRIBUTE = "requestedEvent";
+	/**
+	 * Name of model attribute passing result of add / edit event to event views.
+	 */
 	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
-	
+
 	/**
 	 * The long value that represents an hour in milliseconds
 	 */
@@ -63,6 +88,26 @@ public class EventController extends SessionedController implements ControllerDa
 	 * The long value that represents a day in milliseconds
 	 */
 	public static final long DAY = 3600L * 1000 * 24;
+	/**
+	 * Passes the name of home page of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+	/**
+	 * Passes the name of add event view.
+	 */
+	private static final String ADD_EVENT_VIEW = ControllerData.getAddEventTypeView();
+	/**
+	 * Passes the name of edit event view.
+	 */
+	private static final String EDIT_EVENT_VIEW = ControllerData.getEditEventView();
+	/**
+	 * Passes the name of event list view used by admin.
+	 */
+	private static final String EVENTS_VIEW = ControllerData.getEventsView();
+	/**
+	 * Passes the name of user home page, containing list of reserved events .
+	 */
+	private static final String USER_PANEL_VIEW = ControllerData.getUserPanelView();
 
 	/**
 	 * Instantiation of Room instance, that will be initialized with first free room
@@ -136,8 +181,7 @@ public class EventController extends SessionedController implements ControllerDa
 	}
 
 	/**
-	 * Maps request made by user with specified id concerning display of this user
-	 * list of events
+	 * Maps request made by concerning display of this user's list of events
 	 * 
 	 * @param id
 	 *            - this user id
@@ -277,8 +321,9 @@ public class EventController extends SessionedController implements ControllerDa
 				event.setRoom(repoRoom.findOneById(roomPossible.getId()));
 				event.setSeries(series);
 				repoEvent.save(event);
-				// ths is info regarding first event only, to be completed with information
-				// regarding series of event
+				// Model attribute definition regarding first event only used for addition /
+				// edition confirmation purposes. !!!!! To be completed with information
+				// regarding series of event !!!!!
 				if (i == 1) {
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
 				}
@@ -292,23 +337,21 @@ public class EventController extends SessionedController implements ControllerDa
 
 	}
 
-	@GetMapping("/{id}/delete/{ide}")
-	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
-
-		if (!SessionValidation.isSessionUser(id)) {
-			return MAIN_VIEW;
-		}
-
-		repoEvent.deleteById(ide);
-		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
-		User userCurrent = repoUser.findOneById(id);
-		model.addAttribute(USER_ATTRIBUTE, userCurrent);
-
-		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Usunięto zdarzenie");
-
-		return userVsAdminRedirect(id, model);
-	}
+	/**
+	 * Maps get request made by user with specified id concerning display of this
+	 * user add event form
+	 * 
+	 * @param ide
+	 *            - edited event id
+	 * @param id
+	 *            - this user id
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * 
+	 * @return editEvent.html view fed with this user object and list of all
+	 *         available places
+	 * 
+	 */
 
 	@GetMapping("/{id}/edit/{ide}")
 	public String editEvent(@PathVariable Long ide, @PathVariable Long id, Model model) {
@@ -321,6 +364,23 @@ public class EventController extends SessionedController implements ControllerDa
 		return EDIT_EVENT_VIEW;
 	}
 
+	/**
+	 * Maps post request concerning editing of selected event made by user or admin
+	 * via input form on editEvent.html view
+	 * 
+	 * @param ide
+	 *            - edited event id
+	 * @param id
+	 *            - this user id
+	 * @param event
+	 *            - edited event objest
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return - userPanel.html view for user request or events.html view for admin
+	 *         request with updated list of events
+	 */
 	@PostMapping("/{id}/edit/{ide}")
 	public String editEventPost(@PathVariable Long ide, @PathVariable Long id, @Valid Event event, BindingResult result,
 			Model model) {
@@ -336,25 +396,23 @@ public class EventController extends SessionedController implements ControllerDa
 		Room roomCurrent = event.getRoom();
 		Long placeCurrentId = roomCurrent.getPlace().getId();
 		Long seatsRequired = event.getEventSeats();
-		if (repoEvent.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(), event.getEndHour()).isEmpty()) {
+		if (repoEvent.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(), event.getEndHour())
+				.isEmpty()) {
 			roomPossible = roomCurrent;
-			System.err.println("Bieżący pokój");
 		} else {
 
 			ArrayList<Room> rooms = roomLongListing(placeCurrentId, seatsRequired);
 
 			for (Room room : rooms) {
-
-				if (repoEvent.findCollidingEvents(event.getDate(), room.getId(), event.getHour(), event.getEndHour()).isEmpty()) {
+				if (repoEvent.findCollidingEvents(event.getDate(), room.getId(), event.getHour(), event.getEndHour())
+						.isEmpty()) {
 					roomPossible = room;
 					event.setRoom(roomPossible);
-					System.err.println("Nowy pokój");
 					break;
 				} else {
 					model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
 					model.addAttribute(EVENT_ATTRIBUTE, event);
 					model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-					System.err.println("Brak pokoju");
 					return EDIT_EVENT_VIEW;
 				}
 			}
@@ -366,6 +424,37 @@ public class EventController extends SessionedController implements ControllerDa
 
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Zmieniono zdarzenie");
+
+		return userVsAdminRedirect(id, model);
+	}
+
+	/**
+	 * Maps get request made by user with specified id concerning removal of
+	 * selected event
+	 * 
+	 * @param id
+	 *            - user id
+	 * @param ide
+	 *            - id of event being deleted
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return - userPanel.html view for user request or events.html view for admin
+	 *         request with updated list of events
+	 */
+	@GetMapping("/{id}/delete/{ide}")
+	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
+
+		if (!SessionValidation.isSessionUser(id)) {
+			return MAIN_VIEW;
+		}
+
+		repoEvent.deleteById(ide);
+		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+		User userCurrent = repoUser.findOneById(id);
+		model.addAttribute(USER_ATTRIBUTE, userCurrent);
+
+		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Usunięto zdarzenie");
 
 		return userVsAdminRedirect(id, model);
 	}
@@ -386,6 +475,14 @@ public class EventController extends SessionedController implements ControllerDa
 		return rooms;
 	}
 
+	/**
+	 * Selects admin or user view based on passed id
+	 * @param id
+	 *            - user id
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return admin or user view
+	 */
 	private String userVsAdminRedirect(Long id, Model model) {
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
@@ -396,10 +493,18 @@ public class EventController extends SessionedController implements ControllerDa
 		}
 	}
 
+	/**
+	 * Sets model attribute passing all types on event to add event input form view 
+	 * @return model attribute containing all types of events
+	 */
 	@ModelAttribute("ourEventTypes")
 	public List<EventType> getEventTypes() {
 		return repoEventType.findAll();
 	}
+	/**
+	 * Sets model attribute passing all places to add event input form view 
+	 * @return model attribute containing all types of events
+	 */
 
 	@ModelAttribute("ourPlaces")
 	public List<Place> getPlaces() {

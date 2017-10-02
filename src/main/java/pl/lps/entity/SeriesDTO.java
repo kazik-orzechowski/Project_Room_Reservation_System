@@ -28,8 +28,7 @@ public class SeriesDTO {
 
 	
 	private Series series;
-	private Long numberOfEvents;
-	private String eventTypeName;
+	private Integer numberOfEvents;
 	private Date seriesStartDate;
 	private Date seriesEndDate;
 	private List<Date> seriesHours;
@@ -39,13 +38,12 @@ public class SeriesDTO {
 	
 	
 	
-	public SeriesDTO(Series series, Long numberOfEvents, String eventTypeName, Date seriesStartDate, Date seriesEndDate,
+	public SeriesDTO(Series series, Integer numberOfEvents, Date seriesStartDate, Date seriesEndDate,
 			List<Date> seriesHours, Integer seriesDurations, Integer seriesFrequency,
 			List<String> seriesPlacesAndRooms) {
 		super();
 		this.series = series;
 		this.numberOfEvents = numberOfEvents;
-		this.eventTypeName = eventTypeName;
 		this.seriesStartDate = seriesStartDate;
 		this.seriesEndDate = seriesEndDate;
 		this.seriesHours = seriesHours;
@@ -62,8 +60,7 @@ public class SeriesDTO {
 	}
 	@Override
 	public String toString() {
-		return "SeriesDTO [series=" + series + ", numberOfEvents=" + numberOfEvents + ", eventTypeName=" + eventTypeName
-				+ ", seriesStartDate=" + seriesStartDate + ", seriesEndDate=" + seriesEndDate + ", seriesHours="
+		return "SeriesDTO [series=" + series + ", numberOfEvents=" + numberOfEvents + ", seriesStartDate=" + seriesStartDate + ", seriesEndDate=" + seriesEndDate + ", seriesHours="
 				+ seriesHours + ", seriesDurations=" + seriesDurations + ", seriesFrequency=" + seriesFrequency
 				+ ", seriesPlacesAndRooms=" + seriesPlacesAndRooms + "]";
 	}
@@ -73,17 +70,11 @@ public class SeriesDTO {
 	public void setSeries(Series series) {
 		this.series = series;
 	}
-	public Long getNumberOfEvents() {
+	public Integer getNumberOfEvents() {
 		return numberOfEvents;
 	}
-	public void setNumberOfEvents(Long numberOfEvents) {
+	public void setNumberOfEvents(Integer numberOfEvents) {
 		this.numberOfEvents = numberOfEvents;
-	}
-	public String getEventTypeName() {
-		return eventTypeName;
-	}
-	public void setEventTypeName(String eventTypeName) {
-		this.eventTypeName = eventTypeName;
 	}
 	public Date getSeriesStartDate() {
 		return seriesStartDate;

@@ -9,12 +9,17 @@ import pl.lps.data.ControllerData;
 
 @Controller
 @RequestMapping("/logout")
-public class LogoutController extends SessionedController implements ControllerData {
+public class LogoutController extends SessionedController {
 
 	private static final String MAIN_MESSAGE_ATTRIBUTE = "message";
 	private static final String MAIN_USER_ATTRIBUTE = "user";
 	private static final String MAIN_USERNAME_ATTRIBUTE = "username";
 
+	/**
+	 * Passes the name of home page of this application.
+	 */
+	private static final String MAIN_VIEW = ControllerData.getMainView();
+	
 	@GetMapping("")
 	public String logout(Model model) {
 		session().setAttribute(MAIN_USER_ATTRIBUTE, null);
