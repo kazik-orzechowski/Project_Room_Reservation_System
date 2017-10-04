@@ -43,7 +43,8 @@
 		</td>
 		<td th:text="${seriesDTO.series.client}"></td>
        <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.delete}">*</a> 
-       <a th:href="@{/events/{id}/series/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.edit}">*</a></td>
+       <a th:href="@{/events/{id}/series/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.edit}">*</a>
+       </td>
     </tr>
 </table>
 

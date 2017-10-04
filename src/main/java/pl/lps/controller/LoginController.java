@@ -28,6 +28,13 @@ public class LoginController extends SessionedController {
 	private static final String USER_PANEL_VIEW = ControllerData.getUserPanelView();
 	
 	/**
+	 * Name of model attribute passing an information to the user panel view
+	 * regarding the current series (all or name} being displayed
+	 */
+
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+
+	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
 	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
@@ -69,7 +76,8 @@ public class LoginController extends SessionedController {
 			model.addAttribute("eventType", repoEventType.findAll());
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, u);
 			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(u.getId()));
-				
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+		
 			// 0 for all series to be displayed
 			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
 			return USER_PANEL_VIEW;

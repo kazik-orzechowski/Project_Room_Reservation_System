@@ -26,6 +26,17 @@ public class UserController extends SessionedController {
 	 */
 	private static final String MAIN_VIEW = ControllerData.getMainView();
 
+	/**
+	 * Id of the series that should be displayed (0 for all series)
+	 */
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
+	
+	/**
+	 * Name of model attribute passing an information to the user panel view
+	 * regarding the current series (all or name} being displayed
+	 */
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+
 	
 	private static final String USER_ATTRIBUTE = "user";
 	
@@ -89,13 +100,14 @@ public class UserController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		repoUser.deleteById(id);
-		return "redirect: /" + USERS_VIEW;
+		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
+		return USERS_VIEW;
 	}
 
 	@GetMapping("/{id}/edit")
 	public String editUser(@PathVariable Long id, Model model) {
 
-		if (!SessionValidation.isSessionAdmin()) {
+		if (!SessionValidation.isSessionValid()) {
 			return MAIN_VIEW;
 		}
 
@@ -121,10 +133,14 @@ public class UserController extends SessionedController {
 		model.addAttribute("eventType", repoEventType.findAll());
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+			model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
 			return USERS_VIEW;
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+			model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
+
 			return USER_PANEL_VIEW;
 		}
 

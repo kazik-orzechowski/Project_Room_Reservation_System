@@ -19,11 +19,15 @@ import pl.lps.entity.Place;
 import pl.lps.entity.Room;
 import pl.lps.repository.PlaceRepository;
 import pl.lps.repository.RoomRepository;
+import pl.lps.repository.UserRepository;
 
 @Controller
 @RequestMapping("/rooms")
 public class RoomController extends SessionedController {
 
+	@Autowired
+	UserRepository repoUser;
+	
 	/**
 	 * Defines the name of place attribute used in room list view to show current
 	 * place that list refers to.
@@ -66,6 +70,21 @@ public class RoomController extends SessionedController {
 	 */
 	private static final String EDIT_ROOM_VIEW = ControllerData.getEditRoomView();
 
+	/**
+	 * Id of the series that should be displayed (0 for all series)
+	 */
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
+	
+	/**
+	 * Name of model attribute passing an information to the user panel view
+	 * regarding the current series (all or name} being displayed
+	 */
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+
+
+	private static final String USER_ATTRIBUTE = "user";
+	
+	
 	@Autowired
 	RoomRepository repoRoom;
 
@@ -79,20 +98,20 @@ public class RoomController extends SessionedController {
 			return MAIN_VIEW;
 		}
 
-		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAll());
-		System.out.println(repoRoom.findAll().toString());
+		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		return ROOMS_VIEW;
 	}
 
-	@RequestMapping("/forUser")
-	public String allRoomsForUser(Model model) {
+	@RequestMapping("/forUser/{id}/{ids}")
+	public String allRoomsForUser(@PathVariable Long id, @PathVariable Long ids, Model model) {
 
 		if (!SessionValidation.isSessionValid()) {
 			return MAIN_VIEW;
 		}
-
-		model.addAttribute(ROOMS_VIEW, repoRoom.findAll());
-		System.out.println(repoRoom.findAll().toString());
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
+		model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
+		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		return ROOMS_FOR_USER_VIEW;
 	}
 
@@ -115,7 +134,7 @@ public class RoomController extends SessionedController {
 			return ADD_ROOM_VIEW;
 		}
 		repoRoom.save(room);
-		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAll());
+		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findAll());
 		return ROOMS_VIEW;
 
@@ -128,6 +147,9 @@ public class RoomController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		repoRoom.deleteById(id);
+		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
+		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findAll());
+
 		return ROOMS_VIEW;
 	}
 
@@ -148,7 +170,8 @@ public class RoomController extends SessionedController {
 			return EDIT_ROOM_VIEW;
 		}
 		repoRoom.save(editedRoom);
-		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAll());
+		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
+		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findAll());
 		return ROOMS_VIEW;
 
 	}

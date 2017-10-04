@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import pl.lps.entity.Event;
 import pl.lps.entity.Room;
 import pl.lps.entity.User;
 
@@ -41,6 +42,17 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	 */
 	List<Room> findAllByPlaceId(Long id);
 
+	
+
+	/**
+	 * Room search method
+	 * 
+	 * @return list of rooms with specified sorted by place name ascending
+	 */
+	@Query("SELECT r FROM Room r ORDER BY r.place.name DESC")
+	List<Room> findAllListOrderByPlaceName();
+
+	
 	/**
 	 * Room search method
 	 * 

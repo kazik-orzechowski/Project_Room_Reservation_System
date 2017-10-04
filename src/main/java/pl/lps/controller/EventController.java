@@ -214,6 +214,25 @@ public class EventController extends SessionedController {
 		return USER_PANEL_VIEW;
 	}
 
+	/**
+	 * Maps request made by user concerning display of this user's home page
+	 * containing the list of events of this user. The list may include all events
+	 * for ids parameter = 0 or be limited to one of this user's series for ids
+	 * parameter > 0.
+	 * 
+	 * @param id
+	 *            - this user id
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on). 0 gives all events of this user, while other ids
+	 *            values narrow list to the events belonging to the series with
+	 *            specified id (ids).
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return userPanel.html view fed with this user's event list and this user
+	 *         object
+	 */
+
 	@RequestMapping("/{id}/series/{ids}")
 	public String allEventsBySeriesId(@PathVariable Long id, @PathVariable Long ids, Model model) {
 
@@ -238,20 +257,21 @@ public class EventController extends SessionedController {
 
 	/**
 	 * Maps get request made by user with specified id concerning display of this
-	 * user add event form
+	 * user add event form. !!!!! Possibility of adding event to an existing series
+	 * to be created!!!!!
 	 * 
 	 * @param id
 	 *            - this user id
 	 * @param ids
 	 *            - id of series from the origin view (when the edit link was
-	 *            clicked on)
+	 *            clicked on). 0 for all user's series.
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return addEvent.html view fed with this user object and list of all
 	 *         available places
 	 */
 	@GetMapping("/{id}/add/{ids}")
-	public String addEvent(@PathVariable Long id,@PathVariable Long ids, Model model) {
+	public String addEvent(@PathVariable Long id, @PathVariable Long ids, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
@@ -268,6 +288,7 @@ public class EventController extends SessionedController {
 	/**
 	 * Maps post request concerning adding of new event made by user via input form
 	 * on addEvent.html view
+	 *
 	 * 
 	 * @param dateOfFirstEvent
 	 *            - YYYY-MM-dd date of first event in the defined event series -
@@ -296,6 +317,9 @@ public class EventController extends SessionedController {
 	 *            - client of the defined event series
 	 * @param id
 	 *            - id of user making reservation
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on). 0 for all user's series.
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return - userPanel.html view fed with this user's event list and this user
@@ -386,7 +410,7 @@ public class EventController extends SessionedController {
 	 *            - this user id
 	 * @param ids
 	 *            - id of series from the origin view (when the edit link was
-	 *            clicked on)
+	 *            clicked on). 0 for all user's series.
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * 
@@ -396,7 +420,7 @@ public class EventController extends SessionedController {
 	 */
 
 	@GetMapping("/{id}/edit/{ide}/{ids}")
-	public String editEvent(@PathVariable Long ide, @PathVariable Long id, @PathVariable Long ids,  Model model) {
+	public String editEvent(@PathVariable Long ide, @PathVariable Long id, @PathVariable Long ids, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
@@ -418,7 +442,7 @@ public class EventController extends SessionedController {
 	 *            - this user id
 	 * @param ids
 	 *            - id of series from the origin view (when the edit link was
-	 *            clicked on)
+	 *            clicked on). 0 for all user's series.
 	 * @param event
 	 *            - edited event object
 	 * @param result
@@ -534,6 +558,10 @@ public class EventController extends SessionedController {
 	 * 
 	 * @param id
 	 *            - user id
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on). 0 for all user's series.
+	 * 
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return admin or user view
@@ -550,8 +578,8 @@ public class EventController extends SessionedController {
 			} else {
 
 				model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesId(ids));
-				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " " + repoSeries.getOne(ids).getEventType().getName() + " "
-						+ repoSeries.getOne(ids).getClient());
+				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " "
+						+ repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
 			}
 
 			return USER_PANEL_VIEW;
