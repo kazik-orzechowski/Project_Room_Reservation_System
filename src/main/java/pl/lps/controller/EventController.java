@@ -81,6 +81,16 @@ public class EventController extends SessionedController {
 	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
 
 	/**
+	 * Id of the series that should be displayed (0 for all series)
+	 */
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
+	/**
+	 * Name of model attribute passing an information to the user panel view
+	 * regarding the current series (all or name} being displayed
+	 */
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+
+	/**
 	 * The long value that represents an hour in milliseconds
 	 */
 	public static final long HOUR = 3600L * 1000;
@@ -95,7 +105,7 @@ public class EventController extends SessionedController {
 	/**
 	 * Passes the name of add event view.
 	 */
-	private static final String ADD_EVENT_VIEW = ControllerData.getAddEventTypeView();
+	private static final String ADD_EVENT_VIEW = ControllerData.getAddEventView();
 	/**
 	 * Passes the name of edit event view.
 	 */
@@ -181,7 +191,9 @@ public class EventController extends SessionedController {
 	}
 
 	/**
-	 * Maps request made by concerning display of this user's list of events
+	 * Maps request made by concerning display of this user's list of events !!!!!
+	 * not mapped in this version (now it is allEventsBySeriesId) - to be deleted
+	 * after verification of links !!!!!
 	 * 
 	 * @param id
 	 *            - this user id
@@ -190,6 +202,7 @@ public class EventController extends SessionedController {
 	 * @return userPanel.html view fed with this user's event list and this user
 	 *         object
 	 */
+
 	@RequestMapping("/{id}")
 	public String allEvents(@PathVariable Long id, Model model) {
 
@@ -198,8 +211,29 @@ public class EventController extends SessionedController {
 		}
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-		System.out.println(repoEvent.findAll().toString());
 		return USER_PANEL_VIEW;
+	}
+
+	@RequestMapping("/{id}/series/{ids}")
+	public String allEventsBySeriesId(@PathVariable Long id, @PathVariable Long ids, Model model) {
+
+		if (!SessionValidation.isSessionUser(id)) {
+			return MAIN_VIEW;
+		}
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
+
+		if (ids == 0) {
+			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+
+		} else {
+			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesId(ids));
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE,
+					" " + repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
+		}
+		return USER_PANEL_VIEW;
+
 	}
 
 	/**
@@ -332,8 +366,9 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
 
-		return userVsAdminRedirect(id, model);
+		return userVsAdminRedirect(id, 0L, model);
 
 	}
 
@@ -345,6 +380,9 @@ public class EventController extends SessionedController {
 	 *            - edited event id
 	 * @param id
 	 *            - this user id
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on)
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * 
@@ -353,14 +391,16 @@ public class EventController extends SessionedController {
 	 * 
 	 */
 
-	@GetMapping("/{id}/edit/{ide}")
-	public String editEvent(@PathVariable Long ide, @PathVariable Long id, Model model) {
+	@GetMapping("/{id}/edit/{ide}/{ids}")
+	public String editEvent(@PathVariable Long ide, @PathVariable Long id, @PathVariable Long ids,  Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		model.addAttribute(EVENT_ATTRIBUTE, repoEvent.findOneById(ide));
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
+
 		return EDIT_EVENT_VIEW;
 	}
 
@@ -372,8 +412,11 @@ public class EventController extends SessionedController {
 	 *            - edited event id
 	 * @param id
 	 *            - this user id
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on)
 	 * @param event
-	 *            - edited event objest
+	 *            - edited event object
 	 * @param result
 	 *            - binding result errors
 	 * @param model
@@ -381,9 +424,9 @@ public class EventController extends SessionedController {
 	 * @return - userPanel.html view for user request or events.html view for admin
 	 *         request with updated list of events
 	 */
-	@PostMapping("/{id}/edit/{ide}")
-	public String editEventPost(@PathVariable Long ide, @PathVariable Long id, @Valid Event event, BindingResult result,
-			Model model) {
+	@PostMapping("/{id}/edit/{ide}/{ids}")
+	public String editEventPost(@PathVariable Long ide, @PathVariable Long id, @PathVariable Long ids,
+			@Valid Event event, @RequestParam Long placeId, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
 			return EDIT_EVENT_VIEW;
@@ -394,9 +437,10 @@ public class EventController extends SessionedController {
 		event.setId(ide);
 		repoEvent.deleteById(ide);
 		Room roomCurrent = event.getRoom();
-		Long placeCurrentId = roomCurrent.getPlace().getId();
+		Long placeCurrentId = placeId;
 		Long seatsRequired = event.getEventSeats();
-		if (repoEvent.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(), event.getEndHour())
+		if (placeId == event.getRoom().getId() && repoEvent
+				.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(), event.getEndHour())
 				.isEmpty()) {
 			roomPossible = roomCurrent;
 		} else {
@@ -424,8 +468,9 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Zmieniono zdarzenie");
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
-		return userVsAdminRedirect(id, model);
+		return userVsAdminRedirect(id, ids, model);
 	}
 
 	/**
@@ -436,13 +481,16 @@ public class EventController extends SessionedController {
 	 *            - user id
 	 * @param ide
 	 *            - id of event being deleted
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on)
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return - userPanel.html view for user request or events.html view for admin
 	 *         request with updated list of events
 	 */
-	@GetMapping("/{id}/delete/{ide}")
-	public String delEvent(@PathVariable Long id, @PathVariable Long ide, Model model) {
+	@GetMapping("/{id}/delete/{ide}/{ids}")
+	public String delEvent(@PathVariable Long id, @PathVariable Long ide, @PathVariable Long ids, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
@@ -456,7 +504,7 @@ public class EventController extends SessionedController {
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Usunięto zdarzenie");
 
-		return userVsAdminRedirect(id, model);
+		return userVsAdminRedirect(id, ids, model);
 	}
 
 	/**
@@ -477,32 +525,47 @@ public class EventController extends SessionedController {
 
 	/**
 	 * Selects admin or user view based on passed id
+	 * 
 	 * @param id
 	 *            - user id
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return admin or user view
 	 */
-	private String userVsAdminRedirect(Long id, Model model) {
+	private String userVsAdminRedirect(Long id, Long ids, Model model) {
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 			return EVENTS_VIEW;
 		} else {
-			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+			if (ids == 0) {
+				model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+
+			} else {
+
+				model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesId(ids));
+				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " " + repoSeries.getOne(ids).getEventType().getName() + " "
+						+ repoSeries.getOne(ids).getClient());
+			}
+
 			return USER_PANEL_VIEW;
+
 		}
 	}
 
 	/**
-	 * Sets model attribute passing all types on event to add event input form view 
+	 * Sets model attribute passing all types on event to add event input form view
+	 * 
 	 * @return model attribute containing all types of events
 	 */
 	@ModelAttribute("ourEventTypes")
 	public List<EventType> getEventTypes() {
 		return repoEventType.findAll();
 	}
+
 	/**
-	 * Sets model attribute passing all places to add event input form view 
+	 * Sets model attribute passing all places to add event input form view
+	 * 
 	 * @return model attribute containing all types of events
 	 */
 

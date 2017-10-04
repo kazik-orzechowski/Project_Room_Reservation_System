@@ -18,7 +18,8 @@
   <p th:text="#{event.series.eventType.name} + ' ' + ${event.series.eventType.name}"> </p>
   <p th:text="#{event.client} + ' ' + ${event.series.client}"> </p>
  
-        <form method="post" id="event-form" th:action="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:object="${event}">
+        <form method="post" id="event-form" th:action="@{/events/{id}/edit/{ide}/{ids} 
+        (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})}" th:object="${event}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         

@@ -13,8 +13,6 @@
 <h2 th:text="#{user.series.page} + ' ' + ${user.userName}">*</h2>
 <p><a th:href="@{/events/{id}/ (id=${user.id})}" th:text="#{user.main.page}">*</a><br/>
 
-<h2 th:text="#{series.list}">*</h2>
-
 <table>
     <tr>
     	<th th:text="#{series.id}">* </th>
@@ -28,16 +26,24 @@
     	<th th:text="#{action}">* </th>
     </tr>
     <tr th:each="seriesDTO : ${allSeries}">
-		<td th:text="${seriesDTO.id}"> </td>
-    	<td th:text="${seriesDTO.eventType.name}"> </td>
-    	<td th:text="${#dates.format(seriesDTO.firstEvent, 'dd-MM-yyyy')}"> </td>
-    	<td th:text="${#dates.format(seriesDTO.lastEvent, 'dd-MM-yyyy')}"> </td>
-      	<td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
+		<td th:text="${seriesDTO.series.id}"> </td>
+    	<td th:text="${seriesDTO.series.eventType.name}"> </td>
+    	<td th:text="${#dates.format(seriesDTO.seriesStartDate, 'dd-MM-yyyy')}"> </td>
+    	<td th:text="${#dates.format(seriesDTO.seriesEndDate, 'dd-MM-yyyy')}"> </td>
+      	<td>
+	      	<span th:each="hour : ${seriesDTO.seriesHours}">
+	      		<span th:text="${#dates.format(hour, 'HH:mm')}"> </span>
+	      	</span>
+      	</td>
         <td th:text="${seriesDTO.numberOfEvents}"> </td>
-		<td th:text="${seriesDTO.placeAndRoom.name}"> </td>
-		<td th:text="${seriesDTO.client}"></td>
-       <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${series.id})}" th:text="#{series.delete}">*</a> 
-       <a th:href="@{/events/{id}/editSeries/{ids}/ (id=${user.id}, ids=${series.id})}" th:text="#{series.edit}">*</a></td>
+		<td >
+			<span th:each="venue : ${seriesDTO.seriesPlacesAndRooms}">
+				<span th:text="${venue}">   </span>
+			</span>
+		</td>
+		<td th:text="${seriesDTO.series.client}"></td>
+       <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.delete}">*</a> 
+       <a th:href="@{/events/{id}/series/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.edit}">*</a></td>
     </tr>
 </table>
 

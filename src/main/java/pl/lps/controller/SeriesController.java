@@ -1,51 +1,42 @@
 package pl.lps.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.Valid;
+import javax.transaction.Transactional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.util.DateUtils;
 
-import pl.lps.entity.EventType;
-import pl.lps.entity.Place;
-import pl.lps.entity.Room;
+import pl.lps.data.ControllerData;
+import pl.lps.entity.Event;
 import pl.lps.entity.Series;
 import pl.lps.entity.SeriesDTO;
 import pl.lps.entity.User;
-import pl.lps.data.ControllerData;
-import pl.lps.entity.Event;
+import pl.lps.repository.EventRepository;
 import pl.lps.repository.EventTypeRepository;
-import pl.lps.repository.PlaceRepository;
-import pl.lps.repository.RoomRepository;
 import pl.lps.repository.SeriesRepository;
 import pl.lps.repository.UserRepository;
-import pl.lps.repository.EventRepository;
 
 @Controller
 @RequestMapping("/series")
 public class SeriesController extends SessionedController {
 
+	/**
+	 * Name of model attribute passing result of add / edit event to event views.
+	 */
+	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
+
+	
 	public static final long HOUR = 3600 * 1000;
 	public static final long DAY = 3600 * 1000 * 24;
 	private static final String MAIN_VIEW = ControllerData.getMainView();
@@ -85,7 +76,7 @@ public class SeriesController extends SessionedController {
 	 * @param model
 	 * @return userSeriesPanel.html view
 	 */
-
+	@Transactional
 	@RequestMapping("/{id}")
 	public String getSeries(@PathVariable Long id, Model model) {
 
@@ -100,14 +91,15 @@ public class SeriesController extends SessionedController {
 
 			SeriesDTO seriesDto = new SeriesDTO();
 			seriesDto.setSeries(series);
-			ArrayList<Event> events = (ArrayList<Event>) series.getEvents();
-
+			Hibernate.initialize(series.getEvents());
+			List<Event> events = (List<Event>) series.getEvents();
+System.err.println(series.toString());
 			Collections.sort(events, new Comparator<Event>() {
 				public int compare(Event e1, Event e2) {
 					return e1.getDate().compareTo(e2.getDate());
 				}
 			});
-
+System.err.println(events.toString());
 			int numberOfEvents = (int) events.size();
 			seriesDto.setSeriesStartDate(events.get(0).getDate());
 			seriesDto.setSeriesEndDate(events.get(numberOfEvents - 1).getDate());
@@ -117,27 +109,32 @@ public class SeriesController extends SessionedController {
 			Set<String> venuesOfEventSeries = new HashSet<>();
 			Set<Date> startHoursOfEventSeries = new HashSet<>();
 			for (Event event : events) {
-				venuesOfEventSeries.add(event.getRoom().getPlace() + " " + event.getRoom().getNumber());
+				venuesOfEventSeries.add(event.getRoom().getPlace().getName() + " sala " + event.getRoom().getNumber());
 				startHoursOfEventSeries.add(event.getHour());
 			}
-			seriesDto.setSeriesHours((ArrayList<Date>) startHoursOfEventSeries);
-			seriesDto.setSeriesPlacesAndRooms((ArrayList<String>) venuesOfEventSeries);
+			
+			
+			seriesDto.setSeriesHours(startHoursOfEventSeries);
+			seriesDto.setSeriesPlacesAndRooms(venuesOfEventSeries);
 			seriesDTOList.add(seriesDto); 
-		}
 
+		}
+System.err.println("Checkpoint 3");
 		model.addAttribute("allSeries", seriesDTOList);
 		User userCurrent = repoUser.findOneById(id);
 		model.addAttribute("user", userCurrent);
+		model.addAttribute("user", userCurrent);
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "");
 
-		if (userCurrent.getUserName().equals("admin")) {
-			model.addAttribute("events", repoEvent.findAll());
-			return "events";
-		} else {
-			model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-		}
-		model.addAttribute("eventType", repoEventType.findAll());
-		model.addAttribute("addEventInfo", "Usunięto zdarzenie");
-		return "userPanel";
+//		if (userCurrent.getUserName().equals("admin")) {
+//			model.addAttribute("allSeries", repoEvent.findAll());
+//			return "events";
+//		} else {
+//			model.addAttribute("allSeries", repoEvent.findAllBySeriesUserId(id));
+//		}
+
+		model.addAttribute("addSeriesInfo", "");
+		return "userSeriesPanel";
 
 	}
 }

@@ -12,16 +12,17 @@
 <h4 th:text="#{page.main.title}">*</h4>
 <h2 th:text="#{user.main.page} + ' ' + ${user.userName}">*</h2>
 <p><small><a th:href="@{/logout}" th:text="#{user.logout}">*</a></small></p>
-<p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}">*</a></p>
-<p><a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a><br />
-<a th:href="@{/events/series}" th:text="#{event.series.list}">*</a></p>
-<p><a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
+<p><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}">*</a> # 
+<a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a> # 
+<a th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{event.series.list}">*</a> # 
+<a th:href="@{/events/{id}/series/0/ (id=${user.id})}" th:text="#{event.series.list.all}">*</a> # 
+<a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
 
 <p><a th:text="${requestedEvent != null} ? 
 ${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}
 : ${addEventInfo}">*</a></p>
 
-<h2 th:text="#{event.list}">*</h2>
+<h2 th:text="#{event.list} + ' ' +${displayedSeries}">* <span th:text="${displayedSeries}">*</span></h2>
 
 <table>
     <tr>
@@ -46,8 +47,8 @@ ${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' 
 		<td th:text="${event.room.place.name}"> </td>
        <td th:text="${event.room.number}"></td>
 		<td th:text="${event.series.client}"></td>
-       <td><a th:href="@{/events/{id}/delete/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.delete}">*</a> 
-       <a th:href="@{/events/{id}/edit/{ide}/ (id=${user.id}, ide=${event.id})}" th:text="#{event.edit}">*</a></td>
+       <td><a th:href="@{/events/{id}/delete/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})}" th:text="#{event.delete}">*</a> 
+       <a th:href="@{/events/{id}/edit/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})  }" th:text="#{event.edit}">*</a></td>
     </tr>
 </table>
 

@@ -39,10 +39,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 	/**
 	 * Event search method
 	 * 
-	 * @param series
-	 * @return list of events with specified series attribute
+	 * @param series id
+	 * @return list of events with specified series id
 	 */
-	List<Event> findAllBySeries(Series series);
+	List<Event> findAllBySeriesId(Long id);
 
 	/**
 	 * Event search method
