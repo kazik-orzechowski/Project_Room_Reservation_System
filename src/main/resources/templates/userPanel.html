@@ -16,7 +16,7 @@
 <a th:href="@{/rooms/forUser}" th:text="#{room.list}">*</a> # 
 <a th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{event.series.list}">*</a> # 
 <a th:href="@{/events/{id}/series/0/ (id=${user.id})}" th:text="#{event.series.list.all}">*</a> # 
-<a th:href="@{/events/{id}/add/(id=${user.id})}" th:text="#{event.add}">*</a></p>
+<a th:href="@{/events/{id}/add/{ids}/ (id=${user.id}, ids=${displayedSeriesId})}" th:text="#{event.add}">*</a></p>
 
 <p><a th:text="${requestedEvent != null} ? 
 ${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}

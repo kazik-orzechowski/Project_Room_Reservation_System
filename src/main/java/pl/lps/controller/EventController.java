@@ -242,13 +242,16 @@ public class EventController extends SessionedController {
 	 * 
 	 * @param id
 	 *            - this user id
+	 * @param ids
+	 *            - id of series from the origin view (when the edit link was
+	 *            clicked on)
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return addEvent.html view fed with this user object and list of all
 	 *         available places
 	 */
-	@GetMapping("/{id}/add")
-	public String addEvent(@PathVariable Long id, Model model) {
+	@GetMapping("/{id}/add/{ids}")
+	public String addEvent(@PathVariable Long id,@PathVariable Long ids, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
@@ -257,6 +260,7 @@ public class EventController extends SessionedController {
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "");
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
 		return ADD_EVENT_VIEW;
 	}
@@ -298,12 +302,12 @@ public class EventController extends SessionedController {
 	 *         object for ordinary user and events.html view for admin
 	 * @throws ParseException
 	 */
-	@PostMapping("/{id}/add")
+	@PostMapping("/{id}/add/{ids}")
 	public String addEventPost(@RequestParam @DateTimeFormat(pattern = "MM/dd/yyyy") Date dateOfFirstEvent,
 			@RequestParam @DateTimeFormat(pattern = "HH:mm") Date hour, @RequestParam Long numberOfEvents,
 			@RequestParam Long eventDuration, @RequestParam Long eventSeats, @RequestParam Long placeId,
 			@RequestParam Long eventTypeId, @RequestParam Long eventCycleLength, @RequestParam String client,
-			@PathVariable Long id, Model model) {
+			@PathVariable Long id, @PathVariable Long ids, Model model) {
 
 		Date endHour = new Date(hour.getTime() + eventDuration * HOUR);
 
@@ -366,9 +370,9 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
+		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
-		return userVsAdminRedirect(id, 0L, model);
+		return userVsAdminRedirect(id, ids, model);
 
 	}
 
@@ -457,6 +461,8 @@ public class EventController extends SessionedController {
 					model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
 					model.addAttribute(EVENT_ATTRIBUTE, event);
 					model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
+					model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
+
 					return EDIT_EVENT_VIEW;
 				}
 			}
