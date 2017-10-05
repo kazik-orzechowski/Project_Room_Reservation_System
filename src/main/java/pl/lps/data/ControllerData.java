@@ -114,6 +114,22 @@ public final class ControllerData {
 	static final String ROOMS_FOR_USER_VIEW = "roomsForUser";
 
 	/**
+	 * Contains the name of the view displaying list of user's series.
+	 */
+	private static final String USER_SERIES_PANEL_VIEW = "userSeriesPanel";
+	
+	
+	/**
+	 * Gets the name of view containing the list of series of user
+	 * 
+	 * @return the name of a view displaying a list of series of user
+	 */
+	
+	public static String getUserSeriesPanelView() {
+		return USER_SERIES_PANEL_VIEW;
+	}
+
+	/**
 	 * Gets the name of view containing the list of rooms available for user
 	 * 
 	 * @return the name of a view displaying a list of rooms available to user
@@ -293,4 +309,6 @@ public final class ControllerData {
 		return PLACES_VIEW;
 	}
 
+	
+	
 }

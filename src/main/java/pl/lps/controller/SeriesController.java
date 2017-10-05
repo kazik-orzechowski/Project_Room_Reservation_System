@@ -14,6 +14,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,7 +32,13 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/series")
 public class SeriesController extends SessionedController {
 
-	private static final String USER_SERIES_PANEL_VIEW = "userSeriesPanel";
+	/**
+	 * Passes the name of user view, containing list of user's series.
+	 */
+	private static final String USER_SERIES_PANEL_VIEW = ControllerData.getUserSeriesPanelView();
+	/**
+	 * Name of model attribute passing information regarding displayed series to user event view.
+	 */
 
 	private static final String ADD_SERIES_INFO_ATTRIBUTE = "addSeriesInfo";
 
@@ -39,9 +46,9 @@ public class SeriesController extends SessionedController {
 	 * Name of model attribute passing result of add / edit event to event views.
 	 */
 	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
-
-	public static final long HOUR = 3600 * 1000;
-	public static final long DAY = 3600 * 1000 * 24;
+	/**
+	 * Passes the name of home page of this application.
+	 */
 	private static final String MAIN_VIEW = ControllerData.getMainView();
 
 	@Autowired
@@ -60,31 +67,16 @@ public class SeriesController extends SessionedController {
 	SessionValidation sv;
 
 	/**
-	 * Maps admin's request to display all the series of events.
-	 * 
-	 * @param model
-	 * @return places.html view
-	 */
-
-	@RequestMapping("")
-	public String allSeries(Model model) {
-
-		if (!SessionValidation.isSessionAdmin()) {
-			return MAIN_VIEW;
-		}
-
-		model.addAttribute("series", repoEvent.findAll());
-		model.addAttribute("user", repoUser.findOneByUserName("admin"));
-		return "series";
-	}
-
-	/**
-	 * Maps the request of user to display a list of this user's series of events.
+	 * Maps the request of admin or user to display a list of this user's series of
+	 * events.
 	 * 
 	 * @param id
 	 *            - user id
 	 * @param model
-	 * @return userSeriesPanel.html view
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return for user userPanel.html view containing all of this user series. For
+	 *         admin returns series.html view containing series of events of all
+	 *         users.
 	 */
 	@Transactional
 	@RequestMapping("/{id}")
@@ -94,6 +86,66 @@ public class SeriesController extends SessionedController {
 			return MAIN_VIEW;
 		}
 
+		prepareSeriesView(id, model);
+
+		return adminVsUserSeriesViewRedirect(id);
+
+	}
+
+	/**
+	 * Maps the request of admin or user to delete the selected series of events.
+	 * 
+	 * @param id
+	 *            - user id
+	 * @param ids
+	 *            - id of the series to be deleted
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return for user userPanel.html view containing all of this user series. For
+	 *         admin returns series.html view containing series of events of all
+	 *         users.
+	 */
+	@GetMapping("/{id}/delete/{ids}")
+	public String delSeries(@PathVariable Long id, @PathVariable Long ids, Model model) {
+
+		if (!SessionValidation.isSessionUser(id)) {
+			return MAIN_VIEW;
+		}
+
+		repoSeries.deleteById(ids);
+		prepareSeriesView(id, model);
+
+		return adminVsUserSeriesViewRedirect(id);
+
+	}
+
+	/**
+	 * Selects admin or user view based on passed id
+	 * 
+	 * @param id
+	 *            - user id
+	 * @return for user userPanel.html view, for admin return series.html view.
+	 */
+
+	String adminVsUserSeriesViewRedirect(Long id) {
+		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+			return "series";
+		} else {
+			return USER_SERIES_PANEL_VIEW;
+
+		}
+	}
+
+	/**
+	 * Prepares a list of SeriesDTO objects containing all data regarding event
+	 * series stored in series objects and event objects.
+	 * 
+	 * @param id - user id
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 */
+
+	void prepareSeriesView(Long id, Model model) {
 		List<Series> seriesList = new ArrayList<>();
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
@@ -137,97 +189,10 @@ public class SeriesController extends SessionedController {
 		}
 
 		model.addAttribute("allSeries", seriesDTOList);
-		User userCurrent = repoUser.findOneById(id);
-		model.addAttribute("user", userCurrent);
+
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "");
 		model.addAttribute(ADD_SERIES_INFO_ATTRIBUTE, "");
-
-		
-		 if (userCurrent.getUserName().equals("admin")) {
-			 return "series";
-		 } else {
-			 return USER_SERIES_PANEL_VIEW;
-
-		 }
-
-
+		model.addAttribute("user", repoUser.findOneById(id));
 	}
-}
 
-//
-// @RequestMapping("/{id}")
-// public String allSeries(@PathVariable Long id, Model model) {
-//
-// if(!SessionValidation.isSessionUser(id)) {
-// return "main";
-// }
-//
-// public String getSeries(@PathVariable Long id, Model model) {
-//
-// if(!SessionValidation.isSessionUser(id)) {
-// return "main";
-// }
-//
-// List<Series> seriesList = repoSeries.findAllByUserId(id);
-//
-// for(Series series : seriesList)
-// {
-//
-//
-// ArrayList<Event> events = (ArrayList<Event>) series.getEvents();
-// Long numberOfEvents = (long) events.size();
-// List<Date>
-// for(Event event : events) {
-//
-// }
-//
-// SeriesDTO seriesDto = new SeriesDTO
-// }
-//
-// model.addAttribute("series", seriesList);
-// User userCurrent = repoUser.findOneById(id);
-// model.addAttribute("user", userCurrent);
-//
-//
-//
-// if (userCurrent.getUserName().equals("admin")) {
-// model.addAttribute("events", repoEvent.findAll());
-// return "events";
-// } else {
-// model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-// }
-// model.addAttribute("eventType", repoEventType.findAll());
-// model.addAttribute("addEventInfo", "Usunięto zdarzenie");
-// return "userPanel";
-//
-// }
-//
-//
-//
-// @GetMapping("/{id}/delete/{ide}")
-// public String delSeries(@PathVariable Long id, @PathVariable Long ide, Model
-// model) {
-//
-// if(!SessionValidation.isSessionUser(id)) {
-// return "main";
-// }
-//
-// repoEvent.deleteById(ide);
-// model.addAttribute("events", repoEvent.findAll());
-// User userCurrent = repoUser.findOneById(id);
-// model.addAttribute("user", userCurrent);
-// if (userCurrent.getUserName().equals("admin")) {
-// model.addAttribute("events", repoEvent.findAll());
-// return "events";
-// } else {
-// model.addAttribute("events", repoEvent.findAllBySeriesUserId(id));
-// }
-// model.addAttribute("eventType", repoEventType.findAll());
-// model.addAttribute("addEventInfo", "Usunięto zdarzenie");
-// return "userPanel";
-//
-// }
-//
-//
-//
-// }
+}
