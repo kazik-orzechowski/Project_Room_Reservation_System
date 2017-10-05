@@ -50,6 +50,14 @@ public class PlaceController extends SessionedController  {
 	@Autowired
 	PlaceRepository repoPlace;
 
+	/**
+	 * Maps admin's request to display all the places.
+	 * 
+	 * @param model
+	 * @return places.html view
+	 */
+
+	
 	@RequestMapping("")
 	public String allPlaces(Model model) {
 		
@@ -62,6 +70,16 @@ public class PlaceController extends SessionedController  {
 		return PLACES_VIEW;
 	}
 
+	/**
+	 * Maps admin's request to add new place.
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return addEventType.html view with a list of all the places
+	 */
+
+
+	
 	@GetMapping("/add")
 	public String addPlace(Model model) {
 		
@@ -73,6 +91,18 @@ public class PlaceController extends SessionedController  {
 		model.addAttribute(PLACE_ATTRIBUTE, place);
 		return ADD_PLACE_VIEW;
 	}
+
+	/**
+	 * Maps post request concerning adding a new place made by admin
+	 * via input form on addPlace.html view
+	 * 
+	 * @param addedPlace - place instance parameterized in the input form 
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return places.html view with the updated list of all the places
+	 */
 
 	@PostMapping("/add")
 	public String addPlacePost(@Valid Place addedPlace, BindingResult result, Model model) {
@@ -86,6 +116,19 @@ public class PlaceController extends SessionedController  {
 
 	}
 
+	/**
+	 * Maps admin request to delete a place with the selected id.
+	 * 
+	 * @param id
+	 *            - id of the place to be deleted
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return places.html view with the list of all the places
+	 */
+
+
+	
 	@GetMapping("/{id}/delete")
 	public String delPlace(@PathVariable Long id, Model model) {
 		
@@ -96,6 +139,18 @@ public class PlaceController extends SessionedController  {
 		repoPlace.deleteById(id);
 		return "redirect: /"+PLACES_VIEW;
 	}
+
+	/**
+	 * Maps admin request to edit a place with the selected id.
+	 * 
+	 * @param id
+	 *            - id of the place to be edited
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return places.html view with the list of all the places
+	 */
+
 
 	@GetMapping("/{id}/edit")
 	public String editPlace(@PathVariable Long id, Model model) {
@@ -108,6 +163,17 @@ public class PlaceController extends SessionedController  {
 		return EDIT_PLACE_VIEW;
 	}
 
+	/**
+	 * Maps admin's post request concerning editing a selected place 
+	 * via input form on editPlace.html view
+	 * 
+	 * @param editedPlace - place instance parameterized in the input form 
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return places.html view with the updated list of all the places
+	 */
 	
 	@PostMapping("/{id}/edit")
 	public String editPlacePost(@Valid Place editedPlace, BindingResult result, Model model) {

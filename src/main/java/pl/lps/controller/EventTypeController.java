@@ -19,12 +19,12 @@ import pl.lps.repository.EventTypeRepository;
 @RequestMapping("/eventTypes")
 public class EventTypeController extends SessionedController {
 
-	
 	/**
-	 * Name of model attribute passing selected event type to add event type and edit event type views.
+	 * Name of model attribute passing selected event type to add event type and
+	 * edit event type views.
 	 */
 	private static final String EVENT_TYPE_ATTRIBUTE = "eventTypes";
-	
+
 	/**
 	 * Name of model attribute passing list of all event types to particular views.
 	 */
@@ -32,7 +32,7 @@ public class EventTypeController extends SessionedController {
 	/**
 	 * Passes the name of home page view of this application.
 	 */
-	private static final String MAIN_VIEW = ControllerData.getMainView();	
+	private static final String MAIN_VIEW = ControllerData.getMainView();
 	/**
 	 * Passes the name of all event types view used by admin.
 	 */
@@ -45,33 +45,60 @@ public class EventTypeController extends SessionedController {
 	 * Passes the name of edit event type view used by admin.
 	 */
 	private static final String EDIT_EVENT_TYPE_VIEW = ControllerData.getEditEventTypeView();
-	
+
 	@Autowired
 	EventTypeRepository repoEventType;
 
+	/**
+	 * Maps admin's request to display all the event types.
+	 * 
+	 * @param model
+	 * @return eventTypes.html view
+	 */
+
 	@RequestMapping("")
 	public String allEventTypes(Model model) {
-		
-		if(!SessionValidation.isSessionValid()) {
+
+		if (!SessionValidation.isSessionValid()) {
 			return MAIN_VIEW;
 		}
-		
+
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
 		System.out.println(repoEventType.findAll().toString());
 		return EVENT_TYPES_VIEW;
 	}
 
+	/**
+	 * Maps admin's request to add new event type.
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return addEventType.html view with a list of all the event types
+	 */
+
 	@GetMapping("/add")
 	public String addEventType(Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
-		
+
 		EventType eventType = new EventType();
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, eventType);
 		return ADD_EVENT_TYPE_VIEW;
 	}
+
+	/**
+	 * Maps post request concerning adding a new event type made by admin
+	 * via input form on addEventType.html view
+	 * 
+	 * @param eventType - event type instance parameterized in the input form 
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return eventTypes.html view with the updated list of all the events types
+	 */
 
 	@PostMapping("/add")
 	public String addEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
@@ -85,26 +112,63 @@ public class EventTypeController extends SessionedController {
 
 	}
 
+	/**
+	 * Maps admin request to delete an event type with the selected id.
+	 * 
+	 * @param id
+	 *            - id of the event type to be deleted
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return eventTypes.html view with the list of all the event types 
+	 */
+
 	@GetMapping("/{id}/delete")
 	public String delEventType(@PathVariable Long id, Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
 		repoEventType.deleteById(id);
-		return "redirect: /"+EVENT_TYPES_VIEW;
+		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
+		return EVENT_TYPES_VIEW;
 	}
+
+	/**
+	 * Maps admin request to edit an event type with the selected id.
+	 * 
+	 * @param id
+	 *            - id of the event type to be edited
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return eventTypes.html view with the list of all the event types 
+	 */
 
 	@GetMapping("/{id}/edit")
 	public String editEventType(@PathVariable Long id, Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findOneById(id));
 		return EDIT_EVENT_TYPE_VIEW;
 	}
 
+
+	/**
+	 * Maps admin's post request concerning editing a selected event type 
+	 * via input form on edit EventType.html view
+	 * 
+	 * @param eventType - event type instance parameterized in the input form 
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return eventTypes.html view with the updated list of all the events types
+	 */
+
+	
 	@PostMapping("/{id}/edit")
 	public String editEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
