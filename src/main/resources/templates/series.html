@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Panel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
+
+</head>
+<body>
+<h4 th:text="#{page.main.title}">*</h4>
+<h2 th:text="#{user.series.page} + ' ' + ${user.userName}">*</h2>
+<p><a th:href="@{/users/adminPanel}" th:text="#{page.main}">*</a></p>
+
+<table>
+    <tr>
+    	<th th:text="#{series.id}">* </th>
+    	<th th:text="#{series.user.fullname}">* </th>
+    	<th th:text="#{series.eventType.name}">* </th>
+    	<th th:text="#{series.firstEvent.date}">* </th>
+       	<th th:text="#{series.lastEvent.date}">* </th>
+    	<th th:text="#{series.initial.hour}">* </th>
+    	<th th:text="#{series.numberOfEvents}">* </th>
+		<th th:text="#{series.placeAndRoom.name}">* </th>
+		<th th:text="#{series.client}"></th>
+    	<th th:text="#{action}">* </th>
+    </tr>
+    <tr th:each="seriesDTO : ${allSeries}">
+		<td th:text="${seriesDTO.series.id}"> </td>
+    	<td th:text="${seriesDTO.series.user.firstName} + ' ' + ${seriesDTO.series.user.lastName} "> </td>
+    	<td th:text="${seriesDTO.series.eventType.name}"> </td>
+    	<td th:text="${#dates.format(seriesDTO.seriesStartDate, 'dd-MM-yyyy')}"> </td>
+    	<td th:text="${#dates.format(seriesDTO.seriesEndDate, 'dd-MM-yyyy')}"> </td>
+      	<td>
+	      	<span th:each="hour : ${seriesDTO.seriesHours}">
+	      		<span th:text="${#dates.format(hour, 'HH:mm')}"> </span>
+	      	</span>
+      	</td>
+        <td th:text="${seriesDTO.numberOfEvents}"> </td>
+		<td >
+			<span th:each="venue : ${seriesDTO.seriesPlacesAndRooms}">
+				<span th:text="${venue}">   </span>
+			</span>
+		</td>
+		<td th:text="${seriesDTO.series.client}"></td>
+       <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.delete}">*</a> 
+       <a th:href="@{/events/}" th:text="#{series.edit}">*</a>
+       </td>
+    </tr>
+</table>
+
+</body>
+</html>
+

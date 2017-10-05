@@ -91,6 +91,15 @@ public class RoomController extends SessionedController {
 	@Autowired
 	PlaceRepository repoPlace;
 
+	/**
+	 * Maps admin's request to add new room.
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return rooms.html view with a list of all the room
+	 */
+
+	
 	@RequestMapping("")
 	public String allRooms(Model model) {
 
@@ -115,6 +124,18 @@ public class RoomController extends SessionedController {
 		return ROOMS_FOR_USER_VIEW;
 	}
 
+
+	/**
+	 * Maps admin's request to add a new room.
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return addRoom.html view with a list of all the rooms
+	 */
+
+
+
+
 	@GetMapping("/add")
 	public String addRoom(Model model) {
 
@@ -126,6 +147,18 @@ public class RoomController extends SessionedController {
 		model.addAttribute(ROOM_ATTRIBUTE, addedRoom);
 		return ADD_ROOM_VIEW;
 	}
+
+	/**
+	 * Maps post request concerning adding a new room made by admin
+	 * via input form on addRoom.html view
+	 * 
+	 * @param room - room instance parameterized in the input form 
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return rooms.html view with the updated list of all the rooms
+	 */
 
 	@PostMapping("/add")
 	public String addRoomPost(@Valid Room room, BindingResult result, Model model) {
@@ -140,6 +173,20 @@ public class RoomController extends SessionedController {
 
 	}
 
+
+
+/**
+ * Maps admin request to delete a place with the selected id.
+ * 
+ * @param id
+ *            - id of the room to be deleted
+ * 
+ * @param model
+ *            - instance of Model class used to pass attributes to the views
+ * @return rooms.html view with the list of all the rooms
+ */
+
+
 	@GetMapping("/{id}/delete")
 	public String delRoom(@PathVariable Long id, Model model) {
 
@@ -153,6 +200,17 @@ public class RoomController extends SessionedController {
 		return ROOMS_VIEW;
 	}
 
+	/**
+	 * Maps admin's request to edit a room with the selected id.
+	 * 
+	 * @param id
+	 *            - id of the room to be edited
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return rooms.html view with the list of all the rooms
+	 */
+
 	@GetMapping("/{id}/edit")
 	public String editRoom(@PathVariable Long id, Model model) {
 
@@ -163,6 +221,20 @@ public class RoomController extends SessionedController {
 		return EDIT_ROOM_VIEW;
 	}
 
+
+	/**
+	 * Maps admin's post request concerning editing a selected room 
+	 * via input form on editRoom.html view
+	 * 
+	 * @param editedRoom - room instance parameterized in the input form 
+	 * @param result
+	 *            - binding result errors
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return rooms.html view with the updated list of all the rooms
+	 */
+
+	
 	@PostMapping("/{id}/edit")
 	public String editRoomPost(@Valid Room editedRoom, BindingResult result, Model model) {
 		if (result.hasErrors()) {
@@ -176,6 +248,12 @@ public class RoomController extends SessionedController {
 
 	}
 
+	/**
+	 * Sets model attribute passing all places to add event input form view
+	 * 
+	 * @return model attribute containing all types of events
+	 */
+	
 	@ModelAttribute("ourPlaces")
 	public List<Place> getPlaces() {
 		return this.repoPlace.findAll();

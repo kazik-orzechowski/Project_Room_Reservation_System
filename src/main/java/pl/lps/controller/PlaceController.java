@@ -75,7 +75,7 @@ public class PlaceController extends SessionedController  {
 	 * 
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return addEventType.html view with a list of all the places
+	 * @return addPlace.html view with a list of all the places
 	 */
 
 

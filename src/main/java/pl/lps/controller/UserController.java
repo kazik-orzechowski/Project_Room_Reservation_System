@@ -77,6 +77,7 @@ public class UserController extends SessionedController {
 		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
+		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneByUserName("admin"));
 
 		return ADMIN_PANEL_VIEW;
 	}

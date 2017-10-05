@@ -31,12 +31,15 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/series")
 public class SeriesController extends SessionedController {
 
+	private static final String USER_SERIES_PANEL_VIEW = "userSeriesPanel";
+
+	private static final String ADD_SERIES_INFO_ATTRIBUTE = "addSeriesInfo";
+
 	/**
 	 * Name of model attribute passing result of add / edit event to event views.
 	 */
 	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
 
-	
 	public static final long HOUR = 3600 * 1000;
 	public static final long DAY = 3600 * 1000 * 24;
 	private static final String MAIN_VIEW = ControllerData.getMainView();
@@ -56,6 +59,13 @@ public class SeriesController extends SessionedController {
 	@Autowired
 	SessionValidation sv;
 
+	/**
+	 * Maps admin's request to display all the series of events.
+	 * 
+	 * @param model
+	 * @return places.html view
+	 */
+
 	@RequestMapping("")
 	public String allSeries(Model model) {
 
@@ -69,7 +79,7 @@ public class SeriesController extends SessionedController {
 	}
 
 	/**
-	 * User series list display request
+	 * Maps the request of user to display a list of this user's series of events.
 	 * 
 	 * @param id
 	 *            - user id
@@ -81,10 +91,17 @@ public class SeriesController extends SessionedController {
 	public String getSeries(@PathVariable Long id, Model model) {
 
 		if (!SessionValidation.isSessionUser(id)) {
-			return "main";
+			return MAIN_VIEW;
 		}
 
-		List<Series> seriesList = repoSeries.findAllByUserId(id);
+		List<Series> seriesList = new ArrayList<>();
+
+		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+			seriesList = repoSeries.findAll();
+		} else {
+			seriesList = repoSeries.findAllByUserId(id);
+		}
+
 		List<SeriesDTO> seriesDTOList = new ArrayList<SeriesDTO>();
 
 		for (Series series : seriesList) {
@@ -93,18 +110,18 @@ public class SeriesController extends SessionedController {
 			seriesDto.setSeries(series);
 			Hibernate.initialize(series.getEvents());
 			List<Event> events = (List<Event>) series.getEvents();
-System.err.println(series.toString());
+
 			Collections.sort(events, new Comparator<Event>() {
 				public int compare(Event e1, Event e2) {
 					return e1.getDate().compareTo(e2.getDate());
 				}
 			});
-System.err.println(events.toString());
+
 			int numberOfEvents = (int) events.size();
 			seriesDto.setSeriesStartDate(events.get(0).getDate());
 			seriesDto.setSeriesEndDate(events.get(numberOfEvents - 1).getDate());
 			seriesDto.setNumberOfEvents(numberOfEvents);
-			
+
 			// Adding all unique venues and hours of event series
 			Set<String> venuesOfEventSeries = new HashSet<>();
 			Set<Date> startHoursOfEventSeries = new HashSet<>();
@@ -112,29 +129,27 @@ System.err.println(events.toString());
 				venuesOfEventSeries.add(event.getRoom().getPlace().getName() + " sala " + event.getRoom().getNumber());
 				startHoursOfEventSeries.add(event.getHour());
 			}
-			
-			
+
 			seriesDto.setSeriesHours(startHoursOfEventSeries);
 			seriesDto.setSeriesPlacesAndRooms(venuesOfEventSeries);
-			seriesDTOList.add(seriesDto); 
+			seriesDTOList.add(seriesDto);
 
 		}
-System.err.println("Checkpoint 3");
+
 		model.addAttribute("allSeries", seriesDTOList);
 		User userCurrent = repoUser.findOneById(id);
 		model.addAttribute("user", userCurrent);
-		model.addAttribute("user", userCurrent);
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "");
+		model.addAttribute(ADD_SERIES_INFO_ATTRIBUTE, "");
 
-//		if (userCurrent.getUserName().equals("admin")) {
-//			model.addAttribute("allSeries", repoEvent.findAll());
-//			return "events";
-//		} else {
-//			model.addAttribute("allSeries", repoEvent.findAllBySeriesUserId(id));
-//		}
+		
+		 if (userCurrent.getUserName().equals("admin")) {
+			 return "series";
+		 } else {
+			 return USER_SERIES_PANEL_VIEW;
 
-		model.addAttribute("addSeriesInfo", "");
-		return "userSeriesPanel";
+		 }
+
 
 	}
 }

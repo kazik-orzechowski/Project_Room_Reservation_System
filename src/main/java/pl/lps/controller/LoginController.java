@@ -71,6 +71,7 @@ public class LoginController extends SessionedController {
 		}
 
 		if (u.getUserName().equals("admin")) {
+			model.addAttribute(LOGIN_USER_ATTRIBUTE, u);
 			return ADMIN_PANEL_VIEW;
 		} else {
 			model.addAttribute("eventType", repoEventType.findAll());

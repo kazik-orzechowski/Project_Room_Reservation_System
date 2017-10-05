@@ -12,7 +12,8 @@
 <p><a th:href="@{/rooms}" th:text="#{room.main}">*</a></p>
 <p><a th:href="@{/eventTypes}" th:text="#{eventType.main}">*</a></p>
 <p><a th:href="@{/users}" th:text="#{user.main}">*</a></p>
-<p><a th:href="@{/events/4}" th:text="#{event.main}">*</a></p>
+<p><a th:href="@{/events}" th:text="#{event.main}">*</a></p>
+<p><a th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{series.main}">*</a></p>
 
 </body>
 </html>
