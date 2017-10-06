@@ -11,24 +11,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.Place;
 import pl.lps.repository.PlaceRepository;
 
+/**
+ * PlaceController is a class used to map and process all admin requests
+ * regarding places, i.e. sites in which rooms are located. All methods are
+ * mapped at base "/places" browser path. This controller returns and feeds
+ * place related views: places.html (admin's view responsible for display of all
+ * places), addPlace.html and editPlace.html responsible for adding and editing
+ * places.
+ * 
+ * @author kaz
+ *
+ */
+
 @Controller
 @RequestMapping("/places")
-public class PlaceController extends SessionedController  {
+public class PlaceController extends SessionedController {
 
 	/**
 	 * Defines the name of place attribute used in add place and edit place views.
 	 */
-	private static final String PLACE_ATTRIBUTE = "place";
+	private static final String PLACE_ATTRIBUTE = ControllerAttributesData.getPlaceAttribute();
 
 	/**
 	 * Defines the name of all places attribute used in place list view.
 	 */
-	private static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
-	
+	private static final String ALL_PLACES_ATTRIBUTE = ControllerAttributesData.getAllPlacesAttribute();
+
 	/**
 	 * Passes the name of home page of this application.
 	 */
@@ -45,8 +58,7 @@ public class PlaceController extends SessionedController  {
 	 * Passes the name of edit place view.
 	 */
 	private static final String EDIT_PLACE_VIEW = ControllerData.getAddPlaceView();
-	
-	
+
 	@Autowired
 	PlaceRepository repoPlace;
 
@@ -54,17 +66,17 @@ public class PlaceController extends SessionedController  {
 	 * Maps admin's request to display all the places.
 	 * 
 	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
 	 * @return places.html view
 	 */
 
-	
 	@RequestMapping("")
 	public String allPlaces(Model model) {
-		
-		if(!SessionValidation.isSessionValid()) {
+
+		if (!SessionValidation.isSessionValid()) {
 			return MAIN_VIEW;
 		}
-		
+
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 		System.out.println(repoPlace.findAll().toString());
 		return PLACES_VIEW;
@@ -78,30 +90,29 @@ public class PlaceController extends SessionedController  {
 	 * @return addPlace.html view with a list of all the places
 	 */
 
-
-	
 	@GetMapping("/add")
 	public String addPlace(Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
-		
+
 		Place place = new Place();
 		model.addAttribute(PLACE_ATTRIBUTE, place);
 		return ADD_PLACE_VIEW;
 	}
 
 	/**
-	 * Maps post request concerning adding a new place made by admin
-	 * via input form on addPlace.html view
+	 * Maps post request concerning adding a new place made by admin via input form
+	 * on addPlace.html view
 	 * 
-	 * @param addedPlace - place instance parameterized in the input form 
+	 * @param addedPlace
+	 *            - place instance parameterized in the input form
 	 * @param result
 	 *            - binding result errors
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return places.html view with the updated list of all the places
+	 * @return addPlace.html if there are errors in the input form, places.html view with the updated list of all the places
 	 */
 
 	@PostMapping("/add")
@@ -127,17 +138,15 @@ public class PlaceController extends SessionedController  {
 	 * @return places.html view with the list of all the places
 	 */
 
-
-	
 	@GetMapping("/{id}/delete")
 	public String delPlace(@PathVariable Long id, Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
-		
+
 		repoPlace.deleteById(id);
-		return "redirect: /"+PLACES_VIEW;
+		return "redirect: /" + PLACES_VIEW;
 	}
 
 	/**
@@ -151,30 +160,31 @@ public class PlaceController extends SessionedController  {
 	 * @return places.html view with the list of all the places
 	 */
 
-
 	@GetMapping("/{id}/edit")
 	public String editPlace(@PathVariable Long id, Model model) {
-		
-		if(!SessionValidation.isSessionAdmin()) {
+
+		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
-		
+
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findOneById(id));
 		return EDIT_PLACE_VIEW;
 	}
 
 	/**
-	 * Maps admin's post request concerning editing a selected place 
-	 * via input form on editPlace.html view
+	 * Maps admin's post request concerning editing a selected place via input form
+	 * on editPlace.html view
 	 * 
-	 * @param editedPlace - place instance parameterized in the input form 
+	 * @param editedPlace
+	 *            - place instance parameterized in the input form
 	 * @param result
 	 *            - binding result errors
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return places.html view with the updated list of all the places
+	 * @return editPlace.html if there are errors in the input form, places.html
+	 *         view with the updated list of all the places
 	 */
-	
+
 	@PostMapping("/{id}/edit")
 	public String editPlacePost(@Valid Place editedPlace, BindingResult result, Model model) {
 		if (result.hasErrors()) {

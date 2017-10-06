@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.Event;
 import pl.lps.entity.EventType;
@@ -36,9 +37,9 @@ import pl.lps.repository.UserRepository;
 /**
  * EventController is a class used to map and process all users requests
  * regarding events. All methods are mapped at base "/events" browser path.
- * EventController returns and feeds event related views: userPanel (main user
- * view responsible for display of all user events), addEvent and edit event
- * responsible for event adding and editing
+ * EventController returns and feeds event related views: userPanel (main user's
+ * view responsible for display of all user's events), addEvent and edit event
+ * responsible for event adding and editing.
  * 
  * @author kaz
  *
@@ -50,45 +51,45 @@ public class EventController extends SessionedController {
 	/**
 	 * Name of model attribute passing selected user to event related views.
 	 */
-	protected static final String USER_ATTRIBUTE = "user";
+	protected static final String USER_ATTRIBUTE = ControllerAttributesData.getUserAttribute();
 	/**
 	 * Name of model attribute passing selected event to add event and edit event
 	 * views.
 	 */
-	protected static final String EVENT_ATTRIBUTE = "event";
+	protected static final String EVENT_ATTRIBUTE = ControllerAttributesData.getEventAttribute();
 	/**
 	 * Name of model attribute passing list of all or selected events to particular
 	 * views.
 	 */
-	protected static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+	protected static final String ALL_EVENTS_ATTRIBUTE = ControllerAttributesData.getAllEventsAttribute();
 	/**
 	 * Name of model attribute passing event type attribute of selected event to
 	 * event views.
 	 */
-	protected static final String EVENT_TYPE_ATTRIBUTE = "eventType";
+	protected static final String EVENT_TYPE_ATTRIBUTE = ControllerAttributesData.getEventTypeAttribute();
 	/**
 	 * Name of model attribute passing a list all places to event views.
 	 */
-	protected static final String ALL_PLACES_ATTRIBUTE = "allPlaces";
+	protected static final String ALL_PLACES_ATTRIBUTE = ControllerAttributesData.getAllPlacesAttribute();
 
 	/**
 	 * Name of model attribute passing a list all places to event views.
 	 */
-	protected static final String REQUESTED_EVENT_ATTRIBUTE = "requestedEvent";
+	protected static final String REQUESTED_EVENT_ATTRIBUTE = ControllerAttributesData.getRequestedEventAttribute();
 	/**
 	 * Name of model attribute passing result of add / edit event to event views.
 	 */
-	protected static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
+	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
 
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
-	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedAttribute();
 	/**
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
 	 */
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
 
 	/**
 	 * The long value that represents an hour in milliseconds
@@ -198,7 +199,7 @@ public class EventController extends SessionedController {
 	 * @param id
 	 *            - this user id
 	 * @param model
-	 *            - instance used to pass attributes to the views
+	 *            - instance of Model class used to pass attributes to the views
 	 * @return userPanel.html view fed with this user's event list and this user
 	 *         object
 	 */

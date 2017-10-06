@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.Place;
 import pl.lps.entity.Room;
@@ -21,24 +22,36 @@ import pl.lps.repository.PlaceRepository;
 import pl.lps.repository.RoomRepository;
 import pl.lps.repository.UserRepository;
 
+/**
+ * RoomController is a class used to map and process all admin and user requests
+ * regarding rooms. All methods are mapped at base "/rooms" browser path. This
+ * controller returns and feeds room related views: rooms.html (admin's view
+ * responsible for display of all rooms), addRoom.html and editRoom.html
+ * responsible for adding and editing room as well as user's view
+ * roomsForUser.html.
+ * 
+ * @author kaz
+ *
+ */
+
 @Controller
 @RequestMapping("/rooms")
 public class RoomController extends SessionedController {
 
 	@Autowired
 	UserRepository repoUser;
-	
+
 	/**
 	 * Defines the name of place attribute used in room list view to show current
 	 * place that list refers to.
 	 */
-	private static final String PLACE_ATTRIBUTE = "place";
+	private static final String PLACE_ATTRIBUTE =  "place";
 
 	/**
 	 * Defines the name of room attribute used in add place and edit room views.
 	 */
 	private static final String ROOM_ATTRIBUTE = "room";
-	
+
 	/**
 	 * Defines the name of place attribute used in place list view.
 	 */
@@ -73,18 +86,18 @@ public class RoomController extends SessionedController {
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
-	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
-	
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedAttribute();
+
 	/**
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
 	 */
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
+	/**
+	 * Name of model attribute passing User class object to room related views.
+	 */
+	private static final String USER_ATTRIBUTE = ControllerAttributesData.getUserAttribute();
 
-
-	private static final String USER_ATTRIBUTE = "user";
-	
-	
 	@Autowired
 	RoomRepository repoRoom;
 
@@ -99,7 +112,6 @@ public class RoomController extends SessionedController {
 	 * @return rooms.html view with a list of all the room
 	 */
 
-	
 	@RequestMapping("")
 	public String allRooms(Model model) {
 
@@ -124,7 +136,6 @@ public class RoomController extends SessionedController {
 		return ROOMS_FOR_USER_VIEW;
 	}
 
-
 	/**
 	 * Maps admin's request to add a new room.
 	 * 
@@ -132,9 +143,6 @@ public class RoomController extends SessionedController {
 	 *            - instance of Model class used to pass attributes to the views
 	 * @return addRoom.html view with a list of all the rooms
 	 */
-
-
-
 
 	@GetMapping("/add")
 	public String addRoom(Model model) {
@@ -149,10 +157,11 @@ public class RoomController extends SessionedController {
 	}
 
 	/**
-	 * Maps post request concerning adding a new room made by admin
-	 * via input form on addRoom.html view
+	 * Maps post request concerning adding a new room made by admin via input form
+	 * on addRoom.html view
 	 * 
-	 * @param room - room instance parameterized in the input form 
+	 * @param room
+	 *            - room instance parameterized in the input form
 	 * @param result
 	 *            - binding result errors
 	 * @param model
@@ -173,19 +182,16 @@ public class RoomController extends SessionedController {
 
 	}
 
-
-
-/**
- * Maps admin request to delete a place with the selected id.
- * 
- * @param id
- *            - id of the room to be deleted
- * 
- * @param model
- *            - instance of Model class used to pass attributes to the views
- * @return rooms.html view with the list of all the rooms
- */
-
+	/**
+	 * Maps admin request to delete a place with the selected id.
+	 * 
+	 * @param id
+	 *            - id of the room to be deleted
+	 * 
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 * @return rooms.html view with the list of all the rooms
+	 */
 
 	@GetMapping("/{id}/delete")
 	public String delRoom(@PathVariable Long id, Model model) {
@@ -221,12 +227,12 @@ public class RoomController extends SessionedController {
 		return EDIT_ROOM_VIEW;
 	}
 
-
 	/**
-	 * Maps admin's post request concerning editing a selected room 
-	 * via input form on editRoom.html view
+	 * Maps admin's post request concerning editing a selected room via input form
+	 * on editRoom.html view
 	 * 
-	 * @param editedRoom - room instance parameterized in the input form 
+	 * @param editedRoom
+	 *            - room instance parameterized in the input form
 	 * @param result
 	 *            - binding result errors
 	 * @param model
@@ -234,7 +240,6 @@ public class RoomController extends SessionedController {
 	 * @return rooms.html view with the updated list of all the rooms
 	 */
 
-	
 	@PostMapping("/{id}/edit")
 	public String editRoomPost(@Valid Room editedRoom, BindingResult result, Model model) {
 		if (result.hasErrors()) {
@@ -253,7 +258,7 @@ public class RoomController extends SessionedController {
 	 * 
 	 * @return model attribute containing all types of events
 	 */
-	
+
 	@ModelAttribute("ourPlaces")
 	public List<Place> getPlaces() {
 		return this.repoPlace.findAll();

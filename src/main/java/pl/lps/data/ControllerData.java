@@ -13,108 +13,118 @@ package pl.lps.data;
 public final class ControllerData {
 
 	/**
-	 * Contains the name of user sign up view.
+	 * Name of user sign up view.
 	 */
 	static final String SIGNUP_VIEW = "signup";
 
 	/**
-	 * Contains the name of user login view.
+	 * Name of user login view.
 	 */
 	static final String LOGIN_VIEW = "login";
 
 	/**
-	 * Contains the name of user home page view .
+	 * Name of user home page view .
 	 */
 	static final String USER_PANEL_VIEW = "userPanel";
 
 	/**
-	 * Contains the name of edit user view available to admin and user.
+	 * Name of series view of this application.
+	 */
+	private static final String SERIES_VIEW = "series";
+	
+	public static String getSeriesView() {
+		return SERIES_VIEW;
+	}
+
+	/**
+	 * Name of edit user view available to admin and user.
 	 */
 	static final String EDIT_USER_VIEW = "editUser";
 
 	/**
-	 * Contains the name of all events view available to admin.
+	 * Name of all events view available to admin.
 	 */
 	static final String EVENTS_VIEW = "events";
 
 	/**
-	 * Contains the name of home page of this application.
+	 * Name of home page of this application.
 	 */
 	static final String MAIN_VIEW = "main";
 
 	/**
-	 * Contains the name of edit event view available to admin and user.
+	 * Name of edit event view available to admin and user.
 	 */
 	static final String EDIT_EVENT_VIEW = "editEvent";
 
 	/**
-	 * Contains the name of add event view available to user.
+	 * Name of add event view available to user.
 	 */
 	static final String ADD_EVENT_VIEW = "addEvent";
 
 	/**
-	 * Contains the name of all users view available to admin .
+	 * Name of all users view available to admin .
 	 */
 	static final String USERS_VIEW = "users";
 
 	/**
-	 * Contains the name of admin panel / home page view.
+	 * Name of admin panel / home page view.
 	 */
 	static final String ADMIN_PANEL_VIEW = "adminPanel";
 
 	/**
-	 * Contains the name of all event types view available to admin .
+	 * Name of all event types view available to admin .
 	 */
 	static final String EVENT_TYPES_VIEW = "eventTypes";
 
 	/**
-	 * Contains the name of edit event type view available to admin .
+	 * Name of edit event type view available to admin .
 	 */
 	static final String EDIT_EVENT_TYPE_VIEW = "editEventType";
 
 	/**
-	 * Contains the name of add event type view available to admin .
+	 * Name of add event type view available to admin .
 	 */
 	static final String ADD_EVENT_TYPE_VIEW = "addEventType";
 
 	/**
-	 * Contains the name of all rooms view available to admin .
+	 * Name of all rooms view available to admin .
 	 */
 	static final String ROOMS_VIEW = "rooms";
 
+	
 	/**
-	 * Contains the name of edit room view available to admin .
+	 * Name of edit room view available to admin .
 	 */
 	static final String EDIT_ROOM_VIEW = "editRoom";
 
 	/**
-	 * Contains the name of add room view available to admin .
+	 * Name of add room view available to admin .
 	 */
 	static final String ADD_ROOM_VIEW = "addRoom";
 
 	/**
-	 * Contains the name of edit place / site view available to admin .
+	 * Name of edit place / site view available to admin .
 	 */
 	static final String EDIT_PLACE_VIEW = "editPlace";
 
 	/**
-	 * Contains the name of add place / site view available to admin .
+	 * Name of add place / site view available to admin .
 	 */
 	static final String ADD_PLACE_VIEW = "addPlace";
 
 	/**
-	 * Contains the name of all places / sites view available to admin .
+	 * Name of all places / sites view available to admin .
 	 */
 	static final String PLACES_VIEW = "places";
 
 	/**
-	 * Contains the name of the view displaying rooms available to user during
+	 * Name of the view displaying rooms available to user during
 	 * reservation process.
 	 */
 	static final String ROOMS_FOR_USER_VIEW = "roomsForUser";
 
 	/**
-	 * Contains the name of the view displaying list of user's series.
+	 * Name of the view displaying list of user's series.
 	 */
 	private static final String USER_SERIES_PANEL_VIEW = "userSeriesPanel";
 	

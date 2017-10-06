@@ -11,9 +11,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.EventType;
 import pl.lps.repository.EventTypeRepository;
+
+/**
+ * EventTypeController is a class used to map and process all admin requests
+ * regarding types of events. All methods are mapped at base "/eventTypes"
+ * browser path. This controller returns and feeds event type related views:
+ * eventTypes.html (admin's view responsible for display of all types of event),
+ * addEventType.html and editEventType.html responsible for adding and editing
+ * event types.
+ * 
+ * @author kaz
+ *
+ */
 
 @Controller
 @RequestMapping("/eventTypes")
@@ -23,26 +36,26 @@ public class EventTypeController extends SessionedController {
 	 * Name of model attribute passing selected event type to add event type and
 	 * edit event type views.
 	 */
-	private static final String EVENT_TYPE_ATTRIBUTE = "eventTypes";
+	private static final String EVENT_TYPE_ATTRIBUTE = ControllerAttributesData.getEventTypeAttribute();
 
 	/**
 	 * Name of model attribute passing list of all event types to particular views.
 	 */
-	private static final String ALL_EVENT_TYPES_ATTRIBUTE = "allEventTypes";
+	private static final String ALL_EVENT_TYPES_ATTRIBUTE = ControllerAttributesData.getAllEventsAttribute();
 	/**
-	 * Passes the name of home page view of this application.
+	 * Name of home page view of this application.
 	 */
 	private static final String MAIN_VIEW = ControllerData.getMainView();
 	/**
-	 * Passes the name of all event types view used by admin.
+	 * Name of all event types view used by admin.
 	 */
 	private static final String EVENT_TYPES_VIEW = ControllerData.getEventTypesView();
 	/**
-	 * Passes the name of add event type view used by admin.
+	 * Name of add event type view used by admin.
 	 */
 	private static final String ADD_EVENT_TYPE_VIEW = ControllerData.getAddEventTypeView();
 	/**
-	 * Passes the name of edit event type view used by admin.
+	 * Name of edit event type view used by admin.
 	 */
 	private static final String EDIT_EVENT_TYPE_VIEW = ControllerData.getEditEventTypeView();
 
@@ -53,6 +66,7 @@ public class EventTypeController extends SessionedController {
 	 * Maps admin's request to display all the event types.
 	 * 
 	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
 	 * @return eventTypes.html view
 	 */
 
@@ -89,15 +103,17 @@ public class EventTypeController extends SessionedController {
 	}
 
 	/**
-	 * Maps post request concerning adding a new event type made by admin
-	 * via input form on addEventType.html view
+	 * Maps post request concerning adding a new event type made by admin via input
+	 * form on addEventType.html view
 	 * 
-	 * @param eventType - event type instance parameterized in the input form 
+	 * @param eventType
+	 *            - event type instance parameterized in the input form
 	 * @param result
 	 *            - binding result errors
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return eventTypes.html view with the updated list of all the events types
+	 * @return addEventType.html if there are errors in the input form,
+	 *         eventTypes.html view with the updated list of all the events types
 	 */
 
 	@PostMapping("/add")
@@ -120,7 +136,7 @@ public class EventTypeController extends SessionedController {
 	 * 
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return eventTypes.html view with the list of all the event types 
+	 * @return eventTypes.html view with the list of all the event types
 	 */
 
 	@GetMapping("/{id}/delete")
@@ -142,7 +158,7 @@ public class EventTypeController extends SessionedController {
 	 * 
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return eventTypes.html view with the list of all the event types 
+	 * @return eventTypes.html view with the list of all the event types
 	 */
 
 	@GetMapping("/{id}/edit")
@@ -155,20 +171,20 @@ public class EventTypeController extends SessionedController {
 		return EDIT_EVENT_TYPE_VIEW;
 	}
 
-
 	/**
-	 * Maps admin's post request concerning editing a selected event type 
-	 * via input form on edit EventType.html view
+	 * Maps admin's post request concerning editing a selected event type via input
+	 * form on edit EventType.html view
 	 * 
-	 * @param eventType - event type instance parameterized in the input form 
+	 * @param eventType
+	 *            - event type instance parameterized in the input form
 	 * @param result
 	 *            - binding result errors
 	 * @param model
 	 *            - instance of Model class used to pass attributes to the views
-	 * @return eventTypes.html view with the updated list of all the events types
+	 * @return editEventType.html if there are errors in the input form,
+	 *         eventTypes.html view with the updated list of all the events types
 	 */
 
-	
 	@PostMapping("/{id}/edit")
 	public String editEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
