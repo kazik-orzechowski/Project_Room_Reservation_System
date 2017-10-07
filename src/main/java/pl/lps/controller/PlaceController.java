@@ -57,7 +57,7 @@ public class PlaceController extends SessionedController {
 	/**
 	 * Passes the name of edit place view.
 	 */
-	private static final String EDIT_PLACE_VIEW = ControllerData.getAddPlaceView();
+	private static final String EDIT_PLACE_VIEW = ControllerData.getEditPlaceView();
 
 	@Autowired
 	PlaceRepository repoPlace;
@@ -98,6 +98,7 @@ public class PlaceController extends SessionedController {
 		}
 
 		Place place = new Place();
+		model.addAttribute("addOrEdit", "add");
 		model.addAttribute(PLACE_ATTRIBUTE, place);
 		return EDIT_PLACE_VIEW;
 	}
@@ -119,7 +120,7 @@ public class PlaceController extends SessionedController {
 	public String addPlacePost(@Valid Place addedPlace, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return ADD_PLACE_VIEW;
+			return EDIT_PLACE_VIEW;
 		}
 		repoPlace.save(addedPlace);
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
@@ -166,7 +167,7 @@ public class PlaceController extends SessionedController {
 		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
-
+		model.addAttribute("addOrEdit", "edit");
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findOneById(id));
 		return EDIT_PLACE_VIEW;
 	}
