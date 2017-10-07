@@ -23,8 +23,8 @@ public class ControllerAttributesData {
 	private static final String USER_ATTRIBUTE = "user";
 
 	/**
-	 * Name of model attribute passing list of all users to users
-	 * view accessible to admin.
+	 * Name of model attribute passing list of all users to users view accessible to
+	 * admin.
 	 */
 
 	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
@@ -34,8 +34,6 @@ public class ControllerAttributesData {
 	 * views.
 	 */
 
-
-	
 	private static final String EVENT_ATTRIBUTE = "event";
 	/**
 	 * Name of model attribute passing list of all or selected events to particular
@@ -66,7 +64,7 @@ public class ControllerAttributesData {
 	 * regarding the series of events added to the event repository.
 	 */
 	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = "addEventSeriesInfo";
-	
+
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
@@ -138,9 +136,24 @@ public class ControllerAttributesData {
 	private static final String ALL_EVENT_TYPES_ATTRIBUTE = "allEventTypes";
 
 	/**
+	 * Name of edit views (place, room, event type) used to pass information if the
+	 * view is used for adding new or editing current instance.
+	 */
+	private static final String ADD_OR_EDIT_ATTRIBUTE = "addOrEdit";
+
+	/**
+	 * Gets the name of edit views (place, room, event type) used to pass information if the
+	 * view is used for adding new or editing current instance.
+	 */
+	public static String getAddOrEditAttribute() {
+		return ADD_OR_EDIT_ATTRIBUTE;
+	}
+
+	/**
 	 * Gets the name of place attribute used in room list view to show current place
 	 * that list refers to.
 	 */
+
 	public static String getPlaceAttribute() {
 		return PLACE_ATTRIBUTE;
 	}
@@ -170,8 +183,6 @@ public class ControllerAttributesData {
 		return USER_PANEL_EVENTS_ATTRIBUTE;
 	}
 
-	
-	
 	/**
 	 * Gets the name of model attribute passing user name to login view.
 	 */
@@ -318,10 +329,9 @@ public class ControllerAttributesData {
 		return SERIES_DISPLAYED_ATTRIBUTE;
 	}
 
-	
 	/**
-	 * Gets the name of model attribute passing an to the user panel view information
-	 * regarding the series of events added to the event repository.
+	 * Gets the name of model attribute passing an to the user panel view
+	 * information regarding the series of events added to the event repository.
 	 */
 
 	public static String getRequestedEventSeriesAttribute() {
@@ -336,10 +346,11 @@ public class ControllerAttributesData {
 		return ALL_EVENT_TYPES_ATTRIBUTE;
 	}
 
+	/**
+	 * Gets the name of all users list attribute used in user list view .
+	 */
 	public static String getAllUsersAttribute() {
 		return ALL_USERS_ATTRIBUTE;
 	}
 
-	
-	
 }

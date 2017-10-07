@@ -7,10 +7,9 @@
 
 <body>
 
-  <h2 th:text="#{room.editroom}">*</h2>
-  <h3 th:text="${room.number}"></h3>
+  <h2 th:text="${addOrEdit == 'edit'} ? #{room.editroom} + #{room.number.notcaps} + ' ' + ${room.number} : #{room.addroom}">*</h2>
 
-        <form method="post" id="room-form" th:action="@{/rooms/{id}/edit/(id=${room.id})}" th:object="${room}">
+        <form method="post" id="room-form" th:action="${addOrEdit == 'edit'} ? @{/rooms/{id}/edit/(id=${room.id})} : @{/rooms/add}" th:object="${room}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         

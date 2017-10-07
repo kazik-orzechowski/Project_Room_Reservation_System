@@ -42,6 +42,13 @@ public class EventTypeController extends SessionedController {
 	 * Name of model attribute passing list of all event types to particular views.
 	 */
 	private static final String ALL_EVENT_TYPES_ATTRIBUTE = ControllerAttributesData.getAllEventTypesAttribute();
+
+	/**
+	 * Name of edit views (place, room, event type) used to pass information if the
+	 * view is used for adding new or editing current instance.
+	 */
+	private static final String ADD_OR_EDIT_ATTRIBUTE = ControllerAttributesData.getAddOrEditAttribute();
+	
 	/**
 	 * Name of home page view of this application.
 	 */
@@ -99,7 +106,9 @@ public class EventTypeController extends SessionedController {
 
 		EventType eventType = new EventType();
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, eventType);
-		return ADD_EVENT_TYPE_VIEW;
+		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
+
+		return EDIT_EVENT_TYPE_VIEW;
 	}
 
 	/**
@@ -120,7 +129,7 @@ public class EventTypeController extends SessionedController {
 	public String addEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			System.err.println(result);
-			return ADD_EVENT_TYPE_VIEW;
+			return EDIT_EVENT_TYPE_VIEW;
 		}
 		repoEventType.save(eventType);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
@@ -168,6 +177,8 @@ public class EventTypeController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findOneById(id));
+		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
+
 		return EDIT_EVENT_TYPE_VIEW;
 	}
 

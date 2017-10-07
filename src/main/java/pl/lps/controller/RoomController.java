@@ -74,11 +74,6 @@ public class RoomController extends SessionedController {
 	private static final String ROOMS_VIEW = ControllerData.getRoomsView();
 
 	/**
-	 * Passes the name of add room view.
-	 */
-	private static final String ADD_ROOM_VIEW = ControllerData.getAddRoomView();
-
-	/**
 	 * Passes the name of edit room view.
 	 */
 	private static final String EDIT_ROOM_VIEW = ControllerData.getEditRoomView();
@@ -99,6 +94,13 @@ public class RoomController extends SessionedController {
 	 */
 	private static final String USER_ATTRIBUTE = ControllerAttributesData.getUserAttribute();
 
+	/**
+	 * Name of edit views (place, room, event type) used to pass information if the
+	 * view is used for adding new or editing current instance.
+	 */
+	private static final String ADD_OR_EDIT_ATTRIBUTE = ControllerAttributesData.getAddOrEditAttribute();
+
+	
 	@Autowired
 	RoomRepository repoRoom;
 
@@ -154,7 +156,9 @@ public class RoomController extends SessionedController {
 
 		Room addedRoom = new Room();
 		model.addAttribute(ROOM_ATTRIBUTE, addedRoom);
-		return ADD_ROOM_VIEW;
+		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
+
+		return EDIT_ROOM_VIEW;
 	}
 
 	/**
@@ -175,7 +179,7 @@ public class RoomController extends SessionedController {
 		if (result.hasErrors()
 				|| repoRoom.findOneByPlaceAndNumber(room.getPlace(), room.getNumber()) != null) {
 			System.err.println(result);
-			return ADD_ROOM_VIEW;
+			return EDIT_ROOM_VIEW;
 		}
 		repoRoom.save(room);
 		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
@@ -226,6 +230,8 @@ public class RoomController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(ROOM_ATTRIBUTE, repoRoom.findOneById(id));
+		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
+
 		return EDIT_ROOM_VIEW;
 	}
 

@@ -6,10 +6,11 @@
 <script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
 <body>
 
-  <h2 th:text="#{eventType.editEventType}">*</h2>
-  <h3 th:text="${eventType.name}"></h3>
+  <h2 th:text="${addOrEdit == 'edit'} ? #{eventType.editeventType} : #{eventType.addeventType}">*</h2>
+  <h3 th:text="${addOrEdit == 'edit'} ? ${eventType.name} : ' '"></h3>
 
-        <form method="post" id="eventType-form" th:action="@{/eventTypes/{id}/edit/(id=${eventType.id})}" th:object="${eventType}">
+         <form method="post" id="eventType-form" th:action="${addOrEdit == 'edit'} ? 
+         @{/eventTypes/{id}/edit/(id=${eventType.id})} : @{/eventTypes/add}" th:object="${eventType}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         

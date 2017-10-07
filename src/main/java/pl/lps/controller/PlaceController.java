@@ -32,6 +32,14 @@ import pl.lps.repository.PlaceRepository;
 @RequestMapping("/places")
 public class PlaceController extends SessionedController {
 
+	
+	/**
+	 * Name of edit views (place, room, event type) used to pass information if the
+	 * view is used for adding new or editing current instance.
+	 */
+	private static final String ADD_OR_EDIT_ATTRIBUTE = ControllerAttributesData.getAddOrEditAttribute();
+
+
 	/**
 	 * Defines the name of place attribute used in add place and edit place views.
 	 */
@@ -50,10 +58,6 @@ public class PlaceController extends SessionedController {
 	 * Passes the name of all places view.
 	 */
 	private static final String PLACES_VIEW = ControllerData.getPlacesView();
-	/**
-	 * Passes the name of add place view.
-	 */
-	private static final String ADD_PLACE_VIEW = ControllerData.getAddPlaceView();
 	/**
 	 * Passes the name of edit place view.
 	 */
@@ -98,7 +102,7 @@ public class PlaceController extends SessionedController {
 		}
 
 		Place place = new Place();
-		model.addAttribute("addOrEdit", "add");
+		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
 		model.addAttribute(PLACE_ATTRIBUTE, place);
 		return EDIT_PLACE_VIEW;
 	}
@@ -167,7 +171,7 @@ public class PlaceController extends SessionedController {
 		if (!SessionValidation.isSessionAdmin()) {
 			return MAIN_VIEW;
 		}
-		model.addAttribute("addOrEdit", "edit");
+		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findOneById(id));
 		return EDIT_PLACE_VIEW;
 	}
