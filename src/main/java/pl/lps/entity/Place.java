@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -34,17 +35,20 @@ public class Place {
 	 * Unique place name
 	 */
 	@Column(unique = true)
-	@NotEmpty
+	@NotNull
+	@Length(min=1, max=50)
 	private String name;
 	/**
 	 * Street and street number of place
 	 */
-	@NotEmpty
+	@NotNull
+	@Length(min=2, max=50)
 	private String street;
 	/**
 	 * City of place
 	 */
-	@NotEmpty
+	@NotNull
+	@Length(min=2, max=40)
 	private String city;
 	/**
 	 * Description of place
