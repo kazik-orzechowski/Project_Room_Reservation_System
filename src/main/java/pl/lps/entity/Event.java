@@ -104,6 +104,17 @@ public class Event {
 		this.room = room;
 	}
 
+	public Event(Date date, Date hour, Date endHour, Long eventDuration, Long eventSeats,
+			Series series) {
+		super();
+		this.date = date;
+		this.hour = hour;
+		this.endHour = endHour;
+		this.eventDuration = eventDuration;
+		this.eventSeats = eventSeats;
+		this.series = series;
+	}
+
 	/**
 	 * Gets the id of this event
 	 * 

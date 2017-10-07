@@ -45,7 +45,7 @@ public class RoomController extends SessionedController {
 	 * Defines the name of place attribute used in room list view to show current
 	 * place that list refers to.
 	 */
-	private static final String PLACE_ATTRIBUTE =  "place";
+	private static final String PLACE_ATTRIBUTE = "place";
 
 	/**
 	 * Defines the name of room attribute used in add place and edit room views.
@@ -92,7 +92,8 @@ public class RoomController extends SessionedController {
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
 	 */
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData
+			.getSeriesDisplayedInfoAttribute();
 	/**
 	 * Name of model attribute passing User class object to room related views.
 	 */
@@ -171,7 +172,8 @@ public class RoomController extends SessionedController {
 
 	@PostMapping("/add")
 	public String addRoomPost(@Valid Room room, BindingResult result, Model model) {
-		if (result.hasErrors()) {
+		if (result.hasErrors()
+				|| repoRoom.findOneByPlaceAndNumber(room.getPlace(), room.getNumber()) != null) {
 			System.err.println(result);
 			return ADD_ROOM_VIEW;
 		}
@@ -242,7 +244,9 @@ public class RoomController extends SessionedController {
 
 	@PostMapping("/{id}/edit")
 	public String editRoomPost(@Valid Room editedRoom, BindingResult result, Model model) {
-		if (result.hasErrors()) {
+		repoRoom.delete(editedRoom);
+		if (result.hasErrors()
+				|| repoRoom.findOneByPlaceAndNumber(editedRoom.getPlace(), editedRoom.getNumber()) != null) {
 			System.err.println(result);
 			return EDIT_ROOM_VIEW;
 		}

@@ -41,7 +41,7 @@ public class EventTypeController extends SessionedController {
 	/**
 	 * Name of model attribute passing list of all event types to particular views.
 	 */
-	private static final String ALL_EVENT_TYPES_ATTRIBUTE = ControllerAttributesData.getAllEventsAttribute();
+	private static final String ALL_EVENT_TYPES_ATTRIBUTE = ControllerAttributesData.getAllEventTypesAttribute();
 	/**
 	 * Name of home page view of this application.
 	 */

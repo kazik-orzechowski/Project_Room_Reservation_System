@@ -21,10 +21,21 @@ public class ControllerAttributesData {
 	 * Name of model attribute passing selected user to event related views.
 	 */
 	private static final String USER_ATTRIBUTE = "user";
+
+	/**
+	 * Name of model attribute passing list of all users to users
+	 * view accessible to admin.
+	 */
+
+	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
+
 	/**
 	 * Name of model attribute passing selected event to add event and edit event
 	 * views.
 	 */
+
+
+	
 	private static final String EVENT_ATTRIBUTE = "event";
 	/**
 	 * Name of model attribute passing list of all or selected events to particular
@@ -50,6 +61,12 @@ public class ControllerAttributesData {
 	 */
 	private static final String ADD_EVENT_INFO_ATTRIBUTE = "addEventInfo";
 
+	/**
+	 * Name of model attribute passing an to the user panel view information
+	 * regarding the series of events added to the event repository.
+	 */
+	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = "addEventSeriesInfo";
+	
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
@@ -153,6 +170,8 @@ public class ControllerAttributesData {
 		return USER_PANEL_EVENTS_ATTRIBUTE;
 	}
 
+	
+	
 	/**
 	 * Gets the name of model attribute passing user name to login view.
 	 */
@@ -299,4 +318,28 @@ public class ControllerAttributesData {
 		return SERIES_DISPLAYED_ATTRIBUTE;
 	}
 
+	
+	/**
+	 * Gets the name of model attribute passing an to the user panel view information
+	 * regarding the series of events added to the event repository.
+	 */
+
+	public static String getRequestedEventSeriesAttribute() {
+		return REQUESTED_EVENT_SERIES_ATTRIBUTE;
+	}
+
+	/**
+	 * Gets the name of all event type list attribute used in event type list view .
+	 */
+
+	public static String getAllEventTypesAttribute() {
+		return ALL_EVENT_TYPES_ATTRIBUTE;
+	}
+
+	public static String getAllUsersAttribute() {
+		return ALL_USERS_ATTRIBUTE;
+	}
+
+	
+	
 }

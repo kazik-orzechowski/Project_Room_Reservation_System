@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import pl.lps.entity.Event;
+import pl.lps.entity.Place;
 import pl.lps.entity.Room;
 import pl.lps.entity.User;
 
@@ -37,12 +38,21 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	/**
 	 * Room search method
+	 * 
 	 * @param id
 	 * @return list of rooms located in the place with specified by place id
 	 */
 	List<Room> findAllByPlaceId(Long id);
 
-	
+	/**
+	 * Room search method used for matching new room number in selected place with
+	 * existing room number to assert that the new room will be given the unique number.
+	 * 
+	 * @param place - place in which this room is located
+	 * @param number - number of the room
+	 * @return room located with the specified number in the specified place 
+	 */
+	Room findOneByPlaceAndNumber(Place place, Long number);
 
 	/**
 	 * Room search method
@@ -52,13 +62,12 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	@Query("SELECT r FROM Room r ORDER BY r.place.name DESC")
 	List<Room> findAllListOrderByPlaceName();
 
-	
 	/**
 	 * Room search method
 	 * 
 	 * @param seats
-	 * @return list of rooms with number of seats equal or higher than the specified number
-	 *         of seats
+	 * @return list of rooms with number of seats equal or higher than the specified
+	 *         number of seats
 	 */
 	@Query("SELECT r FROM Room r WHERE r.seats >= :minSeats")
 	List<Room> findAllByRoomSize(@Param("minSeats") Long seats);
@@ -68,8 +77,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	 * 
 	 * @param id
 	 * @param seats
-	 * @return list of rooms with number of seats equal or higher than the specified number
-	 *         of seats in the place pointed by place id
+	 * @return list of rooms with number of seats equal or higher than the specified
+	 *         number of seats in the place pointed by place id
 	 */
 	@Query("SELECT r FROM Room r WHERE r.seats >= :minSeats AND r.place.id = :placeId")
 	List<Room> findAllByPlaceAndRoomSize(@Param("placeId") Long id, @Param("minSeats") Long seats);

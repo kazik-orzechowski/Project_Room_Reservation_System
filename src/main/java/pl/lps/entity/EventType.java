@@ -7,8 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
+
 
 /**
  * EventType entity class concerns type of events that are possible to be used
@@ -32,13 +34,14 @@ public class EventType {
 	 * Unique name of event type
 	 */
 	@Column(unique = true)
-	@NotEmpty
+	@NotNull
 	private String name;
 
 	/**
 	 * Description of event type
 	 */
-	@NotEmpty
+	@NotNull
+	@Length(min=0, max=200)
 	private String description;
 
 	/**

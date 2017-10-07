@@ -19,8 +19,8 @@
 <a th:href="@{/events/{id}/add/{ids}/ (id=${user.id}, ids=${displayedSeriesId})}" th:text="#{event.add}">*</a></p>
 
 <p><a th:text="${requestedEvent != null} ? 
-${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + ${#dates.format(requestedEvent.hour, 'HH:mm')}
-: ${addEventInfo}">*</a></p>
+${addEventInfo} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + 
+${#dates.format(requestedEvent.hour, 'HH:mm')} + ' ' +${addEventSeriesInfo}: ${addEventInfo}">*</a></p>
 
 <h2 th:text="#{event.list} + ' ' +${displayedSeries}">* <span th:text="${displayedSeries}">*</span></h2>
 

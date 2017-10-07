@@ -91,8 +91,8 @@
                         class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" id="place" name="placeId">
-                        <option th:each="place : ${ourPlaces}" th:value="${{place.id}}" th:text="${place.name}">Wireframe
+                   <select class="form-control" id="place" name="placeId">
+                        <option th:each="place : ${ourPlaces}" th:value="${{place.id}}" th:text="${place.name}" >Wireframe
                         </option>
 					</select>
                 </div>

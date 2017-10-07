@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
 import pl.lps.repository.EventRepository;
@@ -41,19 +42,19 @@ public class UserController extends SessionedController {
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
-	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedAttribute();
 
 	/**
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
 	 */
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = "displayedSeries";
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
 
-	private static final String USER_ATTRIBUTE = "user";
+	private static final String USER_ATTRIBUTE = ControllerAttributesData.getUserAttribute();
 
-	private static final String ALL_USERS_ATTRIBUTE = "allUsers";
+	private static final String ALL_USERS_ATTRIBUTE = ControllerAttributesData.getAllUsersAttribute();
 
-	private static final String ALL_EVENTS_ATTRIBUTE = "allEvents";
+	private static final String ALL_EVENTS_ATTRIBUTE = ControllerAttributesData.getAllEventsAttribute();
 
 	private static final String USERS_VIEW = ControllerData.getUsersView();
 
@@ -217,6 +218,7 @@ public class UserController extends SessionedController {
 			return MAIN_VIEW;
 		}
 
+		
 		User addedUser = new User();
 		model.addAttribute(USER_ATTRIBUTE, addedUser);
 		return SIGNUP_VIEW;

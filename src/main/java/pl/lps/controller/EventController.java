@@ -79,8 +79,14 @@ public class EventController extends SessionedController {
 	/**
 	 * Name of model attribute passing result of add / edit event to event views.
 	 */
-	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
 
+	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
+	/**
+	 * Name of model attribute passing an to the user panel view information
+	 * regarding the series of events added to the event repository.
+	 */
+	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = ControllerAttributesData
+			.getRequestedEventSeriesAttribute();
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
@@ -89,7 +95,8 @@ public class EventController extends SessionedController {
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
 	 */
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData
+			.getSeriesDisplayedInfoAttribute();
 
 	/**
 	 * The long value that represents an hour in milliseconds
@@ -368,28 +375,31 @@ public class EventController extends SessionedController {
 		if (roomPossible != null) {
 
 			Integer i = 0;
-			for (Date date2 : requestedDates) {
+			for (Date eventStartDate : requestedDates) {
 				if (i == 0) {
 					repoSeries.save(series);
 				}
 
 				i++;
-
-				Event event = new Event();
-				event.setDate(date2);
-				event.setHour(hour);
-				event.setEventSeats(eventSeats);
-				event.setEndHour(endHour);
-				event.setEventDuration(eventDuration);
-				event.setRoom(repoRoom.findOneById(roomPossible.getId()));
-				event.setSeries(series);
+				Event event = new Event(eventStartDate, hour, endHour, eventDuration, eventSeats, series, roomPossible);
 				repoEvent.save(event);
 				// Model attribute definition regarding first event only used for addition /
 				// edition confirmation purposes. !!!!! To be completed with information
 				// regarding series of event !!!!!
 				if (i == 1) {
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
+				} else if (i == 2) {
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE,
+							" oraz kolejne " + (i - 1) + " zdarzenie po" + eventCycleLength + " dniach");
+				} else if (i > 2 && i < 6) {
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE,
+							" oraz kolejne " + (i - 1) + " zdarzenia, co " + eventCycleLength + " dni");
+				} else if (i >= 6) {
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE,
+							" oraz kolejnych " + i + " zdarzeń, co " + eventCycleLength + " dni");
+
 				}
+
 			}
 		}
 
@@ -427,6 +437,7 @@ public class EventController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
+System.err.println("GET" + repoEvent.findOneById(ide).getRoom().getPlace().getName().toString());
 		model.addAttribute(EVENT_ATTRIBUTE, repoEvent.findOneById(ide));
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
@@ -464,11 +475,16 @@ public class EventController extends SessionedController {
 		Date endHour = new Date(event.getHour().getTime() + event.getEventDuration() * HOUR);
 		event.setEndHour(endHour);
 		event.setId(ide);
-		repoEvent.deleteById(ide);
 		Room roomCurrent = event.getRoom();
+
+System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
+
 		Long placeCurrentId = placeId;
 		Long seatsRequired = event.getEventSeats();
-		if (placeId == event.getRoom().getId() && repoEvent
+		// event deleted temporarily from repo to not disturb in the search for free rooms (e.g. in
+		// the situation when user wants to move 2 hour event one hour earlier
+		repoEvent.deleteById(ide);
+		if (placeId == roomCurrent.getPlace().getId() && repoEvent
 				.findCollidingEvents(event.getDate(), roomCurrent.getId(), event.getHour(), event.getEndHour())
 				.isEmpty()) {
 			roomPossible = roomCurrent;
@@ -499,6 +515,7 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Zmieniono zdarzenie");
+		model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "");
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
 		return userVsAdminRedirect(id, ids, model);
@@ -572,6 +589,7 @@ public class EventController extends SessionedController {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 			return EVENTS_VIEW;
 		} else {
+			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 			if (ids == 0) {
 				model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");

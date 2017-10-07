@@ -99,7 +99,7 @@ public class PlaceController extends SessionedController {
 
 		Place place = new Place();
 		model.addAttribute(PLACE_ATTRIBUTE, place);
-		return ADD_PLACE_VIEW;
+		return EDIT_PLACE_VIEW;
 	}
 
 	/**
