@@ -197,6 +197,8 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneByUserName("admin"));
+		model.addAttribute("activeMenuItem", "events");
+
 		return EVENTS_VIEW;
 	}
 
@@ -607,6 +609,7 @@ public class EventController extends SessionedController {
 	private String userVsAdminRedirect(Long id, Long ids, Model model) {
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+			model.addAttribute("activeMenuItem", "events");
 			return EVENTS_VIEW;
 		} else {
 			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);

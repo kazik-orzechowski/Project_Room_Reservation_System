@@ -28,7 +28,7 @@
                <label class="form-label" for="number" th:text="#{room.number}"><span
                        class="required">*</span>
                </label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
+               <div class="form-input">
                    <input th:field="*{number}" type="text" id="number" th:value="${room.number}" required="required"
                           class="form-control col-md-7 col-xs-12"/>
                </div>
@@ -38,7 +38,7 @@
                <label class="form-label" for="floor" th:text="#{room.floor}"><span
                        class="required">*</span>
                </label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
+               <div class="form-input">
                    <input th:field="*{floor}" type="text" id="floor"  th:value="${room.floor}" required="required"
                           class="form-control col-md-7 col-xs-12"/>
                </div>
@@ -48,7 +48,7 @@
                <label class="form-label" for="place" th:text="#{room.place.name}"><span
                        class="required">*</span>
                </label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
+               <div class="form-input">
                    <select class="form-control" id="place" th:field="*{place}">
                        <option th:each="place : ${ourPlaces}" th:value="${{place}}" th:text="${place.name}">Wireframe
                         </option>
@@ -60,7 +60,7 @@
                <label class="form-label" for="seats" th:text="#{room.seats}"><span
                        class="required">*</span>
                </label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
+               <div class="form-input">
                    <input th:field="*{seats}" type="text" id="seats"  th:value="${room.seats}" required="required"
                           class="form-control col-md-7 col-xs-12"/>
                </div>
@@ -70,11 +70,11 @@
                <label class="form-label" for="description" th:text="#{room.description}"><span
                        class="required">*</span>
                </label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
+               <div class="form-input">
                    <input th:field="*{description}" id="description" th:value="${room.description}" required="required"
                           class="form-control col-md-7 col-xs-12"/>
                </div>
-           </div>
+           </div><br/><br/>
                    
            <div class="event-group">
                    <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>

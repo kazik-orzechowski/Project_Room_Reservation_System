@@ -196,11 +196,12 @@ public class SeriesController extends SessionedController {
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 		model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+		model.addAttribute("activeMenuItem", "series");
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+
 			return SERIES_VIEW;
 		} else {
-			model.addAttribute("activeMenuItem", "series");
 			return USER_SERIES_PANEL_VIEW;
 
 		}
