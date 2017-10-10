@@ -1,77 +1,88 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<meta charset="utf-8" /> 
-<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
-<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
-
+<head>
+    <title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
 
 <body>
-<h1 th:text="#{page.main.title}">*</h1>
-  <h2 th:text="#{user.signup}">*</h2>
 
+<div class="header">
+    <div th:replace="fragments/header :: headerMain">Header </div>
+</div>
+
+<div class="container">
+
+<h1 th:text="#{page.main.title}">*</h1>
+<h2 th:text="#{user.signup}">*</h2>
+
+	<div class="col-md-6 col-sm-6 col-xs-12">
+	
         <form method="post" id="user-form" th:action="@{/register}" th:object="${user}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         
 
-            <div class="form-user">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" th:text="#{user.firstname}"><span
+            <div class="form-group">
+                <label class="form-label" for="first-name" th:text="#{user.firstname}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{firstName}" type="text" id="first-name" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
            
-            <div class="form-user">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-Name" th:text="#{user.lastname}"><span
+            <div class="form-group">
+                <label class="form-label" for="last-Name" th:text="#{user.lastname}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{lastName}" type="text" id="last-name" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
             
-             <div class="form-user">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-Name" th:text="#{user.username}"><span
+             <div class="form-group">
+                <label class="form-label" for="user-Name" th:text="#{user.username}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{userName}" type="text" id="user-name" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
             
-             <div class="form-user">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password" th:text="#{user.password}"><span
+             <div class="form-group">
+                <label class="form-label" for="password" th:text="#{user.password}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{password}" type="password" id="password" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
                       
-             <div class="form-user">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email" th:text="#{user.email}"><span
+             <div class="form-group">
+                <label class="form-label" for="email" th:text="#{user.email}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{email}" type="email" id="email" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
-            </div>
+            </div><br/><br/>
         
-  			<div class="ln_solid"></div>
             <div class="event-group">
                 <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
                 <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
             </div>
-
-</form>
-    
+		</form>
+	</div>
+</div>
 </body>
 </html>

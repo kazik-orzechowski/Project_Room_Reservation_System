@@ -27,7 +27,7 @@
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         
 
-            <div class="form-user">
+            <div class="form-group">
                 <label class="form-label" for="first-name" th:text="#{user.firstname}"><span
                         class="required">*</span>
                 </label>
@@ -37,7 +37,7 @@
                 </div>
             </div>
            
-            <div class="form-user">
+            <div class="form-group">
                 <label class="form-label" for="last-Name" th:text="#{user.lastname}"><span
                         class="required">*</span>
                 </label>
@@ -48,7 +48,7 @@
             </div>
             
                   
-             <div class="form-user">
+             <div class="form-group">
                 <label class="form-label" for="password" th:text="#{user.password}"><span
                         class="required">*</span>
                 </label>
@@ -58,7 +58,7 @@
                 </div>
             </div>
                       
-             <div class="form-user">
+             <div class="form-group">
                 <label class="form-label" for="email" th:text="#{user.email}"><span
                         class="required">*</span>
                 </label>
@@ -67,7 +67,7 @@
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
-            <div class="form-user">
+            <div class="form-group">
                 <label class="form-label" for="user-Name" th:text="#{user.username}"><span
                         class="required">*</span>
                 </label>
@@ -77,7 +77,7 @@
           		</div>
             </div><br/><br/>
 			
-            <div class="event-group">
+            <div class="form-group">
                     <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
                     <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
             </div>
