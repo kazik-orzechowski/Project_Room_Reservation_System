@@ -11,7 +11,7 @@
 <p><a th:href="@{/register}" th:text="#{user.signup}">*</a></p>
 <p><a th:href="@{/login}" th:text="#{user.login}">*</a></p>
 
-<p><a th:text="${message} !=null ? ${message} + ${username} : ''">*</a></p>
+<p><a th:text="${message !=null} ? #{${message}} + ${username} : ''">*</a></p>
 
 
 </body>

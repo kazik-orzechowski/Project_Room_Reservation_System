@@ -2,6 +2,7 @@ package pl.lps.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -70,7 +71,7 @@ public class Event {
 	/**
 	 * Room assigned to event
 	 */
-	@ManyToOne
+	@ManyToOne 
 	private Room room;
 
 	/**

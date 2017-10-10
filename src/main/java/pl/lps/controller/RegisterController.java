@@ -91,8 +91,8 @@ public class RegisterController {
 			return SIGNUP_VIEW;
 		}
 		this.repoUser.save(user);
-		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "Zarejestrowano użytkownika ");
-		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, user.getUserName());
+		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "user.signed.up");
+		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, " " + user.getUserName());
 
 		return MAIN_VIEW;
 	}

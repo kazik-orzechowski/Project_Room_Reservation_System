@@ -27,6 +27,8 @@ import pl.lps.entity.Place;
 import pl.lps.entity.Room;
 import pl.lps.entity.Series;
 import pl.lps.entity.User;
+import pl.lps.model.SessionValidation;
+import pl.lps.model.SessionedController;
 import pl.lps.repository.EventRepository;
 import pl.lps.repository.EventTypeRepository;
 import pl.lps.repository.PlaceRepository;
@@ -249,16 +251,20 @@ public class EventController extends SessionedController {
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
-
+		model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
+		
 		if (ids == 0) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
-
+			
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesId(ids));
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE,
 					" " + repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
 		}
+		model.addAttribute("activeMenuItem", "home");
+		
 		return USER_PANEL_VIEW;
 
 	}
@@ -287,9 +293,11 @@ public class EventController extends SessionedController {
 
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
-		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "");
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
+		model.addAttribute("activeMenuItem", "addEvent");
 
+		
 		return ADD_EVENT_VIEW;
 	}
 
@@ -362,11 +370,11 @@ public class EventController extends SessionedController {
 			if (repoEvent.findManyCollidingEvents(requestedDates, room.getId(), hour, endHour).isEmpty()) {
 
 				roomPossible = room;
-				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Dodano zdarzenie");
+				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.added");
 
 				break;
 			} else {
-				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
+				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.no.rooms");
 				roomPossible = null;
 			}
 
@@ -383,23 +391,22 @@ public class EventController extends SessionedController {
 				i++;
 				Event event = new Event(eventStartDate, hour, endHour, eventDuration, eventSeats, series, roomPossible);
 				repoEvent.save(event);
-				// Model attribute definition regarding first event only used for addition /
-				// edition confirmation purposes. !!!!! To be completed with information
-				// regarding series of event !!!!!
+
+				
+				model.addAttribute("eventCycleLength", eventCycleLength);
+				model.addAttribute("followingEvents", (i - 1));
+
 				if (i == 1) {
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
+
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
 				} else if (i == 2) {
-					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE,
-							" oraz kolejne " + (i - 1) + " zdarzenie po" + eventCycleLength + " dniach");
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.2");
 				} else if (i > 2 && i < 6) {
-					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE,
-							" oraz kolejne " + (i - 1) + " zdarzenia, co " + eventCycleLength + " dni");
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.3.to.5");
 				} else if (i >= 6) {
-					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE,
-							" oraz kolejnych " + i + " zdarzeń, co " + eventCycleLength + " dni");
-
+					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.from.6");
 				}
-
 			}
 		}
 
@@ -437,7 +444,7 @@ public class EventController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-System.err.println("GET" + repoEvent.findOneById(ide).getRoom().getPlace().getName().toString());
+		System.err.println("GET" + repoEvent.findOneById(ide).getRoom().getPlace().getName().toString());
 		model.addAttribute(EVENT_ATTRIBUTE, repoEvent.findOneById(ide));
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
@@ -477,11 +484,12 @@ System.err.println("GET" + repoEvent.findOneById(ide).getRoom().getPlace().getNa
 		event.setId(ide);
 		Room roomCurrent = event.getRoom();
 
-System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
+		System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
 
 		Long placeCurrentId = placeId;
 		Long seatsRequired = event.getEventSeats();
-		// event deleted temporarily from repo to not disturb in the search for free rooms (e.g. in
+		// event deleted temporarily from repo to not disturb in the search for free
+		// rooms (e.g. in
 		// the situation when user wants to move 2 hour event one hour earlier
 		repoEvent.deleteById(ide);
 		if (placeId == roomCurrent.getPlace().getId() && repoEvent
@@ -499,7 +507,7 @@ System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
 					event.setRoom(roomPossible);
 					break;
 				} else {
-					model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Brak wolnych sal");
+					model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.no.rooms");
 					model.addAttribute(EVENT_ATTRIBUTE, event);
 					model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 					model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
@@ -514,8 +522,8 @@ System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Zmieniono zdarzenie");
-		model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "");
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.changed");
+		model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
 		return userVsAdminRedirect(id, ids, model);
@@ -543,14 +551,26 @@ System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
 		}
-
+		
+		/**
+		 * Series removal when the last even of the series has been deleted.
+		 */
+		Event event = repoEvent.findOneById(ide);
+		if (event.getSeries().getEvents().size() == 1) {
+			repoSeries.delete(event.getSeries());
+		}
+			
 		repoEvent.deleteById(ide);
+		
+		
+		
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
 
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "Usunięto zdarzenie");
+		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.removed");
+		model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 
 		return userVsAdminRedirect(id, ids, model);
 	}
@@ -600,6 +620,7 @@ System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
 				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " "
 						+ repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
 			}
+			model.addAttribute("activeMenuItem", "home");
 
 			return USER_PANEL_VIEW;
 

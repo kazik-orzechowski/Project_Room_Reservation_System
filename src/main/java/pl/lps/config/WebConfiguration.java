@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @Configuration
 public class WebConfiguration {
@@ -16,4 +19,7 @@ public class WebConfiguration {
 	        slr.setDefaultLocale(new Locale("pl"));
 	        return slr;
 	}
+
+	 
+
 }

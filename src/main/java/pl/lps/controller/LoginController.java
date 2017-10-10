@@ -11,6 +11,7 @@ import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
 import pl.lps.model.LoginData;
+import pl.lps.model.SessionedController;
 import pl.lps.repository.EventRepository;
 import pl.lps.repository.EventTypeRepository;
 import pl.lps.repository.UserRepository;
@@ -27,6 +28,27 @@ import pl.lps.repository.UserRepository;
 @Controller
 @RequestMapping("/login")
 public class LoginController extends SessionedController {
+
+	/**
+	 * Name of model attribute passing an information to the user panel view
+	 * regarding the current series (all or name} being displayed
+	 */
+
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
+
+	/**
+	 * Id of the series that should be displayed (0 for all series)
+	 */
+	private static final String SERIES_DISPLAYED_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedAttribute();
+
+
+	/**
+	 * Name of model attribute passing an to the user panel view information
+	 * regarding the series of events added to the event repository.
+	 */
+	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = ControllerAttributesData
+			.getRequestedEventSeriesAttribute();
+
 
 	/**
 	 * Name of model attribute passing a list of all or selected events to user
@@ -46,6 +68,13 @@ public class LoginController extends SessionedController {
 	 */
 	private static final String LOGIN_USER_ATTRIBUTE = ControllerAttributesData.getLoginUserAttribute();
 	/**
+	 * Name of model attribute passing result of add / edit event to event views.
+	 */
+
+	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
+
+	
+	/**
 	 * Passes the name of home page of this application.
 	 */
 	private static final String MAIN_VIEW = ControllerData.getMainView();
@@ -62,18 +91,7 @@ public class LoginController extends SessionedController {
 	 */
 	private static final String USER_PANEL_VIEW = ControllerData.getUserPanelView();
 
-	/**
-	 * Name of model attribute passing an information to the user panel view
-	 * regarding the current series (all or name} being displayed
-	 */
-
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
-
-	/**
-	 * Id of the series that should be displayed (0 for all series)
-	 */
-	private static final String SERIES_DISPLAYED_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedAttribute();
-
+	
 	@Autowired
 	UserRepository repoUser;
 
@@ -118,7 +136,7 @@ public class LoginController extends SessionedController {
 		User user = this.repoUser.findByUserName(userData.getLogin());
 		if (user == null) {
 			model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "Wprowadź prawidłowe dane");
-			model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, "");
+			model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, "null");
 			return LOGIN_VIEW;
 		}
 
@@ -134,9 +152,13 @@ public class LoginController extends SessionedController {
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
 			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(user.getId()));
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
+			model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 
 			// 0 for all series to be displayed
 			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
+			model.addAttribute("activeMenuItem", "home");
+
 			return USER_PANEL_VIEW;
 		}
 	}

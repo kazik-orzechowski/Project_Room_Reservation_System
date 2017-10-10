@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.User;
+import pl.lps.model.SessionValidation;
+import pl.lps.model.SessionedController;
 import pl.lps.repository.EventRepository;
 import pl.lps.repository.EventTypeRepository;
 import pl.lps.repository.UserRepository;
@@ -50,6 +52,12 @@ public class UserController extends SessionedController {
 	 */
 	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
 
+	/**
+	 * Name of model attribute passing result of add / edit event to event views.
+	 */
+
+	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
+
 	private static final String USER_ATTRIBUTE = ControllerAttributesData.getUserAttribute();
 
 	private static final String ALL_USERS_ATTRIBUTE = ControllerAttributesData.getAllUsersAttribute();
@@ -68,6 +76,21 @@ public class UserController extends SessionedController {
 
 	private static final String SIGNUP_VIEW = ControllerData.getSignupView();
 
+	/**
+	 * Name of model attribute passing an to the user panel view information
+	 * regarding the series of events added to the event repository.
+	 */
+	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = ControllerAttributesData
+			.getRequestedEventSeriesAttribute();
+
+
+	/**
+	 * Name of model attribute passing a list of all or selected events to user
+	 * panel view.
+	 */
+	private static final String USER_PANEL_EVENTS_ATTRIBUTE = ControllerAttributesData.getUserPanelEventsAttribute();
+	
+	
 	@Autowired
 	UserRepository repoUser;
 
@@ -160,7 +183,7 @@ public class UserController extends SessionedController {
 		} else {
 			model.addAttribute("returnUrl", "/" + EVENTS_VIEW + "/" + id);
 		}
-
+		model.addAttribute("activeMenuItem", "editUser");
 		return EDIT_USER_VIEW;
 	}
 
@@ -196,8 +219,13 @@ public class UserController extends SessionedController {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 			model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
-			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
 
+			model.addAttribute("eventType", repoEventType.findAll());
+			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
+			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
+			model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
+			model.addAttribute("displayedSeriesId", 0);
+			
 			return USER_PANEL_VIEW;
 		}
 

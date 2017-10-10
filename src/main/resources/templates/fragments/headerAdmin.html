@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Grand Reserve</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+<header th:fragment="header" th:inline="text">
+
+ <nav class="navbar navbar-inverse" >
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Grand Reserve</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li th:class="${activeMenuItem == 'home'} ? 'active' : ''" ><a th:href="@{/users/adminPanel}" >Administrator home</a></li>
+      <li th:class="${activeMenuItem == 'places'} ? 'active' : ''"><a th:href="@{/places}" th:text="#{places.main}">Event</a></li>
+      <li th:class="${activeMenuItem == 'rooms'} ? 'active' : ''"><a th:href="@{/rooms}" th:text="#{room.main}">Rooms </a></li>
+      <li th:class="${activeMenuItem == 'series'} ? 'active' : ''"><a th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{series.main}">Series</a></li>
+      <li th:class="${activeMenuItem == 'events'} ? 'active' : ''"><a th:href="@{/events}" th:text="#{event.main}" >Events</a></li>
+      <li th:class="${activeMenuItem == 'users'} ? 'active' : ''"><a  th:href="@{/users}" th:text="#{user.main}">Users</a></li>
+      <li><a th:href="@{/logout}" th:text="#{user.logout}"></a></li>
+    </ul>
+  </div>
+</nav> 
+</header>
+
+</body>
+</html>

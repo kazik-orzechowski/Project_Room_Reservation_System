@@ -3,6 +3,7 @@ package pl.lps.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -62,7 +63,7 @@ public class Room {
 	/**
 	 * Reference to events assigned to room
 	 */
-	@OneToMany(mappedBy = "room")
+	@OneToMany(mappedBy = "room", cascade=CascadeType.ALL)
 	private List<Event> events = new ArrayList<Event>();
 
 	/**

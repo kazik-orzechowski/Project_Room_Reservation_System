@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.model.LoginData;
+import pl.lps.model.SessionedController;
 
 /**
  * LoginController is a controller class used to map and process user requests
@@ -41,7 +42,7 @@ public class MainControler extends SessionedController {
 	 * Name of User class user attribute used in session.
 	 */
 	private static final String SESSION_USER_ATTRIBUTE = ControllerAttributesData.getSessionUserAttribute();
-
+	
 	
 	/**
 	 * Maps user request to get to the home page of the application.
@@ -54,12 +55,13 @@ public class MainControler extends SessionedController {
 		LoginData loginData = (LoginData) session().getAttribute(SESSION_USER_ATTRIBUTE );
 
 		if (session().getAttribute(SESSION_USER_ATTRIBUTE ) != null) {
-			model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "#{user.logged.in}");
+			model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "user.logged.in");
 			model.addAttribute(MAIN_USERNAME_ATTRIBUTE, " " + loginData.getLogin());
 		}
 
-		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "");
-		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, "");
+
+		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "null");
+		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, " ");
 
 		return MAIN_VIEW;
 	}

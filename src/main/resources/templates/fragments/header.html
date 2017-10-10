@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Grand Reserve</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css">
+<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+<header th:fragment="header" th:inline="text">
+<p th:text=${activeMenuItem}></p> 
+ <nav class="navbar navbar-inverse" >
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Grand Reserve</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li th:class="${activeMenuItem == 'home'} ? 'active' : ''" ><a th:href="@{/events/{id}/series/0 (id=${session.user.id})}" >Home</a></li>
+      <li th:class="${activeMenuItem == 'addEvent'} ? 'active' : ''"><a th:href="${displayedSeriesId == null} ? @{/events/{id}/add/0/ (id=${user.id})} : @{/events/{id}/add/{ids}/ (id=${user.id}, ids=${displayedSeriesId})}" th:text="#{event.add}">Event</a></li>
+      <li th:class="${activeMenuItem == 'series'} ? 'active' : ''"><a class="dropdown-toggle" th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{event.series.list}">Series
+       </a></li>
+      <li th:class="${activeMenuItem == 'rooms'} ? 'active' : ''"><a th:href="@{/rooms/forUser/{id}/{ids}/ (id=${user.id}, ids=${displayedSeriesId})}" th:text="#{room.list}">Rooms</a></li>
+      <li th:class="${activeMenuItem == 'editUser'} ? 'active' : ''"><a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edituser}" > </a>*</li>
+      <li><a th:text="${session.user.userName}"></a></li>
+      <li><a th:href="@{/logout}" th:text="#{user.logout}"></a></li>
+    </ul>
+  </div>
+</nav> 
+</header>
+
+</body>
+</html>

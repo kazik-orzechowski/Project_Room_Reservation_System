@@ -10,47 +10,57 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <link rel="stylesheet" th:href="@{/css/grandReserve.css}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+
 
 <body>
-  <h4 th:text="#{page.main.title}">*</h4>
-  <h2 th:text="#{event.edit.page}">*</h2>
-  <h3 th:text="#{user.username} + ' ' + ${user.userName}"></h3>
-  <p th:text="#{event.series.eventType.name} + ' ' + ${event.series.eventType.name}"> </p>
-  <p th:text="#{event.client} + ' ' + ${event.series.client}"> </p>
- 
+
+<div class="header">
+    <div th:replace="fragments/header :: header">Header </div>
+</div>
+<div class="container">
+<h2 th:text="#{event.edit.page}">*</h2>
+
+   <div class="col-md-6 col-sm-6 col-xs-12">
+		<p><b th:text="#{event.series.eventType.name} + ' '"></b> <span th:text = "${event.series.eventType.name}"></span> </p>
+		<p><b th:text="#{event.client} + ' '"></b> <span th:text="${event.series.client}"></span> </p>
+	
         <form method="post" id="event-form" th:action="@{/events/{id}/edit/{ide}/{ids} 
         (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})}" th:object="${event}">
-			<ul th:if="${#fields.hasErrors('*')}">
+			<ul th:if="${#fields.hasErrors('*')}" >
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         
 
-            <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dateStart" th:text="#{event.date}"><span
+            <div class="form-group">
+                <label class="form-label" for="dateStart" th:text="#{event.date}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{date}" type="text" id="dateStart" th:value="${event.date}" required="required"
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
-           
-                     <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hour" th:text="#{event.hour}"><span
+	        <br/>
+            <br/>
+         
+                     <div class="form-group">
+                <label class="form-label" for="hour" th:text="#{event.hour}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{hour}" type="text" id="hour" th:value="${event.hour}" required="required"
                            class="form-control col-md-7 col-xs-12 timepicker"/>
                 </div>
             </div>
-         
+            <br/>
+            <br/>
         
           
-          <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="eventDuration" th:text="#{event.eventDuration}"><span
+          <div class="form-group">
+                <label class="form-label" for="eventDuration" th:text="#{event.eventDuration}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <select class="form-control" id="eventDuration" th:field="*{eventDuration}">
                     	<option  th:value="1" th:text="#{event.eventDuration.1}">*</option>
                         <option  th:value="2" th:text="#{event.eventDuration.2}">*</option>
@@ -65,32 +75,36 @@
                </div>
           
           
-          <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="seats" th:text="#{event.seats}"><span
+          <div class="form-group">
+                <label class="form-label" for="seats" th:text="#{event.seats}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{eventSeats}" type="number" id="seats" min="1" max="20" 
                     		th:value="${event.eventSeats}" required="required"
                            	class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
+            <br/>
+            <br/>
             
-            <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="series" 
+            <div class="form-group">
+                <label class="form-label" for="series" 
                 		th:text="#{event.series}"><span class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{series}" type="text" id="series"  
                     		th:value="${event.series}" required="required"
                            	class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
+			<br/>
+			<br/>
 			<div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="place" th:text="#{event.place.suggested}"><span
+                <label class="form-label" for="place" th:text="#{event.place.suggested}"><span
                         class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                    <select class="form-control" id="place" name="placeId">
                         <option th:each="place : ${ourPlaces}" th:value="${{place.id}}" th:text="${place.name}" >Wireframe
                         </option>
@@ -99,25 +113,26 @@
                </div>
             
             
-            <div class="form-event">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="room" 
+            <div class="form-group">
+                <label class="form-label" for="room" 
                 		th:text="#{event.room}"><span class="required">*</span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-input">
                     <input th:field="*{room}" type="text" id="room"  
                     		th:value="${event.room}" required="required"
                            	class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
+            <br/>
+            <br/>
             
-       <div class="ln_solid"></div>
-                <div class="event-group">
+            <div class="form-group">
                     <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
                     <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
-                </div>
-
+            </div>
 </form>
-    
+</div>
+</div>    
 
  <script type="text/javascript">
  $( document ).ready(function() {

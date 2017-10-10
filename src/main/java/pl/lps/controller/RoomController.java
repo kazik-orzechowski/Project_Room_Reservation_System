@@ -18,6 +18,8 @@ import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.Place;
 import pl.lps.entity.Room;
+import pl.lps.model.SessionValidation;
+import pl.lps.model.SessionedController;
 import pl.lps.repository.PlaceRepository;
 import pl.lps.repository.RoomRepository;
 import pl.lps.repository.UserRepository;
@@ -136,6 +138,8 @@ public class RoomController extends SessionedController {
 		model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
+		model.addAttribute("activeMenuItem", "rooms");
+
 		return ROOMS_FOR_USER_VIEW;
 	}
 

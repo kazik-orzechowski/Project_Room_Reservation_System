@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
 import pl.lps.entity.Place;
+import pl.lps.model.SessionValidation;
+import pl.lps.model.SessionedController;
 import pl.lps.repository.PlaceRepository;
 
 /**
