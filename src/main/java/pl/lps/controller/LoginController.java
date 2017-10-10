@@ -146,6 +146,7 @@ public class LoginController extends SessionedController {
 
 		if (user.getUserName().equals("admin")) {
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
+			model.addAttribute("activeMenuItem", "home");
 			return ADMIN_PANEL_VIEW;
 		} else {
 			model.addAttribute("eventType", repoEventType.findAll());

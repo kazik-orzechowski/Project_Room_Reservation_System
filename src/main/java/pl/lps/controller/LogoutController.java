@@ -52,8 +52,10 @@ public class LogoutController extends SessionedController {
 
 		User u = (User) session().getAttribute(SESSION_USER_ATTRIBUTE);
 		session().setAttribute(SESSION_USER_ATTRIBUTE, null);
+
 		model.addAttribute(MAIN_MESSAGE_ATTRIBUTE, "page.main.logout");
 		model.addAttribute(MAIN_USERNAME_ATTRIBUTE, " " + u.getUserName());
+		
 		return MAIN_VIEW;
 	}
 

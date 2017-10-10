@@ -115,6 +115,7 @@ public class UserController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneByUserName("admin"));
+		model.addAttribute("activeMenuItem", "home");
 
 		return ADMIN_PANEL_VIEW;
 	}
@@ -136,6 +137,7 @@ public class UserController extends SessionedController {
 
 		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
 		System.out.println(repoUser.findAll().toString());
+		model.addAttribute("activeMenuItem", "users");
 		return USERS_VIEW;
 	}
 
@@ -156,6 +158,8 @@ public class UserController extends SessionedController {
 		}
 		repoUser.deleteById(id);
 		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
+		model.addAttribute("activeMenuItem", "users");
+
 		return USERS_VIEW;
 	}
 
@@ -180,10 +184,12 @@ public class UserController extends SessionedController {
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute("returnUrl", "/" + USERS_VIEW);
+			model.addAttribute("activeMenuItem", "users");
 		} else {
 			model.addAttribute("returnUrl", "/" + EVENTS_VIEW + "/" + id);
 		}
 		model.addAttribute("activeMenuItem", "editUser");
+
 		return EDIT_USER_VIEW;
 	}
 
@@ -214,6 +220,7 @@ public class UserController extends SessionedController {
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
+			model.addAttribute("activeMenuItem", "users");
 			return USERS_VIEW;
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
@@ -225,6 +232,7 @@ public class UserController extends SessionedController {
 			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 			model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 			model.addAttribute("displayedSeriesId", 0);
+			model.addAttribute("activeMenuItem", "home");
 			
 			return USER_PANEL_VIEW;
 		}

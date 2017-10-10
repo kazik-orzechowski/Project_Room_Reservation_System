@@ -124,6 +124,7 @@ public class RoomController extends SessionedController {
 			return MAIN_VIEW;
 		}
 
+		model.addAttribute("activeMenuItem", "rooms");
 		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		return ROOMS_VIEW;
 	}
@@ -161,6 +162,8 @@ public class RoomController extends SessionedController {
 		Room addedRoom = new Room();
 		model.addAttribute(ROOM_ATTRIBUTE, addedRoom);
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
+		
+		model.addAttribute("activeMenuItem", "rooms");
 
 		return EDIT_ROOM_VIEW;
 	}
@@ -188,6 +191,8 @@ public class RoomController extends SessionedController {
 		repoRoom.save(room);
 		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findAll());
+		model.addAttribute("activeMenuItem", "rooms");
+		
 		return ROOMS_VIEW;
 
 	}
@@ -212,7 +217,8 @@ public class RoomController extends SessionedController {
 		repoRoom.deleteById(id);
 		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findAll());
-
+		model.addAttribute("activeMenuItem", "rooms");
+		
 		return ROOMS_VIEW;
 	}
 
@@ -235,7 +241,8 @@ public class RoomController extends SessionedController {
 		}
 		model.addAttribute(ROOM_ATTRIBUTE, repoRoom.findOneById(id));
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
-
+		model.addAttribute("activeMenuItem", "rooms");
+		
 		return EDIT_ROOM_VIEW;
 	}
 
@@ -263,6 +270,8 @@ public class RoomController extends SessionedController {
 		repoRoom.save(editedRoom);
 		model.addAttribute(ALL_ROOMS_ATTRIBUTE, repoRoom.findAllListOrderByPlaceName());
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findAll());
+		model.addAttribute("activeMenuItem", "rooms");
+		
 		return ROOMS_VIEW;
 
 	}

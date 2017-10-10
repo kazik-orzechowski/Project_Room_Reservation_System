@@ -84,7 +84,8 @@ public class PlaceController extends SessionedController {
 		}
 
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
-		System.out.println(repoPlace.findAll().toString());
+		model.addAttribute("activeMenuItem", "places");
+		
 		return PLACES_VIEW;
 	}
 
@@ -106,6 +107,8 @@ public class PlaceController extends SessionedController {
 		Place place = new Place();
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
 		model.addAttribute(PLACE_ATTRIBUTE, place);
+		model.addAttribute("activeMenuItem", "places");
+
 		return EDIT_PLACE_VIEW;
 	}
 
@@ -130,6 +133,8 @@ public class PlaceController extends SessionedController {
 		}
 		repoPlace.save(addedPlace);
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
+		model.addAttribute("activeMenuItem", "places");
+
 		return PLACES_VIEW;
 
 	}
@@ -153,6 +158,8 @@ public class PlaceController extends SessionedController {
 		}
 
 		repoPlace.deleteById(id);
+		model.addAttribute("activeMenuItem", "places");
+
 		return "redirect: /" + PLACES_VIEW;
 	}
 
@@ -175,6 +182,8 @@ public class PlaceController extends SessionedController {
 		}
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findOneById(id));
+		model.addAttribute("activeMenuItem", "places");
+
 		return EDIT_PLACE_VIEW;
 	}
 
@@ -199,6 +208,7 @@ public class PlaceController extends SessionedController {
 			return EDIT_PLACE_VIEW;
 		}
 		repoPlace.save(editedPlace);
+		model.addAttribute("activeMenuItem", "places");
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 		return PLACES_VIEW;
 

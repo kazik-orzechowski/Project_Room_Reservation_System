@@ -88,6 +88,8 @@ public class EventTypeController extends SessionedController {
 
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
 		System.out.println(repoEventType.findAll().toString());
+		model.addAttribute("activeMenuItem", "eventTypes");
+
 		return EVENT_TYPES_VIEW;
 	}
 
@@ -109,6 +111,7 @@ public class EventTypeController extends SessionedController {
 		EventType eventType = new EventType();
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, eventType);
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
+		model.addAttribute("activeMenuItem", "eventTypes");
 
 		return EDIT_EVENT_TYPE_VIEW;
 	}
@@ -135,6 +138,7 @@ public class EventTypeController extends SessionedController {
 		}
 		repoEventType.save(eventType);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute("activeMenuItem", "eventTypes");
 		return EVENT_TYPES_VIEW;
 
 	}
@@ -158,6 +162,7 @@ public class EventTypeController extends SessionedController {
 		}
 		repoEventType.deleteById(id);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute("activeMenuItem", "eventTypes");
 		return EVENT_TYPES_VIEW;
 	}
 
@@ -180,7 +185,7 @@ public class EventTypeController extends SessionedController {
 		}
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findOneById(id));
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
-
+		model.addAttribute("activeMenuItem", "eventTypes");
 		return EDIT_EVENT_TYPE_VIEW;
 	}
 
@@ -206,6 +211,7 @@ public class EventTypeController extends SessionedController {
 		}
 		repoEventType.save(eventType);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
+		model.addAttribute("activeMenuItem", "eventTypes");
 		return EVENT_TYPES_VIEW;
 
 	}

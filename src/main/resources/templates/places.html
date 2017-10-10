@@ -1,33 +1,45 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>Places</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-<body>
-<h2 th:text="#{place.list}">*</h2>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css">
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-<p><a th:href="@{/users/adminPanel}" th:text="#{page.main}">*</a></p>
-<p><a th:href="@{/places/add}" th:text="#{place.add}">*</a></p>
-<table>
-    <tr>
-    	<th th:text="#{place.id}">* </th>
-    	<th th:text="#{place.name}">* </th>
-    	<th th:text="#{place.city}">* </th>
-    	<th th:text="#{place.street}">* </th>
-    	<th th:text="#{place.description}">* </th>
-    	<th th:text="#{action}">* </th>
-    </tr>
-    <tr th:each="place : ${allPlaces}">
-       <td th:text="${place.id}"></td>
-       <td th:text="${place.name}"></td>
-       <td th:text="${place.city}"></td>
-       <td th:text="${place.street}"></td>
-       <td th:text="${place.description}"></td>
-       <td><a th:href="@{/places/{id}/delete/(id=${place.id})}" th:text="#{place.delete}">*</a> 
-       <a th:href="@{/places/{id}/edit/(id=${place.id})}" th:text="#{place.edit}">*</a></td>
-    </tr>
-</table>
+</head>
+
+<body>
+
+<div class="header">
+    <div th:replace="fragments/header :: headerAdmin">Header </div>
+</div>
+<h2 th:text="#{place.list}">*</h2>
+<div class="container">
+	<p><a th:href="@{/users/adminPanel}" th:text="#{page.main}">*</a></p>
+	<p><a th:href="@{/places/add}" th:text="#{place.add}">*</a></p>
+	<table>
+	    <tr>
+	    	<th th:text="#{place.id}">* </th>
+	    	<th th:text="#{place.name}">* </th>
+	    	<th th:text="#{place.city}">* </th>
+	    	<th th:text="#{place.street}">* </th>
+	    	<th th:text="#{place.description}">* </th>
+	    	<th th:text="#{action}">* </th>
+	    </tr>
+	    <tr th:each="place : ${allPlaces}">
+	       <td th:text="${place.id}"></td>
+	       <td th:text="${place.name}"></td>
+	       <td th:text="${place.city}"></td>
+	       <td th:text="${place.street}"></td>
+	       <td th:text="${place.description}"></td>
+	       <td><a th:href="@{/places/{id}/delete/(id=${place.id})}" th:text="#{place.delete}">*</a> 
+	       <a th:href="@{/places/{id}/edit/(id=${place.id})}" th:text="#{place.edit}">*</a></td>
+	    </tr>
+	</table>
+</div>
+
 </body>
 </html>
 
