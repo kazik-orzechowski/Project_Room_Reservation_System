@@ -230,6 +230,16 @@ public class User {
 	}
 
 	/**
+	 * Passes this user's original hashed password during edit user process.
+	 * 
+	 * @param password
+	 */
+	public void passHashedPassword(String password) {
+		this.password = password;
+	}
+
+	
+	/**
 	 * Password verification method of this user (BCrypt)
 	 * 
 	 * @param password

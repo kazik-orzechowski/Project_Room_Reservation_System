@@ -34,13 +34,13 @@ public class LoginController extends SessionedController {
 	 * regarding the current series (all or name} being displayed
 	 */
 
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData
+			.getSeriesDisplayedInfoAttribute();
 
 	/**
 	 * Id of the series that should be displayed (0 for all series)
 	 */
 	private static final String SERIES_DISPLAYED_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedAttribute();
-
 
 	/**
 	 * Name of model attribute passing an to the user panel view information
@@ -48,7 +48,6 @@ public class LoginController extends SessionedController {
 	 */
 	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = ControllerAttributesData
 			.getRequestedEventSeriesAttribute();
-
 
 	/**
 	 * Name of model attribute passing a list of all or selected events to user
@@ -73,7 +72,6 @@ public class LoginController extends SessionedController {
 
 	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
 
-	
 	/**
 	 * Passes the name of home page of this application.
 	 */
@@ -91,7 +89,6 @@ public class LoginController extends SessionedController {
 	 */
 	private static final String USER_PANEL_VIEW = ControllerData.getUserPanelView();
 
-	
 	@Autowired
 	UserRepository repoUser;
 
@@ -134,22 +131,26 @@ public class LoginController extends SessionedController {
 	@PostMapping("")
 	public String loginPost(LoginData userData, Model model) {
 		User user = this.repoUser.findByUserName(userData.getLogin());
+		LoginData loginData = new LoginData();
+		model.addAttribute(LOGIN_USER_ATTRIBUTE, loginData);
 		if (user == null || !user.isPasswordCorrect(userData.getPassword())) {
-			model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "Wprowadź prawidłowe dane");
-			model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, "null");
+			model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "login.message.invalid.login.or.password");
 			return LOGIN_VIEW;
 		}
-
+		
 		if (user.isPasswordCorrect(userData.getPassword())) {
 			if (user.isEnabled() == false) {
-				model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "Użytkownik jest nieaktywny, skontaktuj się z administratorem");
-				model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, user.getUserName());
+				model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "login.message.user.inactive");
 				return LOGIN_VIEW;
-			} else {
+			}
 			session().setAttribute(LOGIN_USER_ATTRIBUTE, user);
-			} 
+
+			System.err.println("is.enabled" + userData.getPassword());
+			System.err.println("Session" + session().getAttribute("user").toString());
+
 		}
-			
+
+		System.err.println("problem");
 		if (user.getUserName().equals("admin")) {
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
 			model.addAttribute("activeMenuItem", "home");

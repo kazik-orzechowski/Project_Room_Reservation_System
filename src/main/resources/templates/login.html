@@ -19,6 +19,7 @@
 <div class="container">
 	<h1 th:text="#{page.main.title}">*</h1>
 	<h2 th:text="#{page.login}">*</h2>
+	<p><a th:text="${message !=null} ? #{${message}} : ''">*</a></p>
 	
 	<div class="col-md-6 col-sm-6 col-xs-12">
 
@@ -51,6 +52,8 @@
 	            <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
 	            <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
 	        </div>
+		
+		
 		
 		</form>
 	</div>

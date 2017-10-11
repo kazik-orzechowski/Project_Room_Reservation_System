@@ -18,40 +18,40 @@
 <div class="container">
 <h2 th:text="#{user.series.page}">*</h2>
 
-<table>
-    <tr>
-    	<th th:text="#{series.id}">* </th>
-    	<th th:text="#{series.eventType.name}">* </th>
-    	<th th:text="#{series.firstEvent.date}">* </th>
-       	<th th:text="#{series.lastEvent.date}">* </th>
-    	<th th:text="#{series.initial.hour}">* </th>
-    	<th th:text="#{series.numberOfEvents}">* </th>
-		<th th:text="#{series.placeAndRoom.name}">* </th>
-		<th th:text="#{series.client}"></th>
-    	<th th:text="#{action}">* </th>
-    </tr>
-    <tr th:each="seriesDTO : ${allSeries}">
-		<td th:text="${seriesDTO.series.id}"> </td>
-    	<td th:text="${seriesDTO.series.eventType.name}"> </td>
-    	<td th:text="${#dates.format(seriesDTO.seriesStartDate, 'dd-MM-yyyy')}"> </td>
-    	<td th:text="${#dates.format(seriesDTO.seriesEndDate, 'dd-MM-yyyy')}"> </td>
-      	<td>
-	      	<span th:each="hour : ${seriesDTO.seriesHours}">
-	      		<span th:text="${#dates.format(hour, 'HH:mm')}"> </span>
-	      	</span>
-      	</td>
-        <td th:text="${seriesDTO.numberOfEvents}"> </td>
-		<td >
-			<span th:each="venue : ${seriesDTO.seriesPlacesAndRooms}">
-				<span th:text="${venue}">   </span>
-			</span>
-		</td>
-		<td th:text="${seriesDTO.series.client}"></td>
-       <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.delete}">*</a> 
-       <a th:href="@{/events/{id}/series/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.edit}">*</a>
-       </td>
-    </tr>
-</table>
+	<table class="table-condensed table-responsive table-hover">
+	    <tr>
+	    	<th th:text="#{series.id}">* </th>
+	    	<th th:text="#{series.eventType.name}">* </th>
+	    	<th th:text="#{series.firstEvent.date}">* </th>
+	       	<th th:text="#{series.lastEvent.date}">* </th>
+	    	<th th:text="#{series.initial.hour}">* </th>
+	    	<th th:text="#{series.numberOfEvents}">* </th>
+			<th th:text="#{series.placeAndRoom.name}">* </th>
+			<th th:text="#{series.client}"></th>
+	    	<th th:text="#{action}">* </th>
+	    </tr>
+	    <tr th:each="seriesDTO : ${allSeries}">
+			<td th:text="${seriesDTO.series.id}"> </td>
+	    	<td th:text="${seriesDTO.series.eventType.name}"> </td>
+	    	<td th:text="${#dates.format(seriesDTO.seriesStartDate, 'dd-MM-yyyy')}"> </td>
+	    	<td th:text="${#dates.format(seriesDTO.seriesEndDate, 'dd-MM-yyyy')}"> </td>
+	      	<td>
+		      	<span th:each="hour : ${seriesDTO.seriesHours}">
+		      		<span th:text="${#dates.format(hour, 'HH:mm')}"> </span>
+		      	</span>
+	      	</td>
+	        <td th:text="${seriesDTO.numberOfEvents}"> </td>
+			<td >
+				<span th:each="venue : ${seriesDTO.seriesPlacesAndRooms}">
+					<span th:text="${venue}">   </span>
+				</span>
+			</td>
+			<td th:text="${seriesDTO.series.client}"></td>
+	       <td><a th:href="@{/series/{id}/delete/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.delete}">*</a> 
+	       <a th:href="@{/events/{id}/series/{ids}/ (id=${user.id}, ids=${seriesDTO.series.id})}" th:text="#{series.edit}">*</a>
+	       </td>
+	    </tr>
+	</table>
 </div>
 
 </body>

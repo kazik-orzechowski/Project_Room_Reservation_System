@@ -50,7 +50,8 @@ public class UserController extends SessionedController {
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
 	 */
-	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData.getSeriesDisplayedInfoAttribute();
+	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData
+			.getSeriesDisplayedInfoAttribute();
 
 	/**
 	 * Name of model attribute passing result of add / edit event to event views.
@@ -88,14 +89,12 @@ public class UserController extends SessionedController {
 	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = ControllerAttributesData
 			.getRequestedEventSeriesAttribute();
 
-
 	/**
 	 * Name of model attribute passing a list of all or selected events to user
 	 * panel view.
 	 */
 	private static final String USER_PANEL_EVENTS_ATTRIBUTE = ControllerAttributesData.getUserPanelEventsAttribute();
-	
-	
+
 	@Autowired
 	UserRepository repoUser;
 
@@ -194,7 +193,7 @@ public class UserController extends SessionedController {
 			model.addAttribute("returnUrl", "/" + EVENTS_VIEW + "/" + id);
 		}
 		model.addAttribute("activeMenuItem", "editUser");
-
+System.err.println("before post" + repoUser.findOneById(id).getPassword());
 		return EDIT_USER_VIEW;
 	}
 
@@ -215,11 +214,19 @@ public class UserController extends SessionedController {
 
 	@PostMapping("/{id}/edit")
 	public String editUserPost(@Valid User editedUser, @PathVariable Long id, BindingResult result, Model model) {
-		User user = (User)session().getAttribute(LOGIN_USER_ATTRIBUTE);
+		User user = (User) session().getAttribute(LOGIN_USER_ATTRIBUTE);
 
 		if (result.hasErrors() && !user.isPasswordCorrect(editedUser.getPassword())) {
 			return EDIT_USER_VIEW;
 		}
+		// Sets the original password back for edited user. Password in the editedUser
+		// binded object for admin's edition is admin's password
+
+System.err.println("before change" + editedUser.getPassword());
+
+		editedUser.passHashedPassword(repoUser.findOneById(editedUser.getId()).getPassword());
+
+System.err.println("after change" + editedUser.getPassword());		
 		
 		repoUser.save(editedUser);
 
@@ -238,7 +245,7 @@ public class UserController extends SessionedController {
 			model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 			model.addAttribute("displayedSeriesId", 0);
 			model.addAttribute("activeMenuItem", "home");
-			
+
 			return USER_PANEL_VIEW;
 		}
 
@@ -259,7 +266,6 @@ public class UserController extends SessionedController {
 			return MAIN_VIEW;
 		}
 
-		
 		User addedUser = new User();
 		model.addAttribute(USER_ATTRIBUTE, addedUser);
 		return SIGNUP_VIEW;
