@@ -56,6 +56,11 @@ public class UserController extends SessionedController {
 	 * Name of model attribute passing result of add / edit event to event views.
 	 */
 
+	/**
+	 * Name of model attribute passing user as User class object to login view.
+	 */
+	private static final String LOGIN_USER_ATTRIBUTE = ControllerAttributesData.getLoginUserAttribute();
+
 	protected static final String ADD_EVENT_INFO_ATTRIBUTE = ControllerAttributesData.getAddEventInfoAttribute();
 
 	private static final String USER_ATTRIBUTE = ControllerAttributesData.getUserAttribute();
@@ -210,15 +215,15 @@ public class UserController extends SessionedController {
 
 	@PostMapping("/{id}/edit")
 	public String editUserPost(@Valid User editedUser, @PathVariable Long id, BindingResult result, Model model) {
-		if (result.hasErrors()) {
-			System.out.println(result);
+		User user = (User)session().getAttribute(LOGIN_USER_ATTRIBUTE);
+
+		if (result.hasErrors() && !user.isPasswordCorrect(editedUser.getPassword())) {
 			return EDIT_USER_VIEW;
 		}
+		
 		repoUser.save(editedUser);
 
-		model.addAttribute("eventType", repoEventType.findAll());
-
-		if (repoUser.findOneById(id).getUserName().equals("admin")) {
+		if (user.getUserName().equals("admin")) {
 			model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
 			model.addAttribute("activeMenuItem", "users");
 			return USERS_VIEW;

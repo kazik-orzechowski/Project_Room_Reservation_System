@@ -134,16 +134,22 @@ public class LoginController extends SessionedController {
 	@PostMapping("")
 	public String loginPost(LoginData userData, Model model) {
 		User user = this.repoUser.findByUserName(userData.getLogin());
-		if (user == null) {
+		if (user == null || !user.isPasswordCorrect(userData.getPassword())) {
 			model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "Wprowadź prawidłowe dane");
 			model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, "null");
 			return LOGIN_VIEW;
 		}
 
 		if (user.isPasswordCorrect(userData.getPassword())) {
+			if (user.isEnabled() == false) {
+				model.addAttribute(LOGIN_MESSAGE_ATTRIBUTE, "Użytkownik jest nieaktywny, skontaktuj się z administratorem");
+				model.addAttribute(LOGIN_USERNAME_ATTRIBUTE, user.getUserName());
+				return LOGIN_VIEW;
+			} else {
 			session().setAttribute(LOGIN_USER_ATTRIBUTE, user);
+			} 
 		}
-
+			
 		if (user.getUserName().equals("admin")) {
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
 			model.addAttribute("activeMenuItem", "home");

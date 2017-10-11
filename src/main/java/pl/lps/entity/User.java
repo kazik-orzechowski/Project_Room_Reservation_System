@@ -36,6 +36,8 @@ public class User {
 	/**
 	 * Username used for login purposes
 	 */
+	
+	@Column(unique = true)
 	@NotNull
 	@Length(min = 1, max = 20)
 	private String userName;
@@ -54,6 +56,7 @@ public class User {
 	/**
 	 * User unique email address
 	 */
+	@SuppressWarnings("deprecation")
 	@NotNull
 	@Column(unique = true)
 	@Email
@@ -64,6 +67,13 @@ public class User {
 	@NotNull
 	@Length(min = 6)
 	private String password;
+
+	/**
+	 * Status of this user set by the admin
+	 */
+	@NotNull
+	private boolean enabled;
+	
 	/**
 	 * Reference to series (indirect and the only reference to user events)
 	 */
@@ -76,30 +86,38 @@ public class User {
 	private List<Request> requests = new ArrayList<Request>();
 
 	/**
-	 * User empty constructor
+	 * User empty constructor, sets user enable access status to false
 	 */
 	public User() {
 		super();
+		this.enabled = false;
 
 	}
 
+	
 	/**
-	 * User parameterized constructor
-	 * 
+	 * Parameterized user constructor
+	 * @param id
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
 	 * @param email
 	 * @param password
+	 * @param enabled
 	 */
-	public User(String userName, String firstName, String lastName, String email, String password) {
+	public User(Long id, @NotNull @Length(min = 1, max = 20) String userName,
+			@NotNull @Length(min = 1, max = 20) String firstName, @NotNull @Length(min = 1, max = 30) String lastName,
+			@NotNull @Email String email, @NotNull @Length(min = 6) String password, @NotNull boolean enabled) {
 		super();
+		this.id = id;
 		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
+		this.enabled = false;
 	}
+
 
 	/**
 	 * Gets this user's id
@@ -152,6 +170,7 @@ public class User {
 	 * 
 	 * @return this user's username
 	 */
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -239,6 +258,26 @@ public class User {
 	}
 
 	/**
+	 * Gets this user's enabled status
+	 * 
+	 * @param series
+	 */
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * Sets this user's enabled status
+	 * 
+	 * @param series
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+
+	/**
 	 * Gets this user's requests
 	 * 
 	 * @return this user's requests
@@ -263,7 +302,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + userName + ", firstname=" + firstName + ", lastname=" + lastName
-				+ ", email=" + email + ", password=" + password + "]";
+				+ ", email=" + email + ", password=" + password + ", enabled=" + enabled + "]";
 	}
 
 }

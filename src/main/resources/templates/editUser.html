@@ -28,6 +28,16 @@
             </ul> 		         
 
             <div class="form-group">
+                <label class="form-label" for="user-Name" th:text="#{user.username}"><span
+                        class="required">*</span>
+                </label>
+                <div class="form-input">
+       				<input th:field="*{userName}"  type="text"  id="user-name" required="required" th:value="${user.userName}"
+                           class="form-control col-md-7 col-xs-12"/>
+          		</div>
+            </div>
+
+            <div class="form-group">
                 <label class="form-label" for="first-name" th:text="#{user.firstname}"><span
                         class="required">*</span>
                 </label>
@@ -46,19 +56,8 @@
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
-            
-                  
-             <div class="form-group">
-                <label class="form-label" for="password" th:text="#{user.password}"><span
-                        class="required">*</span>
-                </label>
-                <div class="form-input">
-                    <input th:field="*{password}" type="password" id="password" required="required"
-                           class="form-control col-md-7 col-xs-12"/>
-                </div>
-            </div>
-                      
-             <div class="form-group">
+        
+            <div class="form-group">
                 <label class="form-label" for="email" th:text="#{user.email}"><span
                         class="required">*</span>
                 </label>
@@ -67,16 +66,33 @@
                            class="form-control col-md-7 col-xs-12"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="form-label" for="user-Name" th:text="#{user.username}"><span
-                        class="required">*</span>
-                </label>
-                <div class="form-input">
-       				<input th:field="*{userName}"  type="text"  id="user-name" required="required" th:value="${user.userName}"
-                           class="form-control col-md-7 col-xs-12"/>
-          		</div>
-            </div><br/><br/>
-			
+			<div th:if="${session.user.userName == 'admin'}">
+	            <div class="form-group">
+	   				<label class="form-label" th:text="#{user.enabled}"></label>
+	                <div class="form-control col-md-7 col-xs-12">
+	                  	<input type="radio" th:field="*{enabled}" th:value=true id="enabled"/>
+	   					<label class="form-label" for="enabled" th:text="#{user.enabled.yes}"><span>*</span></label>
+	                  	<input type="radio" th:field="*{enabled}" th:value=false id="enabled" />
+	   					<label class="form-label" for="enabled" th:text="#{user.enabled.no}"><span>*</span></label>
+	                </div>
+	            </div>
+			</div>
+			<div th:if="${session.user.userName != 'admin'}">
+				<div>
+					<p><b th:text="#{user.enabled}"> </b><span th:text="${user.enabled == false} ? #{user.enabled.no} : #{user.enabled.yes}">*</span> </p>
+				</div>            
+            </div>
+
+	        <div class="form-group">
+
+	         	<label class="form-label" for="password" th:text="#{user.confirm.your.password}"><span
+	                        class="required">*</span>
+	            </label>
+	            <div class="form-input">
+	                    <input th:field="*{password}" type="password" id="password" required="required" value="${user.password}"
+	                           class="form-control col-md-7 col-xs-12"/>
+	            </div>
+	        </div><br/><br/>
             <div class="form-group">
                     <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
                     <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>

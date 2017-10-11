@@ -27,6 +27,7 @@
 	    	<th th:text="#{user.lastname}">* </th>
 	    	<th th:text="#{user.username}">* </th>
 	    	<th th:text="#{user.email}">* </th>
+	    	<th th:text="#{user.enabled}">* </th>
 	    	<th th:text="#{action}">* </th>
 	    </tr>
 	    <tr th:each="user : ${allUsers}">
@@ -35,7 +36,8 @@
 	       <td th:text="${user.lastName}"></td>
 	       <td th:text="${user.userName}"></td>
 	       <td th:text="${user.email}"></td>
-	       <td><a th:href="@{/users/{id}/delete/(id=${user.id})}" th:text="#{user.delete}">*</a> 
+		   <td th:text="${user.enabled == false} ? #{user.enabled.no} : #{user.enabled.yes}"></td>
+		   <td><a th:href="@{/users/{id}/delete/(id=${user.id})}" th:text="#{user.delete}">*</a> 
 	       <a th:href="@{/users/{id}/edit/(id=${user.id})}" th:text="#{user.edit}">*</a></td>
 	    </tr>
 	</table>

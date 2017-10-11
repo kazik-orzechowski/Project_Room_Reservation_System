@@ -3,10 +3,15 @@
 <head>
     <title>Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
-	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+	
 </head>
 
 <body>
@@ -22,7 +27,7 @@
 
 	<div class="col-md-6 col-sm-6 col-xs-12">
 	
-        <form method="post" id="user-form" th:action="@{/register}" th:object="${user}">
+        <form method="post" id="signupform" th:action="@{/register}" th:object="${user}">
 			<ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul> 		         
@@ -58,15 +63,25 @@
             </div>
             
              <div class="form-group">
-                <label class="form-label" for="password" th:text="#{user.password}"><span
+                <label class="form-label" for="password" th:text="#{user.password.set}"><span
+                        class="required">*</span>
+                </label>
+	                <div class="form-input">
+                    <input th:field="*{password}" type="password" id="password" required="required" 
+                           class="form-control col-md-7 col-xs-12" title="Hasła muszą się zgadzać"/>
+                </div>
+            </div>
+
+             <div class="form-group">
+                <label class="form-label" for="password" th:text="#{user.password.confirm}"><span
                         class="required">*</span>
                 </label>
                 <div class="form-input">
-                    <input th:field="*{password}" type="password" id="password" required="required"
-                           class="form-control col-md-7 col-xs-12"/>
+                    <input type="password" id="passwordConfirmation" name="passwordConfirmation" required="required"
+                           class="form-control col-md-7 col-xs-12" >
                 </div>
             </div>
-                      
+                     
              <div class="form-group">
                 <label class="form-label" for="email" th:text="#{user.email}"><span
                         class="required">*</span>
@@ -79,10 +94,43 @@
         
             <div class="event-group">
                 <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
-                <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
+                <button type="submit" id="submit" class="btn btn-success" th:text="#{submit}">*</button>
             </div>
 		</form>
 	</div>
 </div>
+		<!-- Polish literal input due to direct usage by jQuery validator, to be changed with jQuery i18N  -->
+<script >
+
+$(function()	{
+	var validator = $("#signupform").validate({
+		  rules: {
+		    password: {
+		      required: true,
+		      minlength: 6
+		    },
+
+		    passwordConfirmation: {
+		      required: true,
+		      minlength: 6,
+		      equalTo: "#password"
+		    }
+
+		  },
+		  messages: {
+		    password: {
+		      required: "Provide a password",
+		      minlength: jQuery.validator.format("Hasło musi zawierać co najmniej {0} znaków" )
+		    },
+		    repeatpassword: {
+		      required: "Repeat your password",
+		      minlength: jQuery.validator.format("Hasło musi zawierać co najmniej {0} znaków"),
+		      equalTo: "Hasła się nie zgadzają"
+		    }
+	   },
+	});
+});
+</script>
+
 </body>
 </html>
