@@ -3,28 +3,44 @@
 <head>
     <title>Admin Panel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
 
 </head>
 
 <body>
 
-<div class="header">
-    <div th:replace="fragments/header :: headerAdmin">Header </div>
+<div id="wrap">
+    <div class="clear-top">
+		<div class="header">
+		    <div th:replace="fragments/header :: headerAdmin">Header </div>
+		</div>
+		
+		<div class="container">
+			<h2 th:text="#{page.main.admin}">*</h2>
+			
+			<p><small><a th:href="@{/logout}" th:text="#{user.logout}">*</a></small></p>
+			<p><a th:href="@{/places}" th:text="#{place.main}">*</a></p>
+			<p><a th:href="@{/rooms}" th:text="#{room.main}">*</a></p>
+			<p><a th:href="@{/eventTypes}" th:text="#{eventType.main}">*</a></p>
+			<p><a th:href="@{/users}" th:text="#{user.main}">*</a></p>
+			<p><a th:href="@{/events}" th:text="#{event.main}">*</a></p>
+			<p><a th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{series.main}">*</a></p>
+		</div>
+	</div>
 </div>
+<footer class="footer">
+    <div th:replace="fragments/footer :: footer">Footer </div>
+</footer>
 
-<div class="container">
-	<h2 th:text="#{page.main.admin}">*</h2>
-	
-	<p><small><a th:href="@{/logout}" th:text="#{user.logout}">*</a></small></p>
-	<p><a th:href="@{/places}" th:text="#{place.main}">*</a></p>
-	<p><a th:href="@{/rooms}" th:text="#{room.main}">*</a></p>
-	<p><a th:href="@{/eventTypes}" th:text="#{eventType.main}">*</a></p>
-	<p><a th:href="@{/users}" th:text="#{user.main}">*</a></p>
-	<p><a th:href="@{/events}" th:text="#{event.main}">*</a></p>
-	<p><a th:href="@{/series/{id}/ (id=${user.id})}" th:text="#{series.main}">*</a></p>
-</div>
+
 </body>
 </html>
 

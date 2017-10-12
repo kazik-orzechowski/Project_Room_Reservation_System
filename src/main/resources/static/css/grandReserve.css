@@ -1,3 +1,20 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#wrap {
+    min-height: -webkit-calc(100% - 100px);     /* Chrome */
+    min-height: -moz-calc(100% - 100px);     /* Firefox */
+    min-height: calc(100% - 50px);     /* native */
+}
+
+.footer {
+    position: relative;
+    clear:both;
+    background-color:black;
+}
+
 a.button {
     -webkit-appearance: button;
     -moz-appearance: button;
@@ -7,7 +24,9 @@ a.button {
     color: initial;
 }
 
-th td {
-    text-allign: center;
-    color: darkblue;
+.footer-list {
+	color:white;
+	background-color:#428bca;
+	padding:10px;
 }
+

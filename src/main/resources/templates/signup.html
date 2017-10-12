@@ -11,10 +11,14 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
-	
+
+
 </head>
 
 <body>
+
+<div id="wrap">
+    <div class="clear-top">
 
 <div class="header">
     <div th:replace="fragments/header :: headerMain">Header </div>
@@ -99,6 +103,13 @@
 		</form>
 	</div>
 </div>
+</div>
+</div>
+<footer class="footer">
+    <div th:replace="fragments/footer :: footer">Footer </div>
+</footer>
+
+
 		<!-- Polish literal input due to direct usage by jQuery validator, to be changed with jQuery i18N  -->
 <script >
 

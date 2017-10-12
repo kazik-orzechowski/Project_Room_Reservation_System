@@ -1,58 +1,74 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<title th:text="#{eventType.edit.title}">Edit event type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css">
-	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
 
 </head>
 
 <body>
 
-<div class="header">
-    <div th:replace="fragments/header :: headerAdmin">Header</div>
-</div>
-
-<div class="container">
-	<h2 th:text="${addOrEdit == 'edit'} ? #{eventType.editeventType} : #{eventType.addeventType}">*</h2>
-	<h3 th:text="${addOrEdit == 'edit'} ? ${eventType.name} : ' '"></h3>
-
-   <div class="col-md-6 col-sm-6 col-xs-12">
-	
-         <form method="post" id="eventType-form" th:action="${addOrEdit == 'edit'} ? 
-         @{/eventTypes/{id}/edit/(id=${eventType.id})} : @{/eventTypes/add}" th:object="${eventType}">
-			<ul th:if="${#fields.hasErrors('*')}">
-                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-            </ul> 		         
-
-            <div class="form-group">
-                <label class="form-label" for="name" th:text="#{eventType.name}"><span
-                        class="required">*</span>
-                </label>
-                <div class="form-input">
-                    <input th:field="*{name}" type="text" id="name" th:value="${eventType.name}" required="required"
-                           class="form-control col-md-7 col-xs-12"/>
-                </div>
-            </div>
-           
-            <div class="form-group">
-                <label class="form-label" for="description" th:text="#{eventType.description}"><span
-                        class="required">*</span>
-                </label>
-                <div class="form-input">
-                    <input th:field="*{description}" type="text" id="description" th:value="${eventType.description}" required="required"
-                           class="form-control col-md-7 col-xs-12"/>
-                </div>
-            </div><br/><br/>
-            <div class="form-group">
-                <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
-                <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
-            </div>
-		</form>
+<div id="wrap">
+    <div class="clear-top">
+		<div class="header">
+		    <div th:replace="fragments/header :: headerAdmin">Header</div>
+		</div>
+		
+		<div class="container">
+			<h2 th:text="${addOrEdit == 'edit'} ? #{eventType.editeventType} : #{eventType.addeventType}">*</h2>
+			<h3 th:text="${addOrEdit == 'edit'} ? ${eventType.name} : ' '"></h3>
+		
+		   <div class="col-md-6 col-sm-6 col-xs-12">
+			
+		         <form method="post" id="eventType-form" th:action="${addOrEdit == 'edit'} ? 
+		         @{/eventTypes/{id}/edit/(id=${eventType.id})} : @{/eventTypes/add}" th:object="${eventType}">
+					<ul th:if="${#fields.hasErrors('*')}">
+		                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+		            </ul> 		         
+		
+		            <div class="form-group">
+		                <label class="form-label" for="name" th:text="#{eventType.name}"><span
+		                        class="required">*</span>
+		                </label>
+		                <div class="form-input">
+		                    <input th:field="*{name}" type="text" id="name" th:value="${eventType.name}" required="required"
+		                           class="form-control col-md-7 col-xs-12"/>
+		                </div>
+		            </div>
+		           
+		            <div class="form-group">
+		                <label class="form-label" for="description" th:text="#{eventType.description}"><span
+		                        class="required">*</span>
+		                </label>
+		                <div class="form-input">
+		                    <input th:field="*{description}" type="text" id="description" th:value="${eventType.description}" required="required"
+		                           class="form-control col-md-7 col-xs-12"/>
+		                </div>
+		            </div><br/><br/>
+		            <div class="form-group">
+		                <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
+		                <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
+		            </div>
+				</form>
+			</div>
+		</div>    
 	</div>
-</div>    
+</div>
+<footer class="footer">
+    <div th:replace="fragments/footer :: footer">Footer </div>
+</footer>
+
 </body>
 
 <script >

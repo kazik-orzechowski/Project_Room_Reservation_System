@@ -3,63 +3,69 @@
 <head>
     <title>User Panel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<link rel="stylesheet" th:href="@{/css/grandReserve.css}">
-<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
+
+
 </head>
+
 <body>
 
-<div class="header">
-    <div th:replace="fragments/header :: header">Header </div>
+<div id="wrap">
+    <div class="clear-top">
+
+		<div class="header">
+		    <div th:replace="fragments/header :: header">Header </div>
+		</div>
+		
+		<div class="container">
+		
+			<p><a th:text="${requestedEvent != null} ? 
+			#{${addEventInfo}} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + 
+			${#dates.format(requestedEvent.hour, 'HH:mm')} + ' ' +#{${addEventSeriesInfo}(${eventCycleLength}, ${followingEvents})} 
+			: #{${addEventInfo}}">*</a></p>
+			
+			<h2 th:text="#{event.list} + ' ' +${displayedSeries}">* <span th:text="${displayedSeries}">*</span></h2>
+			
+			<table class="table-condensed table-responsive table-hover">
+			    <tr>
+			    	<th th:text="#{event.id}">* </th>
+			    	<th th:text="#{event.date}">* </th>
+			    	<th th:text="#{event.hour}">* </th>
+			       	<th th:text="#{event.duration}">* </th>
+			    	<th th:text="#{event.eventSeats}">* </th>
+			    	<th th:text="#{event.series.eventType.name}">* </th>
+					<th th:text="#{event.room.place.name}">* </th>
+					<th th:text="#{event.room.number}">* </th>
+					<th th:text="#{event.series.client}"></th>
+			    	<th th:text="#{action}">* </th>
+			    </tr>
+			    <tr th:each="event : ${allEvents}">
+			       <td th:text="${event.id}"></td>
+			       <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
+			       <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
+			       <td th:text="${event.eventDuration}"></td>
+			       <td th:text="${event.eventSeats}"></td>
+			       <td th:text="${event.series.eventType.name}"></td>
+					<td th:text="${event.room.place.name}"> </td>
+			       <td th:text="${event.room.number}"></td>
+					<td th:text="${event.series.client}"></td>
+			       <td><a th:href="@{/events/{id}/delete/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})}" th:text="#{event.delete}">*</a> 
+			       <a th:href="@{/events/{id}/edit/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})  }" th:text="#{event.edit}">*</a></td>
+			    </tr>
+			</table>
+		</div>
+	</div>		
 </div>
-
-<div class="container">
-
-<p><a th:text="${requestedEvent != null} ? 
-#{${addEventInfo}} + ' ' + ${#dates.format(requestedEvent.date, 'dd-MM-yyyy')} + ' ' + 
-${#dates.format(requestedEvent.hour, 'HH:mm')} + ' ' +#{${addEventSeriesInfo}(${eventCycleLength}, ${followingEvents})} 
-: #{${addEventInfo}}">*</a></p>
-
-<h2 th:text="#{event.list} + ' ' +${displayedSeries}">* <span th:text="${displayedSeries}">*</span></h2>
-
-<table class="table-condensed table-responsive table-hover">
-    <tr>
-    	<th th:text="#{event.id}">* </th>
-    	<th th:text="#{event.date}">* </th>
-    	<th th:text="#{event.hour}">* </th>
-       	<th th:text="#{event.duration}">* </th>
-    	<th th:text="#{event.eventSeats}">* </th>
-    	<th th:text="#{event.series.eventType.name}">* </th>
-		<th th:text="#{event.room.place.name}">* </th>
-		<th th:text="#{event.room.number}">* </th>
-		<th th:text="#{event.series.client}"></th>
-    	<th th:text="#{action}">* </th>
-    </tr>
-    <tr th:each="event : ${allEvents}">
-       <td th:text="${event.id}"></td>
-       <td th:text="${#dates.format(event.date, 'dd-MM-yyyy')}"></td>
-       <td th:text="${#dates.format(event.hour, 'HH:mm')}"></td>
-       <td th:text="${event.eventDuration}"></td>
-       <td th:text="${event.eventSeats}"></td>
-       <td th:text="${event.series.eventType.name}"></td>
-		<td th:text="${event.room.place.name}"> </td>
-       <td th:text="${event.room.number}"></td>
-		<td th:text="${event.series.client}"></td>
-       <td><a th:href="@{/events/{id}/delete/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})}" th:text="#{event.delete}">*</a> 
-       <a th:href="@{/events/{id}/edit/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})  }" th:text="#{event.edit}">*</a></td>
-    </tr>
-</table>
-</div>
-<script>
-$( document ).on( 'click', '.nav-list li', function ( e ) {
-    $( this ).addClass( 'active' ).siblings().removeClass( 'active' );
-} );
-</script>
-
+<footer class="footer">
+    <div th:replace="fragments/footer :: footer">Footer </div>
+</footer>
 </body>
 </html>
 

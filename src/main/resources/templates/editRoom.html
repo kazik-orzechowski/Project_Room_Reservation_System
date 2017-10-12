@@ -1,88 +1,102 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+	<title th:text="#{room.edit.title}">Edit room</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css">
-	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
 
 </head>
 
 <body>
 
-<div class="header">
-    <div th:replace="fragments/header :: headerAdmin">Header </div>
-</div>
-
-<div class="container">
-
-  	<h2 th:text="${addOrEdit == 'edit'} ? #{room.editroom} + #{room.number.notcaps} + ' ' + ${room.number} : #{room.addroom}">*</h2>
-
-       <form method="post" id="room-form" th:action="${addOrEdit == 'edit'} ? @{/rooms/{id}/edit/(id=${room.id})} : @{/rooms/add}" th:object="${room}">
-		<ul th:if="${#fields.hasErrors('*')}">
-               <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-           </ul> 		         
-
-           <div class="form-group">
-               <label class="form-label" for="number" th:text="#{room.number}"><span
-                       class="required">*</span>
-               </label>
-               <div class="form-input">
-                   <input th:field="*{number}" type="text" id="number" th:value="${room.number}" required="required"
-                          class="form-control col-md-7 col-xs-12"/>
-               </div>
-           </div>
-          
-           <div class="form-group">
-               <label class="form-label" for="floor" th:text="#{room.floor}"><span
-                       class="required">*</span>
-               </label>
-               <div class="form-input">
-                   <input th:field="*{floor}" type="text" id="floor"  th:value="${room.floor}" required="required"
-                          class="form-control col-md-7 col-xs-12"/>
-               </div>
-           </div>
-        
-         <div class="form-group">
-               <label class="form-label" for="place" th:text="#{room.place.name}"><span
-                       class="required">*</span>
-               </label>
-               <div class="form-input">
-                   <select class="form-control" id="place" th:field="*{place}">
-                       <option th:each="place : ${ourPlaces}" th:value="${{place}}" th:text="${place.name}">Wireframe
+<div id="wrap">
+    <div class="clear-top">
+		<div class="header">
+		    <div th:replace="fragments/header :: headerAdmin">Header </div>
+		</div>
+		
+		<div class="container">
+		
+		  	<h2 th:text="${addOrEdit == 'edit'} ? #{room.editroom} + #{room.number.notcaps} + ' ' + ${room.number} : #{room.addroom}">*</h2>
+		
+		       <form method="post" id="room-form" th:action="${addOrEdit == 'edit'} ? @{/rooms/{id}/edit/(id=${room.id})} : @{/rooms/add}" th:object="${room}">
+				<ul th:if="${#fields.hasErrors('*')}">
+		               <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+		           </ul> 		         
+		
+		           <div class="form-group">
+		               <label class="form-label" for="number" th:text="#{room.number}"><span
+		                       class="required">*</span>
+		               </label>
+		               <div class="form-input">
+		                   <input th:field="*{number}" type="text" id="number" th:value="${room.number}" required="required"
+		                          class="form-control col-md-7 col-xs-12"/>
+		               </div>
+		           </div>
+		          
+		           <div class="form-group">
+		               <label class="form-label" for="floor" th:text="#{room.floor}"><span
+		                       class="required">*</span>
+		               </label>
+		               <div class="form-input">
+		                   <input th:field="*{floor}" type="text" id="floor"  th:value="${room.floor}" required="required"
+		                          class="form-control col-md-7 col-xs-12"/>
+		               </div>
+		           </div>
+		        
+		         <div class="form-group">
+		               <label class="form-label" for="place" th:text="#{room.place.name}"><span
+		                       class="required">*</span>
+		               </label>
+		               <div class="form-input">
+		                   <select class="form-control" id="place" th:field="*{place}">
+		                       <option th:each="place : ${ourPlaces}" th:value="${{place}}" th:text="${place.name}">Wireframe
                         </option>
-                   </select>
-               </div>
-              </div>
-                 
-            <div class="form-group">
-               <label class="form-label" for="seats" th:text="#{room.seats}"><span
-                       class="required">*</span>
-               </label>
-               <div class="form-input">
-                   <input th:field="*{seats}" type="text" id="seats"  th:value="${room.seats}" required="required"
-                          class="form-control col-md-7 col-xs-12"/>
-               </div>
-           </div>
-                     
-            <div class="form-group">
-               <label class="form-label" for="description" th:text="#{room.description}"><span
-                       class="required">*</span>
-               </label>
-               <div class="form-input">
-                   <input th:field="*{description}" id="description" th:value="${room.description}" required="required"
-                          class="form-control col-md-7 col-xs-12"/>
-               </div>
-           </div><br/><br/>
-                   
-           <div class="event-group">
-                   <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
-                   <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
-           </div>
-	</form>
+		                   </select>
+		               </div>
+		              </div>
+		                 
+		            <div class="form-group">
+		               <label class="form-label" for="seats" th:text="#{room.seats}"><span
+		                       class="required">*</span>
+		               </label>
+		               <div class="form-input">
+		                   <input th:field="*{seats}" type="text" id="seats"  th:value="${room.seats}" required="required"
+		                          class="form-control col-md-7 col-xs-12"/>
+		               </div>
+		           </div>
+		                     
+		            <div class="form-group">
+		               <label class="form-label" for="description" th:text="#{room.description}"><span
+		                       class="required">*</span>
+		               </label>
+		               <div class="form-input">
+		                   <input th:field="*{description}" id="description" th:value="${room.description}" required="required"
+		                          class="form-control col-md-7 col-xs-12"/>
+		               </div>
+		           </div><br/><br/>
+		                   
+		           <div class="event-group">
+		                   <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
+		                   <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
+		           </div>
+			</form>
+		</div>
+	</div>
 </div>
-    
+<footer class="footer">
+    <div th:replace="fragments/footer :: footer">Footer </div>
+</footer>
+		    
 </body>
 
 </html>
