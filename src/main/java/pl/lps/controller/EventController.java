@@ -27,6 +27,7 @@ import pl.lps.entity.Place;
 import pl.lps.entity.Room;
 import pl.lps.entity.Series;
 import pl.lps.entity.User;
+import pl.lps.model.RoomList;
 import pl.lps.model.SessionValidation;
 import pl.lps.model.SessionedController;
 import pl.lps.repository.EventRepository;
@@ -188,6 +189,12 @@ public class EventController extends SessionedController {
 	 * @param model
 	 * @return events.html view fed with all events in application database
 	 */
+
+	@Autowired
+	RoomList roomList;
+
+	
+	
 	@RequestMapping("")
 	public String allEvents(Model model) {
 
@@ -359,7 +366,7 @@ public class EventController extends SessionedController {
 
 		Series series = new Series(userCurrent, client, repoEventType.findOneById(eventTypeId));
 
-		ArrayList<Room> rooms = roomLongListing(eventSeats, placeId);
+		ArrayList<Room> rooms = roomList.roomLongListing(placeId, eventSeats);
 
 		// Creation of date list to pass it to event search method
 		for (Long i = 0L; i < numberOfEvents; i++) {
@@ -373,15 +380,16 @@ public class EventController extends SessionedController {
 
 				roomPossible = room;
 				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.added");
-
+				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 				break;
 			} else {
 				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.no.rooms");
+				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 				roomPossible = null;
 			}
 
 		}
-
+		
 		if (roomPossible != null) {
 
 			Integer i = 0;
@@ -393,22 +401,20 @@ public class EventController extends SessionedController {
 				i++;
 				Event event = new Event(eventStartDate, hour, endHour, eventDuration, eventSeats, series, roomPossible);
 				repoEvent.save(event);
-
-				
-				model.addAttribute("eventCycleLength", eventCycleLength);
-				model.addAttribute("followingEvents", (i - 1));
-
 				if (i == 1) {
 					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
-
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
-				} else if (i == 2) {
-					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.2");
-				} else if (i > 2 && i < 6) {
-					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.3.to.5");
-				} else if (i >= 6) {
-					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.from.6");
 				}
+			}
+			model.addAttribute("eventCycleLength", eventCycleLength);
+			model.addAttribute("followingEvents", (i - 1));
+
+			if (i == 2) {
+				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.2");
+			} else if (i > 2 && i < 6) {
+				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.3.to.5");
+			} else if (i >= 6) {
+				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.from.6");
 			}
 		}
 

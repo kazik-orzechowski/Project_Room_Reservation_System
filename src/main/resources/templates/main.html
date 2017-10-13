@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home page</title>
+
+	<title th:text="#{page.main.title}">Grand Reserve</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
@@ -12,7 +13,6 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
 
-
 </head>
 
 <body>
@@ -20,23 +20,25 @@
 <div id="wrap">
     <div class="clear-top">
 
-<div class="header">
-    <div th:replace="fragments/header :: headerMain">Header </div>
+		<div class="header">
+		    <div th:replace="fragments/header :: headerMain">Header </div>
+		</div>
+		
+		<div class="container">
+			<h1 th:text="#{page.main.title}">*</h1>
+			
+			<p><a th:href="@{/register}" th:text="#{user.signup}">*</a></p>
+			<p><a th:href="@{/login}" th:text="#{user.login}">*</a></p>
+			
+			<p><a th:text="${message !=null} ? #{${message}} + ${username} : ''">*</a></p>
+		</div>
+	</div>
 </div>
 
-<div class="container">
-	<h1 th:text="#{page.main.title}">*</h1>
-	
-	<p><a th:href="@{/register}" th:text="#{user.signup}">*</a></p>
-	<p><a th:href="@{/login}" th:text="#{user.login}">*</a></p>
-	
-	<p><a th:text="${message !=null} ? #{${message}} + ${username} : ''">*</a></p>
-</div>
-</div>
-</div>
 <footer class="footer">
     <div th:replace="fragments/footer :: footer">Footer </div>
 </footer>
+
 </body>
 </html>
 

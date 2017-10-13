@@ -1,46 +1,59 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Rooms</title>
-     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css">
-	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<title th:text="#{room.list.title}">Room list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+	<link rel="stylesheet" th:href="@{/css/grandReserve.css}" href="../js/grandReserve.css"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script th:attr="src=@{/js/grandReserve.js}" src="../js/grandReserve.js"></script>
 
 </head>
 
 <body>
 
-<div class="header">
-    <div th:replace="fragments/header :: headerAdmin">Header </div>
+<div id="wrap">
+    <div class="clear-top">
+		<div class="header">
+		    <div th:replace="fragments/header :: headerAdmin">Header </div>
+		</div>
+		
+		<div class="container">
+			<h2 th:text="#{room.list}">*</h2>
+			<p><a th:href="@{/rooms/add}" th:text="#{room.add}">*</a></p>
+			<table class="table-condensed table-responsive table-hover">
+			    <tr>
+			    	<th th:text="#{room.id}">* </th>
+			       	<th th:text="#{room.place.name}">* </th>
+			    	<th th:text="#{room.number}">* </th>
+			    	<th th:text="#{room.floor}">* </th>
+			    	<th th:text="#{room.seats}">* </th>
+			    	<th th:text="#{room.description}">* </th>
+			    	<th th:text="#{action}">* </th>
+			    </tr>
+			    <tr th:each="room : ${allRooms}">
+			       <td th:text="${room.id}"></td>
+			       <td th:text="${room.place.name}"></td>
+			       <td th:text="${room.number}"></td>
+			       <td th:text="${room.floor}"></td>
+			       <td th:text="${room.seats}"></td>
+			       <td th:text="${room.description}"></td>
+			       <td><a th:href="@{/rooms/{id}/delete/(id=${room.id})}" th:text="#{room.delete}">*</a> 
+			       <a th:href="@{/rooms/{id}/edit/(id=${room.id})}" th:text="#{room.edit}">*</a></td>
+			    </tr>
+			</table>
+		</div>
+	</div>
 </div>
+<footer class="footer">
+    <div th:replace="fragments/footer :: footer">Footer </div>
+</footer>
 
-<div class="container">
-	<h2 th:text="#{room.list}">*</h2>
-	<p><a th:href="@{/rooms/add}" th:text="#{room.add}">*</a></p>
-	<table class="table-condensed table-responsive table-hover">
-	    <tr>
-	    	<th th:text="#{room.id}">* </th>
-	       	<th th:text="#{room.place.name}">* </th>
-	    	<th th:text="#{room.number}">* </th>
-	    	<th th:text="#{room.floor}">* </th>
-	    	<th th:text="#{room.seats}">* </th>
-	    	<th th:text="#{room.description}">* </th>
-	    	<th th:text="#{action}">* </th>
-	    </tr>
-	    <tr th:each="room : ${allRooms}">
-	       <td th:text="${room.id}"></td>
-	       <td th:text="${room.place.name}"></td>
-	       <td th:text="${room.number}"></td>
-	       <td th:text="${room.floor}"></td>
-	       <td th:text="${room.seats}"></td>
-	       <td th:text="${room.description}"></td>
-	       <td><a th:href="@{/rooms/{id}/delete/(id=${room.id})}" th:text="#{room.delete}">*</a> 
-	       <a th:href="@{/rooms/{id}/edit/(id=${room.id})}" th:text="#{room.edit}">*</a></td>
-	    </tr>
-	</table>
-</div>
 </body>
 </html>
 

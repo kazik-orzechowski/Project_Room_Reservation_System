@@ -47,10 +47,7 @@
 		                           class="form-control col-md-7 col-xs-12"/>
 		                </div>
 		            </div>
-			        <br/>
-		            <br/>
-		         
-		                     <div class="form-group">
+			        <div class="form-group">
 		                <label class="form-label" for="hour" th:text="#{event.hour}"><span
 		                        class="required">*</span>
 		                </label>
@@ -58,11 +55,7 @@
 		                    <input th:field="*{hour}" type="text" id="hour" th:value="${event.hour}" required="required"
 		                           class="form-control col-md-7 col-xs-12 timepicker"/>
 		                </div>
-		            </div>
-		            <br/>
-		            <br/>
-		        
-		          
+		          </div>
 		          <div class="form-group">
 		                <label class="form-label" for="eventDuration" th:text="#{event.eventDuration}"><span
 		                        class="required">*</span>
@@ -78,10 +71,8 @@
 		                        <option  th:value="10" th:text="#{event.eventDuration.fullDay}">*</option>
 		                        <option  th:value="12" th:text="#{event.eventDuration.tillEnd}">*</option>
 		                    </select>
-		                </div>
-		               </div>
-		          
-		          
+		              </div>
+		          </div>
 		          <div class="form-group">
 		                <label class="form-label" for="seats" th:text="#{event.seats}"><span
 		                        class="required">*</span>
@@ -92,9 +83,6 @@
 		                           	class="form-control col-md-7 col-xs-12"/>
 		                </div>
 		            </div>
-		            <br/>
-		            <br/>
-		            
 		            <div class="form-group">
 		                <label class="form-label" for="series" 
 		                		th:text="#{event.series}"><span class="required">*</span>
@@ -105,8 +93,6 @@
 		                           	class="form-control col-md-7 col-xs-12"/>
 		                </div>
 		            </div>
-					<br/>
-					<br/>
 					<div class="form-group">
 		                <label class="form-label" for="place" th:text="#{event.place.suggested}"><span
 		                        class="required">*</span>
@@ -117,9 +103,7 @@
                         </option>
 							</select>
 		                </div>
-		               </div>
-		            
-		            
+	               	</div>
 		            <div class="form-group">
 		                <label class="form-label" for="room" 
 		                		th:text="#{event.room}"><span class="required">*</span>
@@ -130,9 +114,7 @@
 		                           	class="form-control col-md-7 col-xs-12"/>
 		                </div>
 		            </div>
-		            <br/>
-		            <br/>
-		            
+		            <br/><br/>
 		            <div class="form-group">
 		                    <button class="btn btn-success" onClick=goback() th:text="#{cancel}">*</button>
 		                    <button type="submit" class="btn btn-success" th:text="#{submit}">*</button>
@@ -169,7 +151,7 @@ $( function() {
  
 
 </script>  
-  
+
     
 </body>
 </html>
