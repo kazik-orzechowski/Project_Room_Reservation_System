@@ -46,7 +46,6 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/series")
 public class SeriesController extends SessionedController {
 
-	
 	/**
 	 * Name of model attribute passing selected user to event related views.
 	 */
@@ -106,7 +105,6 @@ public class SeriesController extends SessionedController {
 	private static final String SERIES_DISPLAYED_INFO_ATTRIBUTE = ControllerAttributesData
 			.getSeriesDisplayedInfoAttribute();
 
-	
 	@Autowired
 	EventRepository repoEvent;
 
@@ -209,31 +207,23 @@ public class SeriesController extends SessionedController {
 
 	public void prepareSeriesView(Long id, Model model) {
 		List<Series> seriesList = new ArrayList<>();
-		System.err.println("S2");
-		System.err.println(repoUser.findAll().toString());
+
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			System.err.println("S2.1");
 			seriesList = repoSeries.findAll();
 		} else {
-			System.err.println("S2.2");
 			seriesList = repoSeries.findAllByUserId(id);
 		}
-		System.err.println("S3");
 		List<SeriesDTO> seriesDTOList = new ArrayList<SeriesDTO>();
-		System.err.println("S4");
 		for (Series series : seriesList) {
-			System.err.println("S5");
 			SeriesDTO seriesDto = new SeriesDTO();
 			seriesDto.setSeries(series);
 			Hibernate.initialize(series.getEvents());
 			List<Event> events = (List<Event>) series.getEvents();
-			System.err.println("S6");
 			Collections.sort(events, new Comparator<Event>() {
 				public int compare(Event e1, Event e2) {
 					return e1.getDate().compareTo(e2.getDate());
 				}
 			});
-			System.err.println("S7");
 			int numberOfEvents = (int) events.size();
 			seriesDto.setSeriesStartDate(events.get(0).getDate());
 			seriesDto.setSeriesEndDate(events.get(numberOfEvents - 1).getDate());
@@ -256,9 +246,8 @@ public class SeriesController extends SessionedController {
 		model.addAttribute(ALL_SERIES_ATTRIBUTE, seriesDTOList);
 
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
-		model.addAttribute(ADD_SERIES_INFO_ATTRIBUTE , "null");
+		model.addAttribute(ADD_SERIES_INFO_ATTRIBUTE, "null");
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 	}
 
-	
 }
