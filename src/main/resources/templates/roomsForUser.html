@@ -29,21 +29,21 @@
 			
 			<table class="table table-responsive table-hover table-striped">
 			    <tr>
-			    	<th th:text="#{room.id}">* </th>
 			       	<th th:text="#{room.place.name}">* </th>
 			    	<th th:text="#{room.number}">* </th>
 			    	<th th:text="#{room.floor}">* </th>
 			    	<th th:text="#{room.seats}">* </th>
 			    	<th th:text="#{room.description}">* </th>
+			    	<th th:text="#{room.id}">* </th>
 			    	
 			    </tr>
 			    <tr th:each="room : ${allRooms}">
-			       <td th:text="${room.id}"></td>
 			       <td th:text="${room.place.name}"></td>
 			       <td th:text="${room.number}"></td>
 			       <td th:text="${room.floor}"></td>
 			       <td th:text="${room.seats}"></td>
 			       <td th:text="${room.description}"></td>
+			       <td th:text="${room.id}"></td>
 			     </tr>
 			</table>
 		</div>
