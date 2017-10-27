@@ -17,6 +17,8 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.mindrot.jbcrypt.BCrypt;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 /**
  * User entity class is used to define users. Series class refers to user table
  * in application database.
@@ -77,6 +79,7 @@ public class User {
 	/**
 	 * Reference to series (indirect and the only reference to user events)
 	 */
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Series> series = new ArrayList<Series>();
 	/**

@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 /**
  * Series entity class is used to define series of events and is created during
  * successful reservation attempt made by user. Series is the only indirect
@@ -36,7 +38,7 @@ public class Series {
 	 * Reference to series user (this is the only /indirect/ reference of user to
 	 * event)
 	 */
-	@OneToOne
+	@ManyToOne
 	private User user;
 	/**
 	 * Reference to events in series
