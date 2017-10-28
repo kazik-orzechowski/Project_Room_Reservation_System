@@ -444,7 +444,6 @@ public class EventController extends SessionedController {
 	public String editEventPost(@PathVariable Long ide, @PathVariable Long id, @PathVariable Long ids,
 			@Valid Event event, @RequestParam Long placeId, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			System.err.println(result);
 			return EDIT_EVENT_VIEW;
 		}
 
@@ -530,8 +529,6 @@ public class EventController extends SessionedController {
 		}
 			
 		repoEvent.deleteById(ide);
-		
-		
 		
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);

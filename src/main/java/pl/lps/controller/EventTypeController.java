@@ -87,7 +87,6 @@ public class EventTypeController extends SessionedController {
 		}
 
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
-		System.out.println(repoEventType.findAll().toString());
 		model.addAttribute("activeMenuItem", "eventTypes");
 
 		return EVENT_TYPES_VIEW;
@@ -133,7 +132,6 @@ public class EventTypeController extends SessionedController {
 	@PostMapping("/add")
 	public String addEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			System.err.println(result);
 			return EDIT_EVENT_TYPE_VIEW;
 		}
 		repoEventType.save(eventType);
@@ -206,7 +204,6 @@ public class EventTypeController extends SessionedController {
 	@PostMapping("/{id}/edit")
 	public String editEventTypePost(@Valid EventType eventType, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			System.err.println(result);
 			return EDIT_EVENT_TYPE_VIEW;
 		}
 		repoEventType.save(eventType);

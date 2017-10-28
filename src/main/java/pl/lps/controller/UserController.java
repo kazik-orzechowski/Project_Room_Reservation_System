@@ -140,7 +140,6 @@ public class UserController extends SessionedController {
 		}
 
 		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
-		System.out.println(repoUser.findAll().toString());
 		model.addAttribute("activeMenuItem", "users");
 		return USERS_VIEW;
 	}
@@ -222,11 +221,7 @@ System.err.println("before post" + repoUser.findOneById(id).getPassword());
 		// Sets the original password back for edited user. Password in the editedUser
 		// binded object for admin's edition is admin's password
 
-System.err.println("before change" + editedUser.getPassword());
-
 		editedUser.passHashedPassword(repoUser.findOneById(editedUser.getId()).getPassword());
-
-System.err.println("after change" + editedUser.getPassword());		
 		
 		repoUser.save(editedUser);
 

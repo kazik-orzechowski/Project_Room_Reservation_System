@@ -185,7 +185,6 @@ public class RoomController extends SessionedController {
 	public String addRoomPost(@Valid Room room, BindingResult result, Model model) {
 		if (result.hasErrors()
 				|| repoRoom.findOneByPlaceAndNumber(room.getPlace(), room.getNumber()) != null) {
-			System.err.println(result);
 			return EDIT_ROOM_VIEW;
 		}
 		repoRoom.save(room);

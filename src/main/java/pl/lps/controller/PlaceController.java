@@ -128,7 +128,6 @@ public class PlaceController extends SessionedController {
 	@PostMapping("/add")
 	public String addPlacePost(@Valid Place addedPlace, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			System.err.println(result);
 			return EDIT_PLACE_VIEW;
 		}
 		repoPlace.save(addedPlace);
@@ -204,7 +203,6 @@ public class PlaceController extends SessionedController {
 	@PostMapping("/{id}/edit")
 	public String editPlacePost(@Valid Place editedPlace, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			System.err.println(result);
 			return EDIT_PLACE_VIEW;
 		}
 		repoPlace.save(editedPlace);
