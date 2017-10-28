@@ -195,45 +195,6 @@ public class EventController extends SessionedController {
 	RoomList roomList;
 
 	
-	
-	@RequestMapping("")
-	public String allEvents(Model model) {
-
-		if (!SessionValidation.isSessionAdmin()) {
-			return MAIN_VIEW;
-		}
-
-		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
-		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneByUserName("admin"));
-		model.addAttribute("activeMenuItem", "events");
-
-		return EVENTS_VIEW;
-	}
-
-	/**
-	 * Maps request made by concerning display of this user's list of events !!!!!
-	 * not mapped in this version (now it is allEventsBySeriesId) - to be deleted
-	 * after verification of links !!!!!
-	 * 
-	 * @param id
-	 *            - this user id
-	 * @param model
-	 *            - instance of Model class used to pass attributes to the views
-	 * @return userPanel.html view fed with this user's event list and this user
-	 *         object
-	 */
-
-	@RequestMapping("/{id}")
-	public String allEvents(@PathVariable Long id, Model model) {
-
-		if (!SessionValidation.isSessionUser(id)) {
-			return MAIN_VIEW;
-		}
-		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
-		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-		return USER_PANEL_VIEW;
-	}
-
 	/**
 	 * Maps request made by user concerning display of this user's home page
 	 * containing the list of events of this user. The list may include all events

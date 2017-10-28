@@ -150,7 +150,6 @@ public class LoginController extends SessionedController {
 
 		}
 
-		System.err.println("problem");
 		if (user.getUserName().equals("admin")) {
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
 			model.addAttribute("activeMenuItem", "home");
