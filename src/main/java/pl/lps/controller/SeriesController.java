@@ -205,6 +205,13 @@ public class SeriesController extends SessionedController {
 		}
 	}
 
+	/**
+	 * Prepares list of series for the current user
+	 * @param id - current user id
+	 * @param model
+	 *            - instance of Model class used to pass attributes to the views
+	 */
+	
 	public void prepareSeriesView(Long id, Model model) {
 		List<Series> seriesList = new ArrayList<>();
 
@@ -243,6 +250,8 @@ public class SeriesController extends SessionedController {
 
 		}
 
+		
+		
 		model.addAttribute(ALL_SERIES_ATTRIBUTE, seriesDTOList);
 
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");

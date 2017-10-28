@@ -20,7 +20,7 @@ import pl.lps.model.SessionedController;
  *
  */
 @Controller
-@RequestMapping("main")
+@RequestMapping("")
 
 public class MainControler extends SessionedController {
 
