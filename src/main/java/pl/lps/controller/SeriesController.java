@@ -47,6 +47,15 @@ import pl.lps.repository.UserRepository;
 public class SeriesController extends SessionedController {
 
 	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = ControllerAttributesData.getActiveMenuItemAttribute();
+
+	
+	/**
 	 * Name of model attribute passing selected user to event related views.
 	 */
 	private static final String USER_ATTRIBUTE = "user";
@@ -194,7 +203,7 @@ public class SeriesController extends SessionedController {
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 		model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
-		model.addAttribute("activeMenuItem", "series");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "series");
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 
