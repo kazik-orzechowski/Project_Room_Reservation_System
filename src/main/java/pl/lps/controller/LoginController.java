@@ -29,6 +29,17 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/login")
 public class LoginController extends SessionedController {
 
+
+
+	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = ControllerAttributesData.getActiveMenuItemAttribute();
+
+	
 	/**
 	 * Name of model attribute passing an information to the user panel view
 	 * regarding the current series (all or name} being displayed
@@ -152,7 +163,7 @@ public class LoginController extends SessionedController {
 
 		if (user.getUserName().equals("admin")) {
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
-			model.addAttribute("activeMenuItem", "home");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
 			return ADMIN_PANEL_VIEW;
 		} else {
 			model.addAttribute("eventType", repoEventType.findAll());
@@ -164,7 +175,7 @@ public class LoginController extends SessionedController {
 
 			// 0 for all series to be displayed
 			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, 0);
-			model.addAttribute("activeMenuItem", "home");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
 
 			return USER_PANEL_VIEW;
 		}
