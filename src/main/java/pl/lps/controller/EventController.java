@@ -52,7 +52,13 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/events")
 public class EventController extends SessionedController {
 
-	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = "activeMenuItem";
+	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = ControllerAttributesData.getActiveMenuItemAttribute();
 	/**
 	 * Name of model attribute passing selected user to event related views.
 	 */

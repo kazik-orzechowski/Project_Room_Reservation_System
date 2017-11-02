@@ -21,6 +21,7 @@ import pl.lps.model.SessionedController;
 @Controller
 @RequestMapping("/logout")
 public class LogoutController extends SessionedController {
+
 	/**
 	 * Name of String class message attribute used in the home page view.
 	 */

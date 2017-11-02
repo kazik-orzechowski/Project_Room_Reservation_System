@@ -34,6 +34,14 @@ import pl.lps.repository.PlaceRepository;
 @RequestMapping("/places")
 public class PlaceController extends SessionedController {
 
+	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = ControllerAttributesData.getActiveMenuItemAttribute();
+
 	
 	/**
 	 * Name of edit views (place, room, event type) used to pass information if the
@@ -84,7 +92,7 @@ public class PlaceController extends SessionedController {
 		}
 
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
-		model.addAttribute("activeMenuItem", "places");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "places");
 		
 		return PLACES_VIEW;
 	}
@@ -107,7 +115,7 @@ public class PlaceController extends SessionedController {
 		Place place = new Place();
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
 		model.addAttribute(PLACE_ATTRIBUTE, place);
-		model.addAttribute("activeMenuItem", "places");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "places");
 
 		return EDIT_PLACE_VIEW;
 	}
@@ -132,7 +140,7 @@ public class PlaceController extends SessionedController {
 		}
 		repoPlace.save(addedPlace);
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
-		model.addAttribute("activeMenuItem", "places");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "places");
 
 		return PLACES_VIEW;
 
@@ -157,7 +165,7 @@ public class PlaceController extends SessionedController {
 		}
 
 		repoPlace.deleteById(id);
-		model.addAttribute("activeMenuItem", "places");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "places");
 
 		return "redirect: /" + PLACES_VIEW;
 	}
@@ -181,7 +189,7 @@ public class PlaceController extends SessionedController {
 		}
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
 		model.addAttribute(PLACE_ATTRIBUTE, repoPlace.findOneById(id));
-		model.addAttribute("activeMenuItem", "places");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "places");
 
 		return EDIT_PLACE_VIEW;
 	}
@@ -206,7 +214,7 @@ public class PlaceController extends SessionedController {
 			return EDIT_PLACE_VIEW;
 		}
 		repoPlace.save(editedPlace);
-		model.addAttribute("activeMenuItem", "places");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "places");
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 		return PLACES_VIEW;
 
