@@ -71,6 +71,25 @@ public class ControllerAttributesData {
 	private static final String SERIES_DISPLAYED_ATTRIBUTE = "displayedSeriesId";
 
 	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = "activeMenuItem";
+
+	/**
+	 * Gets the name of active menu item attribute used to pass information to
+	 * header on each page of this application needed to set menu (list) item class
+	 * to 'active' in order to highlight menu item corresponding with the current
+	 * page
+	 */
+
+	public static String getActiveMenuItemAttribute() {
+		return ACTIVE_MENU_ITEM_ATTRIBUTE;
+	}
+
+	/**
 	 * Name of model attribute passing information regarding displayed series to
 	 * user event view.
 	 */
@@ -142,8 +161,8 @@ public class ControllerAttributesData {
 	private static final String ADD_OR_EDIT_ATTRIBUTE = "addOrEdit";
 
 	/**
-	 * Gets the name of edit views (place, room, event type) used to pass information if the
-	 * view is used for adding new or editing current instance.
+	 * Gets the name of edit views (place, room, event type) used to pass
+	 * information if the view is used for adding new or editing current instance.
 	 */
 	public static String getAddOrEditAttribute() {
 		return ADD_OR_EDIT_ATTRIBUTE;

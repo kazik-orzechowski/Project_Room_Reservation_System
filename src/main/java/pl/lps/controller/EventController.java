@@ -52,6 +52,7 @@ import pl.lps.repository.UserRepository;
 @RequestMapping("/events")
 public class EventController extends SessionedController {
 
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = "activeMenuItem";
 	/**
 	 * Name of model attribute passing selected user to event related views.
 	 */
@@ -234,7 +235,7 @@ public class EventController extends SessionedController {
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE,
 					" " + repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
 		}
-		model.addAttribute("activeMenuItem", "home");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
 		
 		return USER_PANEL_VIEW;
 	}
@@ -265,7 +266,7 @@ public class EventController extends SessionedController {
 		model.addAttribute(ALL_PLACES_ATTRIBUTE, repoPlace.findAll());
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
-		model.addAttribute("activeMenuItem", "addEvent");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "addEvent");
 
 		
 		return ADD_EVENT_VIEW;
@@ -573,7 +574,7 @@ public class EventController extends SessionedController {
 	private String userVsAdminRedirect(Long id, Long ids, Model model) {
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
-			model.addAttribute("activeMenuItem", "events");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "events");
 			return EVENTS_VIEW;
 		} else {
 			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
@@ -587,7 +588,7 @@ public class EventController extends SessionedController {
 				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " "
 						+ repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
 			}
-			model.addAttribute("activeMenuItem", "home");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
 
 			return USER_PANEL_VIEW;
 
