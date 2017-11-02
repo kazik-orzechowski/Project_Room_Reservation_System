@@ -34,6 +34,15 @@ import pl.lps.repository.EventTypeRepository;
 @RequestMapping("/eventTypes")
 public class EventTypeController extends SessionedController {
 
+		
+	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = ControllerAttributesData.getActiveMenuItemAttribute();
+
 	/**
 	 * Name of model attribute passing selected event type to add event type and
 	 * edit event type views.
@@ -87,7 +96,7 @@ public class EventTypeController extends SessionedController {
 		}
 
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute("activeMenuItem", "eventTypes");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "eventTypes");
 
 		return EVENT_TYPES_VIEW;
 	}
@@ -110,7 +119,7 @@ public class EventTypeController extends SessionedController {
 		EventType eventType = new EventType();
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, eventType);
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "add");
-		model.addAttribute("activeMenuItem", "eventTypes");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "eventTypes");
 
 		return EDIT_EVENT_TYPE_VIEW;
 	}
@@ -136,7 +145,7 @@ public class EventTypeController extends SessionedController {
 		}
 		repoEventType.save(eventType);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute("activeMenuItem", "eventTypes");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "eventTypes");
 		return EVENT_TYPES_VIEW;
 
 	}
@@ -160,7 +169,7 @@ public class EventTypeController extends SessionedController {
 		}
 		repoEventType.deleteById(id);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute("activeMenuItem", "eventTypes");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "eventTypes");
 		return EVENT_TYPES_VIEW;
 	}
 
@@ -183,7 +192,7 @@ public class EventTypeController extends SessionedController {
 		}
 		model.addAttribute(EVENT_TYPE_ATTRIBUTE, repoEventType.findOneById(id));
 		model.addAttribute(ADD_OR_EDIT_ATTRIBUTE, "edit");
-		model.addAttribute("activeMenuItem", "eventTypes");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "eventTypes");
 		return EDIT_EVENT_TYPE_VIEW;
 	}
 
@@ -208,7 +217,7 @@ public class EventTypeController extends SessionedController {
 		}
 		repoEventType.save(eventType);
 		model.addAttribute(ALL_EVENT_TYPES_ATTRIBUTE, repoEventType.findAll());
-		model.addAttribute("activeMenuItem", "eventTypes");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "eventTypes");
 		return EVENT_TYPES_VIEW;
 
 	}
