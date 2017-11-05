@@ -37,6 +37,7 @@ import pl.lps.repository.PlaceRepository;
 import pl.lps.repository.RoomRepository;
 import pl.lps.repository.SeriesRepository;
 import pl.lps.repository.UserRepository;
+import pl.lps.service.EventService;
 
 /**
  * EventController is a class used to map and process all users requests
@@ -144,6 +145,10 @@ public class EventController extends SessionedController {
 	 */
 	Room roomPossible = new Room();
 
+	
+	@Autowired
+	EventService serviceEvent;
+	
 	/**
 	 * Event repository instance injection
 	 */
@@ -420,7 +425,6 @@ public class EventController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-		System.err.println("GET" + repoEvent.findOneById(ide).getRoom().getPlace().getName().toString());
 		model.addAttribute(EVENT_ATTRIBUTE, repoEvent.findOneById(ide));
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 
@@ -459,8 +463,6 @@ public class EventController extends SessionedController {
 		event.setId(ide);
 		Room roomCurrent = event.getRoom();
 
-		System.err.println("POST 1" + roomCurrent.getPlace().getName().toString());
-
 		Long placeCurrentId = placeId;
 		Long seatsRequired = event.getEventSeats();
 		// event deleted temporarily from repo to not disturb in the search for free
@@ -473,7 +475,7 @@ public class EventController extends SessionedController {
 			roomPossible = roomCurrent;
 		} else {
 
-			ArrayList<Room> rooms = roomLongListing(placeCurrentId, seatsRequired);
+			ArrayList<Room> rooms = serviceEvent.roomLongListing(placeCurrentId, seatsRequired);
 
 			for (Room room : rooms) {
 				if (repoEvent.findCollidingEvents(event.getDate(), room.getId(), event.getHour(), event.getEndHour())
@@ -548,21 +550,21 @@ public class EventController extends SessionedController {
 		return userVsAdminRedirect(id, ids, model);
 	}
 
-	/**
-	 * Preparation of array list of rooms, that will be used to narrow free room
-	 * search to rooms meeting place and number of seats criteria
-	 */
-
-	private ArrayList<Room> roomLongListing(Long placeCurrentId, Long seatsRequired) {
-
-		ArrayList<Room> rooms = new ArrayList<Room>();
-		if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
-			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
-		} else {
-			rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId, seatsRequired);
-		}
-		return rooms;
-	}
+//	/**
+//	 * Preparation of array list of rooms, that will be used to narrow free room
+//	 * search to rooms meeting place and number of seats criteria
+//	 */
+//
+//	private ArrayList<Room> roomLongListing(Long placeCurrentId, Long seatsRequired) {
+//
+//		ArrayList<Room> rooms = new ArrayList<Room>();
+//		if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
+//			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
+//		} else {
+//			rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId, seatsRequired);
+//		}
+//		return rooms;
+//	}
 
 	/**
 	 * Selects admin or user view based on passed id
