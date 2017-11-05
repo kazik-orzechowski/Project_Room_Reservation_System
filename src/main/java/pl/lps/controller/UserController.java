@@ -37,6 +37,15 @@ import pl.lps.repository.UserRepository;
 public class UserController extends SessionedController {
 
 	/**
+	 * Name of active menu item attribute used to pass information to header on each
+	 * page of this application needed to set menu (list) item class to 'active' in
+	 * order to highlight menu item corresponding with the current page
+	 */
+
+	private static final String ACTIVE_MENU_ITEM_ATTRIBUTE = ControllerAttributesData.getActiveMenuItemAttribute();
+
+	
+	/**
 	 * Passes the name of home page of this application.
 	 */
 	private static final String MAIN_VIEW = ControllerData.getMainView();
@@ -119,7 +128,7 @@ public class UserController extends SessionedController {
 			return MAIN_VIEW;
 		}
 		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneByUserName("admin"));
-		model.addAttribute("activeMenuItem", "home");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
 
 		return ADMIN_PANEL_VIEW;
 	}
@@ -140,7 +149,7 @@ public class UserController extends SessionedController {
 		}
 
 		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
-		model.addAttribute("activeMenuItem", "users");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "users");
 		return USERS_VIEW;
 	}
 
@@ -161,7 +170,7 @@ public class UserController extends SessionedController {
 		}
 		repoUser.deleteById(id);
 		model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
-		model.addAttribute("activeMenuItem", "users");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "users");
 
 		return USERS_VIEW;
 	}
@@ -187,11 +196,11 @@ public class UserController extends SessionedController {
 
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			model.addAttribute("returnUrl", "/" + USERS_VIEW);
-			model.addAttribute("activeMenuItem", "users");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "users");
 		} else {
 			model.addAttribute("returnUrl", "/" + EVENTS_VIEW + "/" + id);
 		}
-		model.addAttribute("activeMenuItem", "editUser");
+		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "editUser");
 System.err.println("before post" + repoUser.findOneById(id).getPassword());
 		return EDIT_USER_VIEW;
 	}
@@ -227,7 +236,7 @@ System.err.println("before post" + repoUser.findOneById(id).getPassword());
 
 		if (user.getUserName().equals("admin")) {
 			model.addAttribute(ALL_USERS_ATTRIBUTE, repoUser.findAll());
-			model.addAttribute("activeMenuItem", "users");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "users");
 			return USERS_VIEW;
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
@@ -239,7 +248,7 @@ System.err.println("before post" + repoUser.findOneById(id).getPassword());
 			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 			model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 			model.addAttribute("displayedSeriesId", 0);
-			model.addAttribute("activeMenuItem", "home");
+			model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
 
 			return USER_PANEL_VIEW;
 		}
