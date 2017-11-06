@@ -241,7 +241,7 @@ System.err.println("before post" + repoUser.findOneById(id).getPassword());
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 			model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
-			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, "series.all");
 
 			model.addAttribute("eventType", repoEventType.findAll());
 			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));

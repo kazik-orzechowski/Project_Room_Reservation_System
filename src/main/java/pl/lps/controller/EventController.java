@@ -239,7 +239,7 @@ public class EventController extends SessionedController {
 		
 		if (ids == 0) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
-			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, "series.all");
 			
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesId(ids));

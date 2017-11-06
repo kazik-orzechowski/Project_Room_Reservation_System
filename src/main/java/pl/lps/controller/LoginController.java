@@ -169,7 +169,7 @@ public class LoginController extends SessionedController {
 			model.addAttribute("eventType", repoEventType.findAll());
 			model.addAttribute(LOGIN_USER_ATTRIBUTE, user);
 			model.addAttribute(USER_PANEL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(user.getId()));
-			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, "series.all");
 			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 			model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
 
