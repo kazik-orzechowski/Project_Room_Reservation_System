@@ -44,7 +44,7 @@ public class SeriesService {
 	 *            - instance of Model class used to pass attributes to the views
 	 */
 
-	public void prepareSeriesView(Long id, Model model) {
+	public List<SeriesDTO> prepareSeriesView(Long id, Model model) {
 		List<Series> seriesList = new ArrayList<>();
 		if (repoUser.findOneById(id).getUserName().equals("admin")) {
 			seriesList = repoSeries.findAll();
@@ -81,10 +81,7 @@ public class SeriesService {
 
 		}
 
-		model.addAttribute(ControllerAttributesData.getAllSeries(), seriesDTOList);
-		model.addAttribute(ControllerAttributesData.getAddEventInfoAttribute(), "null");
-		model.addAttribute(ControllerAttributesData.getAddSeriesInfoAttribute(), "null");
-		model.addAttribute("user", repoUser.findOneById(id));
+		return seriesDTOList;
 	}
 
 }

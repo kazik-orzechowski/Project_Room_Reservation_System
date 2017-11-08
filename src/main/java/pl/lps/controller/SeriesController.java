@@ -127,6 +127,10 @@ public class SeriesController extends SessionedController {
 	SeriesRepository repoSeries;
 
 	@Autowired
+	SeriesService serviceSeries;
+
+	
+	@Autowired
 	SessionValidation sv;
 
 	/**
@@ -180,7 +184,15 @@ public class SeriesController extends SessionedController {
 
 		SeriesService seriesServiceView = new SeriesService();
 
-		prepareSeriesView(id, model);
+		List<SeriesDTO> seriesDTOList = serviceSeries.prepareSeriesView(id, model);
+		
+		model.addAttribute(ControllerAttributesData.getAllSeries(), seriesDTOList);
+		model.addAttribute(ControllerAttributesData.getAddEventInfoAttribute(), "null");
+		model.addAttribute(ControllerAttributesData.getAddSeriesInfoAttribute(), "null");
+		model.addAttribute("user", repoUser.findOneById(id));
+
+//		
+//		prepareSeriesView(id, model);
 
 		model.addAttribute("eventCycleLength", "null");
 		model.addAttribute("followingEvents", "null");
@@ -212,60 +224,6 @@ public class SeriesController extends SessionedController {
 			return USER_SERIES_PANEL_VIEW;
 
 		}
-	}
-
-	/**
-	 * Prepares list of series for the current user
-	 * @param id - current user id
-	 * @param model
-	 *            - instance of Model class used to pass attributes to the views
-	 */
-	
-	public void prepareSeriesView(Long id, Model model) {
-		List<Series> seriesList = new ArrayList<>();
-
-		if (repoUser.findOneById(id).getUserName().equals("admin")) {
-			seriesList = repoSeries.findAll();
-		} else {
-			seriesList = repoSeries.findAllByUserId(id);
-		}
-		List<SeriesDTO> seriesDTOList = new ArrayList<SeriesDTO>();
-		for (Series series : seriesList) {
-			SeriesDTO seriesDto = new SeriesDTO();
-			seriesDto.setSeries(series);
-			Hibernate.initialize(series.getEvents());
-			List<Event> events = (List<Event>) series.getEvents();
-			Collections.sort(events, new Comparator<Event>() {
-				public int compare(Event e1, Event e2) {
-					return e1.getDate().compareTo(e2.getDate());
-				}
-			});
-			int numberOfEvents = (int) events.size();
-			seriesDto.setSeriesStartDate(events.get(0).getDate());
-			seriesDto.setSeriesEndDate(events.get(numberOfEvents - 1).getDate());
-			seriesDto.setNumberOfEvents(numberOfEvents);
-
-			// Adding all unique venues and hours of event series
-			Set<String> venuesOfEventSeries = new HashSet<>();
-			Set<Date> startHoursOfEventSeries = new HashSet<>();
-			for (Event event : events) {
-				venuesOfEventSeries.add(event.getRoom().getPlace().getName() + " sala " + event.getRoom().getNumber());
-				startHoursOfEventSeries.add(event.getHour());
-			}
-
-			seriesDto.setSeriesHours(startHoursOfEventSeries);
-			seriesDto.setSeriesPlacesAndRooms(venuesOfEventSeries);
-			seriesDTOList.add(seriesDto);
-
-		}
-
-		
-		
-		model.addAttribute(ALL_SERIES_ATTRIBUTE, seriesDTOList);
-
-		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
-		model.addAttribute(ADD_SERIES_INFO_ATTRIBUTE, "null");
-		model.addAttribute(USER_ATTRIBUTE, repoUser.findOneById(id));
 	}
 
 }
