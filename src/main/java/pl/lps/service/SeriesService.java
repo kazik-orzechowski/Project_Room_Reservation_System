@@ -1,4 +1,4 @@
-package pl.lps.controller;
+package pl.lps.service;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -20,6 +20,7 @@ import pl.lps.repository.EventRepository;
 import pl.lps.repository.EventTypeRepository;
 import pl.lps.repository.SeriesRepository;
 import pl.lps.repository.UserRepository;
+import pl.lps.service.SeriesService;
 
 /**
  * SeriesController is a class used to map and process users and admins requests
