@@ -1,16 +1,9 @@
 package pl.lps.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.lps.data.ControllerAttributesData;
 import pl.lps.data.ControllerData;
-import pl.lps.entity.Event;
-import pl.lps.entity.Series;
 import pl.lps.entity.SeriesDTO;
 import pl.lps.model.SessionValidation;
 import pl.lps.model.SessionedController;
@@ -61,12 +52,6 @@ public class SeriesController extends SessionedController {
 	private static final String USER_ATTRIBUTE = "user";
 
 	/**
-	 * Name of model attribute passing list of series to be displayed in series
-	 * view.
-	 */
-	private static final String ALL_SERIES_ATTRIBUTE = "allSeries";
-
-	/**
 	 * Name of series view of this application.
 	 */
 	private static final String SERIES_VIEW = ControllerData.getSeriesView();
@@ -85,13 +70,6 @@ public class SeriesController extends SessionedController {
 	 */
 	private static final String REQUESTED_EVENT_SERIES_ATTRIBUTE = ControllerAttributesData
 			.getRequestedEventSeriesAttribute();
-
-	/**
-	 * Name of model attribute passing information regarding displayed series to
-	 * user event view.
-	 */
-
-	private static final String ADD_SERIES_INFO_ATTRIBUTE = ControllerAttributesData.getAddSeriesInfoAttribute();
 
 	/**
 	 * Name of model attribute passing result of add / edit event to event views.
@@ -154,7 +132,7 @@ public class SeriesController extends SessionedController {
 		}
 
 		SeriesService seriesServiceView = new SeriesService();
-		prepareSeriesView(id, model);
+		serviceSeries.prepareSeriesView(id, model);
 
 		return adminVsUserSeriesViewRedirect(id, model);
 
@@ -189,11 +167,7 @@ public class SeriesController extends SessionedController {
 		model.addAttribute(ControllerAttributesData.getAllSeries(), seriesDTOList);
 		model.addAttribute(ControllerAttributesData.getAddEventInfoAttribute(), "null");
 		model.addAttribute(ControllerAttributesData.getAddSeriesInfoAttribute(), "null");
-		model.addAttribute("user", repoUser.findOneById(id));
-
-//		
-//		prepareSeriesView(id, model);
-
+		model.addAttribute(ControllerAttributesData.getUserAttribute(), repoUser.findOneById(id));
 		model.addAttribute("eventCycleLength", "null");
 		model.addAttribute("followingEvents", "null");
 
