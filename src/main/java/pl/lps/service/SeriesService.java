@@ -11,6 +11,7 @@ import java.util.Set;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import pl.lps.data.ControllerAttributesData;
@@ -20,7 +21,7 @@ import pl.lps.entity.SeriesDTO;
 import pl.lps.repository.SeriesRepository;
 import pl.lps.repository.UserRepository;
 
-@Component
+@Service
 public class SeriesService {
 
 
