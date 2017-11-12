@@ -23,10 +23,6 @@ import pl.lps.repository.UserRepository;
 @Component
 public class SeriesService {
 
-	public SeriesService() {
-		super();
-	
-	}
 
 	@Autowired
 	UserRepository repoUser;
@@ -34,6 +30,16 @@ public class SeriesService {
 	@Autowired
 	SeriesRepository repoSeries;
 
+	/**
+	 * Empty constructor
+	 */
+	
+	public SeriesService() {
+		super();
+	
+	}
+
+	
 	/**
 	 * Prepares a list of SeriesDTO objects containing all data regarding event
 	 * series stored in series objects and event objects.
