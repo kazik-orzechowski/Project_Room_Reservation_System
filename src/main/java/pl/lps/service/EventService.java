@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import pl.lps.entity.Room;
 import pl.lps.repository.PlaceRepository;
 import pl.lps.repository.RoomRepository;
 
-@Component
+@Service
 public class EventService {
 
 	private ArrayList<Room> eventRooms;

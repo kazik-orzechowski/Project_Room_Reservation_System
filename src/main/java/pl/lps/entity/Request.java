@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
  * room available at the time of the reservation attempt. Request entity class
  * objects are used to define pending request concerning room reservation. The
  * request turns into event when there is a room available for defined criteria.
- * Request class refers to "requests" table in application database. 
- * !!!!! To be implemented !!!!!
+ * Request class refers to "requests" table in application database. !!!!! To be
+ * implemented !!!!!
  * 
  * @author kaz
  *
@@ -66,11 +66,13 @@ public class Request {
 	 */
 	@ManyToOne
 	private User user;
+
 	/**
-	 * Request status
+	 * Request status (0 - pending default, 1 - accepted, 2 - declined, 3 canceled
+	 * by user)
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
-	private Status status;
+	@NotNull
+	private Integer status;
 
 	/**
 	 * Request class object empty constructor
@@ -90,7 +92,8 @@ public class Request {
 	 * @param status
 	 */
 
-	public Request(Date startdate, Date hour, Integer requestDuration, Integer intervalDays, User user, Status status) {
+	public Request(Date startdate, Date hour, Integer requestDuration, 
+			Integer intervalDays, User user, Integer status) {
 		super();
 		this.startdate = startdate;
 		this.hour = hour;
@@ -216,7 +219,7 @@ public class Request {
 	 * @return status of this request
 	 */
 
-	public Status getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
@@ -225,7 +228,7 @@ public class Request {
 	 * 
 	 * @param status
 	 */
-	public void setStatus(Status status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 

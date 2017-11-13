@@ -17,10 +17,10 @@ public class SeriesDisplayService {
 	@Autowired
 	SeriesRepository repoSeries;
 	
-	public List<Series> getPage(int pageNumber) {
-		PageRequest request = new PageRequest (pageNumber - 1, PAGESIZE, Sort.Direction.ASC, "id");
-		
-		return repoSeries.findAll(request).getContent();
-	}
+//	public List<Series> getPage(int pageNumber) {
+//		PageRequest request = new PageRequest (pageNumber - 1, PAGESIZE, Sort.Direction.ASC, "id");
+//		
+//		return repoSeries.findAll(request).getContent();
+//	}
 	
 }
