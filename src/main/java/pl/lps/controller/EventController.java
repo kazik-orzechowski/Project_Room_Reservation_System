@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,7 @@ import pl.lps.data.ControllerData;
 import pl.lps.entity.Event;
 import pl.lps.entity.EventType;
 import pl.lps.entity.Place;
+import pl.lps.entity.Request;
 import pl.lps.entity.Room;
 import pl.lps.entity.Series;
 import pl.lps.entity.User;
@@ -359,6 +361,10 @@ public class EventController extends SessionedController {
 				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.no.rooms");
 				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 				roomPossible = null;
+				Request request = new Request (dateOfFirstEvent, hour, eventDuration, numberOfEvents, 
+						eventCycleLength, userCurrent, eventSeats, 0);
+			
+				
 			}
 
 		}

@@ -50,17 +50,17 @@ public class Request {
 	 * Duration of requested event in request
 	 */
 	@NotNull
-	private Integer requestDuration;
+	private Long requestDuration;
 	/**
 	 * Number of events in requested series of events in request
 	 */
 	@NotNull
-	private Integer requestNumberOfEvents;
+	private Long requestNumberOfEvents;
 	/**
 	 * Interval of series of requested series of events in request
 	 */
 	@NotNull
-	private Integer intervalDays;
+	private Long intervalDays;
 	/**
 	 * User submitting request
 	 */
@@ -68,11 +68,17 @@ public class Request {
 	private User user;
 
 	/**
+	 * NUmber of seats required for requested event
+	 */
+	@NotNull
+	private Long requestEventSeats;
+	
+	/**
 	 * Request status (0 - pending default, 1 - accepted, 2 - declined, 3 canceled
 	 * by user)
 	 */
 	@NotNull
-	private Integer status;
+	private int status;
 
 	/**
 	 * Request class object empty constructor
@@ -82,34 +88,41 @@ public class Request {
 	}
 
 	/**
-	 * Parameterized Request class object constructor
-	 * 
-	 * @param startdate
-	 * @param hour
-	 * @param requestDuration
-	 * @param intervalDays
-	 * @param user
-	 * @param status
-	 */
-
-	public Request(Date startdate, Date hour, Integer requestDuration, 
-			Integer intervalDays, User user, Integer status) {
-		super();
-		this.startdate = startdate;
-		this.hour = hour;
-		this.requestDuration = requestDuration;
-		this.intervalDays = intervalDays;
-		this.user = user;
-		this.status = status;
-	}
-
-	/**
 	 * Gets this request's id
 	 * 
 	 * @return this request's id
 	 */
 	public Long getId() {
 		return id;
+	}
+
+	/**
+	 * Parameterized Request class object constructor
+
+	 * 
+	 * @param id
+	 * @param startdate
+	 * @param hour
+	 * @param requestDuration
+	 * @param requestNumberOfEvents
+	 * @param intervalDays
+	 * @param user
+	 * @param requestEventSeats
+	 * @param status
+	 */
+	
+	public Request(@NotNull Date startdate, @NotNull Date hour, @NotNull Long requestDuration,
+			@NotNull Long requestNumberOfEvents, @NotNull Long intervalDays, User user, @NotNull Long requestEventSeats,
+			@NotNull int status) {
+		super();
+		this.startdate = startdate;
+		this.hour = hour;
+		this.requestDuration = requestDuration;
+		this.requestNumberOfEvents = requestNumberOfEvents;
+		this.intervalDays = intervalDays;
+		this.user = user;
+		this.requestEventSeats = requestEventSeats;
+		this.status = status;
 	}
 
 	/**
@@ -163,7 +176,7 @@ public class Request {
 	 * 
 	 * @return this request's duration
 	 */
-	public Integer getRequestDuration() {
+	public Long getRequestDuration() {
 		return requestDuration;
 	}
 
@@ -172,7 +185,7 @@ public class Request {
 	 * 
 	 * @param requestDuration
 	 */
-	public void setRequestDuration(Integer requestDuration) {
+	public void setRequestDuration(Long requestDuration) {
 		this.requestDuration = requestDuration;
 	}
 
@@ -182,7 +195,7 @@ public class Request {
 	 * @return this request's interval between events in days
 	 */
 
-	public Integer getIntervalDays() {
+	public Long getIntervalDays() {
 		return intervalDays;
 	}
 
@@ -191,7 +204,7 @@ public class Request {
 	 * 
 	 * @param intervalDays
 	 */
-	public void setIntervalDays(Integer intervalDays) {
+	public void setIntervalDays(Long intervalDays) {
 		this.intervalDays = intervalDays;
 	}
 
@@ -232,13 +245,41 @@ public class Request {
 		this.status = status;
 	}
 
+
+	
+	public Long getRequestNumberOfEvents() {
+		return requestNumberOfEvents;
+	}
+
+	public void setRequestNumberOfEvents(Long requestNumberOfEvents) {
+		this.requestNumberOfEvents = requestNumberOfEvents;
+	}
+
+	public Long getRequestEventSeats() {
+		return requestEventSeats;
+	}
+
+	public void setRequestEventSeats(Long requestEventSeats) {
+		this.requestEventSeats = requestEventSeats;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	/**
 	 * Request object to String method, returns request general description
 	 */
 	@Override
 	public String toString() {
 		return "Request [id=" + id + ", startdate=" + startdate + ", hour=" + hour + ", requestDuration="
-				+ requestDuration + ", intervalDays=" + intervalDays + ", user=" + user + ", status=" + status + "]";
+				+ requestDuration + ", requestNumberOfEvents=" + requestNumberOfEvents + ", intervalDays="
+				+ intervalDays + ", user=" + user + ", requestEventSeats=" + requestEventSeats + ", status=" + status + "]";
 	}
+
+	
+	
+	
+	
 
 }
