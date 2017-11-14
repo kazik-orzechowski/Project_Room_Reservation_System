@@ -363,8 +363,9 @@ public class EventController extends SessionedController {
 				roomPossible = null;
 				Request request = new Request (dateOfFirstEvent, hour, eventDuration, numberOfEvents, 
 						eventCycleLength, userCurrent, eventSeats, 0);
-			
 				
+				session().setAttribute("request", request);
+
 			}
 
 		}
