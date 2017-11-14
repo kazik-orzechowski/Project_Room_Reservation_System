@@ -27,6 +27,7 @@ import pl.lps.entity.Event;
 import pl.lps.entity.EventType;
 import pl.lps.entity.Place;
 import pl.lps.entity.Request;
+import pl.lps.entity.RequestDTO;
 import pl.lps.entity.Room;
 import pl.lps.entity.Series;
 import pl.lps.entity.User;
@@ -147,10 +148,9 @@ public class EventController extends SessionedController {
 	 */
 	Room roomPossible = new Room();
 
-	
 	@Autowired
 	EventService serviceEvent;
-	
+
 	/**
 	 * Event repository instance injection
 	 */
@@ -208,7 +208,6 @@ public class EventController extends SessionedController {
 	@Autowired
 	RoomList roomList;
 
-	
 	/**
 	 * Maps request made by user concerning display of this user's home page
 	 * containing the list of events of this user. The list may include all events
@@ -238,18 +237,18 @@ public class EventController extends SessionedController {
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 		model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 		model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "null");
-		
+
 		if (ids == 0) {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, "series.all");
-			
+
 		} else {
 			model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesId(ids));
 			model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE,
 					" " + repoSeries.getOne(ids).getEventType().getName() + " " + repoSeries.getOne(ids).getClient());
 		}
 		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "home");
-		
+
 		return USER_PANEL_VIEW;
 	}
 
@@ -281,7 +280,6 @@ public class EventController extends SessionedController {
 		model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 		model.addAttribute(ACTIVE_MENU_ITEM_ATTRIBUTE, "addEvent");
 
-		
 		return ADD_EVENT_VIEW;
 	}
 
@@ -361,15 +359,18 @@ public class EventController extends SessionedController {
 				model.addAttribute(ADD_EVENT_INFO_ATTRIBUTE, "event.no.rooms");
 				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 				roomPossible = null;
-				Request request = new Request (dateOfFirstEvent, hour, eventDuration, numberOfEvents, 
+				RequestDTO possibleRequest = new RequestDTO(dateOfFirstEvent, hour, eventDuration, numberOfEvents,
 						eventCycleLength, userCurrent, eventSeats, 0);
-				
-				session().setAttribute("request", request);
 
+				session().setAttribute("request", possibleRequest);
+
+				// Add EventDTO to pass event information, or change request entity to have the
+				// same fields and use as an event in model
+				model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, "null");
 			}
 
 		}
-		
+
 		if (roomPossible != null) {
 
 			Integer i = 0;
@@ -386,16 +387,18 @@ public class EventController extends SessionedController {
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
 				}
 			}
-			model.addAttribute("eventCycleLength", eventCycleLength);
-			model.addAttribute("followingEvents", (i - 1));
 
-			if (i == 2) {
-				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.2");
-			} else if (i > 2 && i < 6) {
-				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.3.to.5");
-			} else if (i >= 6) {
-				model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.from.6");
-			}
+		}
+
+		model.addAttribute("eventCycleLength", eventCycleLength);
+		model.addAttribute("followingEvents", (numberOfEvents - 1));
+
+		if (numberOfEvents == 2) {
+			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.2");
+		} else if (numberOfEvents > 2 && numberOfEvents < 6) {
+			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.3.to.5");
+		} else if (numberOfEvents >= 6) {
+			model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "event.following.series.from.6");
 		}
 
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
@@ -535,7 +538,7 @@ public class EventController extends SessionedController {
 		if (!SessionValidation.isSessionUser(id)) {
 			return MAIN_VIEW;
 		}
-		
+
 		/**
 		 * Series removal when the last even of the series has been deleted.
 		 */
@@ -543,9 +546,9 @@ public class EventController extends SessionedController {
 		if (event.getSeries().getEvents().size() == 1) {
 			repoSeries.delete(event.getSeries());
 		}
-			
+
 		repoEvent.deleteById(ide);
-		
+
 		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
 		User userCurrent = repoUser.findOneById(id);
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
@@ -557,21 +560,23 @@ public class EventController extends SessionedController {
 		return userVsAdminRedirect(id, ids, model);
 	}
 
-//	/**
-//	 * Preparation of array list of rooms, that will be used to narrow free room
-//	 * search to rooms meeting place and number of seats criteria
-//	 */
-//
-//	private ArrayList<Room> roomLongListing(Long placeCurrentId, Long seatsRequired) {
-//
-//		ArrayList<Room> rooms = new ArrayList<Room>();
-//		if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
-//			rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
-//		} else {
-//			rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId, seatsRequired);
-//		}
-//		return rooms;
-//	}
+	// /**
+	// * Preparation of array list of rooms, that will be used to narrow free room
+	// * search to rooms meeting place and number of seats criteria
+	// */
+	//
+	// private ArrayList<Room> roomLongListing(Long placeCurrentId, Long
+	// seatsRequired) {
+	//
+	// ArrayList<Room> rooms = new ArrayList<Room>();
+	// if (placeCurrentId == repoPlace.findOneByName("Dowolne").getId()) {
+	// rooms = (ArrayList<Room>) repoRoom.findAllByRoomSize(seatsRequired);
+	// } else {
+	// rooms = (ArrayList<Room>) repoRoom.findAllByPlaceAndRoomSize(placeCurrentId,
+	// seatsRequired);
+	// }
+	// return rooms;
+	// }
 
 	/**
 	 * Selects admin or user view based on passed id
@@ -595,7 +600,7 @@ public class EventController extends SessionedController {
 			model.addAttribute(SERIES_DISPLAYED_ATTRIBUTE, ids);
 			if (ids == 0) {
 				model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAllBySeriesUserId(id));
-				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, " - wszystkie serie");
+				model.addAttribute(SERIES_DISPLAYED_INFO_ATTRIBUTE, "series.all");
 
 			} else {
 
