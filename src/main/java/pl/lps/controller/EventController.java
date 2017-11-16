@@ -366,7 +366,7 @@ public class EventController extends SessionedController {
 
 				// Add EventDTO to pass event information, or change request entity to have the
 				// same fields and use as an event in model
-				model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, "null");
+				model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, possibleRequest);
 			}
 
 		}

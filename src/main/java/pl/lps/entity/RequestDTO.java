@@ -35,7 +35,7 @@ public class RequestDTO {
 	 * Start date of requested event in request
 	 */
 	@NotNull
-	private Date startdate;
+	private Date date;
 	/**
 	 * Start hour of requested event in request
 	 */
@@ -96,7 +96,7 @@ public class RequestDTO {
 	 * 
 	 * 
 	 * @param id
-	 * @param startdate
+	 * @param date
 	 * @param hour
 	 * @param requestDuration
 	 * @param requestNumberOfEvents
@@ -106,11 +106,11 @@ public class RequestDTO {
 	 * @param status
 	 */
 
-	public RequestDTO(@NotNull Date startdate, @NotNull Date hour, @NotNull Long requestDuration,
+	public RequestDTO(@NotNull Date date, @NotNull Date hour, @NotNull Long requestDuration,
 			@NotNull Long requestNumberOfEvents, @NotNull Long intervalDays, User user, @NotNull Long requestEventSeats,
 			@NotNull int status) {
 		super();
-		this.startdate = startdate;
+		this.date = date;
 		this.hour = hour;
 		this.requestDuration = requestDuration;
 		this.requestNumberOfEvents = requestNumberOfEvents;
@@ -134,17 +134,17 @@ public class RequestDTO {
 	 * 
 	 * @return this request's start date
 	 */
-	public Date getStartdate() {
-		return startdate;
+	public Date getDate() {
+		return date;
 	}
 
 	/**
 	 * Sets this request's start date
 	 * 
-	 * @param startdate
+	 * @param date
 	 */
-	public void setStartdate(Date startdate) {
-		this.startdate = startdate;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**
@@ -265,7 +265,7 @@ public class RequestDTO {
 	 */
 	@Override
 	public String toString() {
-		return "Request [id=" + id + ", startdate=" + startdate + ", hour=" + hour + ", requestDuration="
+		return "Request [id=" + id + ", date=" + date + ", hour=" + hour + ", requestDuration="
 				+ requestDuration + ", requestNumberOfEvents=" + requestNumberOfEvents + ", intervalDays="
 				+ intervalDays + ", user=" + user + ", requestEventSeats=" + requestEventSeats + ", status=" + status
 				+ "]";
