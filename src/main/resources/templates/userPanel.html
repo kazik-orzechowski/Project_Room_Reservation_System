@@ -29,6 +29,15 @@
 			${#dates.format(requestedEvent.hour, 'HH:mm')} + ' ' +#{${addEventSeriesInfo}(${followingEvents}, ${eventCycleLength})} 
 			: #{${addEventInfo}}">*</a></p>
 			
+			<div th:if="${addEventInfo == 'event.no.rooms'}">
+
+		            <div class="form-group">
+		                    <button type="button" class="btn btn-success" 
+		                    th:href="@{/events/{id}/requestAccepted/{ide}/{ids}/ (id=${user.id}, ide=${event.id}, ids=${displayedSeriesId})}" 
+		                    th:text="#{event.request.accept}">OK</button>
+		            </div>
+			</div>
+			
 			<h2 th:text="#{event.list} + ' ' +#{${displayedSeries}}">* <span th:text="#{${displayedSeries}}">*</span></h2>
 			
 			<table class="table table-responsive table-striped table-hover">
