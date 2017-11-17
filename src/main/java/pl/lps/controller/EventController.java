@@ -379,12 +379,17 @@ public class EventController extends SessionedController {
 					repoSeries.save(series);
 				}
 
+						
 				i++;
 				Event event = new Event(eventStartDate, hour, endHour, eventDuration, eventSeats, series, roomPossible);
 				repoEvent.save(event);
+				System.err.println("Added" + repoEvent.findOneById(event.getId()));
 				if (i == 1) {
+					
 					model.addAttribute(REQUESTED_EVENT_SERIES_ATTRIBUTE, "null");
 					model.addAttribute(REQUESTED_EVENT_ATTRIBUTE, event);
+
+					
 				}
 			}
 
@@ -540,16 +545,17 @@ public class EventController extends SessionedController {
 		}
 
 		/**
-		 * Series removal when the last even of the series has been deleted.
+		 * Series removal when the last event of the series has been deleted.
 		 */
 		Event event = repoEvent.findOneById(ide);
 		if (event.getSeries().getEvents().size() == 1) {
 			repoSeries.delete(event.getSeries());
 		}
 
-		repoEvent.deleteById(ide);
+		repoEvent.delete(event);
 
-		model.addAttribute(ALL_EVENTS_ATTRIBUTE, repoEvent.findAll());
+		System.err.println(event);
+		
 		User userCurrent = repoUser.findOneById(id);
 		model.addAttribute(USER_ATTRIBUTE, userCurrent);
 
